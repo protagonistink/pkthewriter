@@ -1,0 +1,26 @@
+<svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Handwritten signature style "Patrick Kirkland" -->
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Large P with oval loop -->
+    <path d="M25 85 C20 80, 18 70, 22 55 C26 40, 35 20, 50 15 C70 8, 85 15, 80 30 C75 45, 55 50, 35 52 C30 53, 25 58, 23 70 C21 82, 24 88, 25 85" />
+    <!-- P inner loop -->
+    <ellipse cx="55" cy="28" rx="18" ry="12" transform="rotate(-15 55 28)" />
+
+    <!-- "atrick" lowercase flowing -->
+    <path d="M58 55 C55 50, 58 42, 65 45 C62 50, 60 58, 65 58 C72 58, 78 48, 82 45 C80 52, 78 60, 82 58 C88 55, 95 45, 98 42 C96 50, 94 58, 98 56 C104 52, 112 42, 115 40 C112 48, 110 58, 115 55 C122 50, 130 40, 135 38" />
+
+    <!-- Large K with sharp angles -->
+    <path d="M150 78 C148 70, 150 50, 152 35 C154 25, 156 20, 158 25 C160 35, 158 55, 156 65" />
+    <path d="M156 50 C165 42, 178 28, 188 22 C192 20, 190 25, 182 35 C174 45, 165 52, 158 55" />
+    <path d="M162 52 C170 60, 182 72, 192 80 C196 83, 192 82, 185 75 C178 68, 168 58, 162 52" />
+
+    <!-- "irkland" lowercase flowing -->
+    <path d="M195 55 C192 48, 195 42, 200 45 C198 52, 200 58, 206 55 C212 50, 218 42, 222 40 C220 48, 222 58, 228 54 C235 48, 242 40, 248 38 C245 46, 242 56, 248 54 C256 50, 265 40, 272 35 C268 45, 265 58, 272 55 C280 50, 290 38, 298 32" />
+  </g>
+
+  <!-- Long horizontal flourish line -->
+  <path d="M45 78 C100 76, 200 72, 320 68 C360 66, 385 65, 395 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+
+  <!-- "WRITER" in red, stamp-style italic -->
+  <text x="220" y="95" font-family="'Courier Prime', Courier, monospace" font-size="20" font-style="italic" fill="#E62429" letter-spacing="2">WRITER</text>
+</svg>

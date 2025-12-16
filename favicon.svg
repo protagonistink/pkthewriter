@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#0a0a0a"/>
+
+  <!-- Stylized "P" initial -->
+  <path
+    d="M8 26 C6 24, 5 20, 6 15 C8 8, 12 4, 17 4 C22 4, 25 7, 24 11 C23 15, 18 17, 12 17.5 C10 17.7, 9 19, 8.5 22 C8 25, 8.5 27, 8 26"
+    fill="none"
+    stroke="white"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Red accent dot -->
+  <circle cx="26" cy="26" r="3" fill="#E62429"/>
+</svg>
