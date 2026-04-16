@@ -19,7 +19,7 @@ export const suggestionSetQuery = /* groq */ `
 `;
 
 export const featuredCaseStudiesQuery = /* groq */ `
-  *[_type == "project" && featured == true] | order(year desc)[0...12]{
+  *[_type == "project" && featured == true && defined(slug.current)] | order(year desc)[0...12]{
     _id,
     title,
     slug,
