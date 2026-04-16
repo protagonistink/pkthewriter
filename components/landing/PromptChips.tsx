@@ -12,7 +12,7 @@ export function PromptChips({ onCardChip }: { onCardChip?: (id: "pi") => void })
             <button
               key={chip.id}
               onClick={() => onCardChip?.("pi")}
-              className="font-[var(--font-voice)] text-sm px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors"
+              className="font-voice text-sm px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors"
             >
               {chip.label}
             </button>
@@ -22,7 +22,7 @@ export function PromptChips({ onCardChip }: { onCardChip?: (id: "pi") => void })
           <Link
             key={chip.id}
             href={chip.href!}
-            className="font-[var(--font-voice)] text-sm px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors"
+            className="font-voice text-sm px-4 py-2 rounded-full border border-[var(--color-border)] text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:border-[var(--color-accent)] transition-colors"
           >
             {chip.label}
           </Link>

@@ -20,11 +20,38 @@ function hrefFor(item: SuggestionItem): string {
   return item.url;
 }
 
-export function SuggestionsList({ items }: { items: SuggestionItem[] }) {
-  if (!items || items.length === 0) return null;
+const SKELETON_ROWS = [
+  { icon: <FileText className="w-5 h-5 text-[var(--color-border)]" />, title: "————————————————", meta: "CASE STUDY" },
+  { icon: <BookOpen className="w-5 h-5 text-[var(--color-border)]" />, title: "——————————————", meta: "STORY" },
+  { icon: <Link2 className="w-5 h-5 text-[var(--color-border)]" />, title: "———————————————————", meta: "BLOG" },
+];
+
+function SuggestionsSkeleton() {
   return (
-    <section className="max-w-[640px] mx-auto mt-10 pt-6 border-t border-[var(--color-border)]">
-      <div className="font-[var(--font-voice)] text-sm text-[var(--color-text-muted)] uppercase tracking-[0.2em] mb-4">
+    <section className="mt-10 pt-6 border-t border-[var(--color-border)]">
+      <div className="font-voice text-sm text-[var(--color-border)] uppercase tracking-[0.2em] mb-4">
+        suggestions
+      </div>
+      <ul className="divide-y divide-[var(--color-border)]">
+        {SKELETON_ROWS.map((row, i) => (
+          <li key={i} className="flex items-start gap-4 py-5 opacity-30">
+            <div className="pt-0.5 shrink-0">{row.icon}</div>
+            <div className="min-w-0">
+              <div className="text-[var(--color-border)]">{row.title}</div>
+              <div className="font-voice text-sm text-[var(--color-border)] mt-1 tracking-wide">{row.meta}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export function SuggestionsList({ items }: { items: SuggestionItem[] }) {
+  if (!items || items.length === 0) return <SuggestionsSkeleton />;
+  return (
+    <section className="mt-10 pt-6 border-t border-[var(--color-border)]">
+      <div className="font-voice text-sm text-[var(--color-text-muted)] uppercase tracking-[0.2em] mb-4">
         suggestions
       </div>
       <ul className="divide-y divide-[var(--color-border)]">
@@ -39,7 +66,7 @@ export function SuggestionsList({ items }: { items: SuggestionItem[] }) {
                 <div className="text-[var(--color-text)] group-hover:text-[var(--color-accent)] transition-colors">
                   {item.title}
                 </div>
-                <div className="font-[var(--font-voice)] text-sm text-[var(--color-text-muted)] mt-1 tracking-wide">
+                <div className="font-voice text-sm text-[var(--color-text-muted)] mt-1 tracking-wide">
                   {metaFor(item)}
                 </div>
               </div>

@@ -3,7 +3,7 @@ export function ContactLink({ email }: { email?: string }) {
   return (
     <a
       href={`mailto:${email}`}
-      className="fixed top-6 right-6 z-10 font-[var(--font-voice)] text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+      className="fixed top-6 right-6 z-10 font-voice text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
     >
       [@] contact
     </a>

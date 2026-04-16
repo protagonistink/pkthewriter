@@ -19,8 +19,8 @@ export default async function Page() {
     <>
       <Wordmark />
       <ContactLink email={about?.email} />
-      <main className="min-h-screen flex flex-col justify-center items-center px-6 py-24">
-        <div className="w-full">
+      <main className="min-h-screen px-6 pt-28 pb-24">
+        <div className="max-w-[640px] mx-auto">
           <HeroIntro />
           <LandingClient />
           <SuggestionsList items={suggestionSet?.items ?? []} />
