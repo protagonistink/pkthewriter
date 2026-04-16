@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useId } from "react";
+import Link from "next/link";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -62,7 +63,7 @@ export function ChatBar({
       {reply && (
         <div className="mt-4 font-voice text-sm text-[var(--color-text-muted)]">
           {reply}{" "}
-          <a href="/work" className="text-[var(--color-accent)] hover:underline">show me a case study →</a>
+          <Link href="/work" className="text-[var(--color-accent)] hover:underline">show me a case study →</Link>
           {status === "sent" && <span className="ml-2 text-[var(--color-accent)]">•</span>}
         </div>
       )}
