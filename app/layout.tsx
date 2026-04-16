@@ -18,8 +18,15 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Patrick — Writer",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3003"),
+  title: { default: "Patrick — Writer", template: "%s — Patrick" },
   description: "Copy. Stories. Screenplays. Ask me something.",
+  openGraph: {
+    title: "Patrick — Writer",
+    description: "Copy. Stories. Screenplays. Ask me something.",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
