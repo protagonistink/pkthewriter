@@ -49,21 +49,43 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </div>
       </section>
 
-      {/* Overture — the context paragraph as a single display pull */}
-      {p.context && (
-        <section className="px-[60px] py-[100px] max-[820px]:px-[24px] max-[820px]:py-[64px]">
-          <div className="max-w-[880px] mx-auto">
-            <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[22px]">
-              § Overture
-            </div>
-            <p className="font-[family-name:var(--font-serif)] font-normal text-[clamp(22px,2.4vw,30px)] leading-[1.4] tracking-[-0.005em] m-0 text-[var(--color-ink)]">
-              {p.context}
-            </p>
+      {/* Overture — metadata stack on the left, display-serif context on the right */}
+      {(p.context || p.disciplines?.length || p.deliverables?.length || p.impact?.length) && (
+        <section className="px-[60px] pt-[88px] pb-[60px] max-[820px]:px-[24px] max-[820px]:pt-[60px] max-[820px]:pb-[40px]">
+          <div className="max-w-[1200px] mx-auto grid grid-cols-[minmax(200px,260px)_1fr] gap-[80px] max-[820px]:grid-cols-1 max-[820px]:gap-[40px]">
+            <aside>
+              <MetadataRow label="Client" value={p.brand} />
+              <MetadataRow label="Role" value={p.role} />
+              <MetadataRow label="Year" value={p.year} />
+              <MetadataRow label="Type" value={p.type} />
+              {(p.disciplines?.length || p.deliverables?.length || p.impact?.length) && (
+                <div className="mt-[28px] pt-[28px] border-t border-[var(--color-paper-line)]">
+                  {p.disciplines?.length ? <MetadataRow label="Disciplines" value={p.disciplines.join(", ")} /> : null}
+                  {p.deliverables?.length ? <MetadataRow label="Deliverables" value={p.deliverables.join(", ")} /> : null}
+                  {p.impact?.length ? <MetadataRow label="Impact" value={p.impact.join(" · ")} /> : null}
+                </div>
+              )}
+            </aside>
+
+            {p.context && (
+              <div className="relative">
+                <p className="font-[family-name:var(--font-serif)] font-normal text-[clamp(26px,3.2vw,42px)] leading-[1.22] tracking-[-0.005em] m-0 text-[var(--color-ink)]">
+                  {p.context}
+                </p>
+                <div
+                  aria-hidden="true"
+                  className="absolute left-0 right-0 bottom-0 h-[96px] pointer-events-none"
+                  style={{
+                    background: "linear-gradient(180deg, rgba(15,14,12,0) 0%, var(--color-paper) 92%)",
+                  }}
+                />
+              </div>
+            )}
           </div>
         </section>
       )}
 
-      {/* Moments — numbered editorial sections, intercut with gallery stills */}
+      {/* Numbered moments — editorial sections, intercut with gallery stills */}
       {moments.length > 0 && (
         <div className="pb-[80px]">
           {moments.map((section, i) => (
@@ -72,7 +94,7 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </div>
       )}
 
-      {/* Gallery — if no editorial sections, show gallery as full-bleed stills */}
+      {/* Gallery fallback — if no editorial sections, show gallery as full-bleed stills */}
       {moments.length === 0 && p.gallery?.length ? (
         <section className="pb-[80px]">
           {p.gallery.map((img, i) => (
@@ -87,17 +109,6 @@ export function CaseStudyView({ project: p }: { project: Project }) {
           ))}
         </section>
       ) : null}
-
-      {/* Credits strip */}
-      {(p.disciplines?.length || p.deliverables?.length || p.impact?.length) && (
-        <section className="px-[60px] py-[80px] border-t border-[var(--color-paper-line)] max-[820px]:px-[24px] max-[820px]:py-[56px]">
-          <div className="max-w-[1200px] mx-auto grid grid-cols-3 gap-[48px] max-[820px]:grid-cols-1 max-[820px]:gap-[32px]">
-            {p.disciplines?.length ? <CreditCol title="Disciplines" items={p.disciplines} /> : null}
-            {p.deliverables?.length ? <CreditCol title="Deliverables" items={p.deliverables} /> : null}
-            {p.impact?.length ? <CreditCol title="Impact" items={p.impact} /> : null}
-          </div>
-        </section>
-      )}
 
       {/* Portable Text fallback — conflict/resolution if no editorial sections */}
       {moments.length === 0 && (p.conflict || p.resolution) && (
@@ -197,17 +208,16 @@ function Moment({ section, index }: { section: EditorialSection; index: number }
   );
 }
 
-function CreditCol({ title, items }: { title: string; items: string[] }) {
+function MetadataRow({ label, value }: { label: string; value?: string | null }) {
+  if (!value) return null;
   return (
-    <div>
-      <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-ink-soft)] mb-[14px]">
-        {title}
+    <div className="mb-[18px]">
+      <div className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-soft)] mb-[6px]">
+        {label}
       </div>
-      <ul className="font-[family-name:var(--font-serif)] text-[16px] leading-[1.7] text-[var(--color-ink)] list-none p-0 m-0 space-y-[4px]">
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
+      <div className="font-[family-name:var(--font-serif)] text-[17px] leading-[1.35] text-[var(--color-ink)]">
+        {value}
+      </div>
     </div>
   );
 }
