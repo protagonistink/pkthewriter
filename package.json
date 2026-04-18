@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "verify": "npm run typecheck && npm run lint",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "sanity:backfill-slugs": "tsx scripts/backfill-sanity-slugs.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.3",
@@ -31,9 +32,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/ui": "^4.1.4",
+    "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5",
     "vitest": "^4.1.4"
   }
