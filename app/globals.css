@@ -57,6 +57,13 @@ body {
 .work-gallery:has(> li:hover) > li { opacity: 0.42; }
 .work-gallery > li:hover { opacity: 1 !important; }
 
+/* Signature logo — multiply against paper, invert-hue-preserve on dark */
+.site-logo { mix-blend-mode: multiply; }
+[data-theme="dark"] .site-logo {
+  mix-blend-mode: normal;
+  filter: invert(1) hue-rotate(180deg);
+}
+
 /* ---------------------------------------------------------------- */
 /* Dark scope: case-study pages. Re-points the same tokens so child  */
 /* components don't need a parallel CSS surface.                      */

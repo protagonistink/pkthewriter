@@ -10,8 +10,7 @@ export function SiteHeader({ email }: { email?: string }) {
         <img
           src="/logo-signature.png"
           alt="Patrick Kirkland, writer"
-          className="w-full h-auto"
-          style={{ mixBlendMode: "multiply" }}
+          className="site-logo w-full h-auto"
         />
       </Link>
       <a
