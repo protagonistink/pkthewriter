@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
 
 export default function CaseStudyLayout({ children }: { children: ReactNode }) {
   return (
@@ -24,6 +25,7 @@ export default function CaseStudyLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
       {children}
+      <CaseStudyAsk />
     </div>
   );
 }

@@ -49,22 +49,16 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </div>
       </section>
 
-      {/* Overture — metadata stack on the left, display-serif context on the right */}
+      {/* Overture — credits stack on the left, display-serif context on the right.
+          Brand/role/year/type already live in the hero kicker, so we don't
+          repeat them here — only the project-specific credits. */}
       {(p.context || p.disciplines?.length || p.deliverables?.length || p.impact?.length) && (
         <section className="px-[60px] pt-[88px] pb-[60px] max-[820px]:px-[24px] max-[820px]:pt-[60px] max-[820px]:pb-[40px]">
           <div className="max-w-[1200px] mx-auto grid grid-cols-[minmax(200px,260px)_1fr] gap-[80px] max-[820px]:grid-cols-1 max-[820px]:gap-[40px]">
             <aside>
-              <MetadataRow label="Client" value={p.brand} />
-              <MetadataRow label="Role" value={p.role} />
-              <MetadataRow label="Year" value={p.year} />
-              <MetadataRow label="Type" value={p.type} />
-              {(p.disciplines?.length || p.deliverables?.length || p.impact?.length) && (
-                <div className="mt-[28px] pt-[28px] border-t border-[var(--color-paper-line)]">
-                  {p.disciplines?.length ? <MetadataRow label="Disciplines" value={p.disciplines.join(", ")} /> : null}
-                  {p.deliverables?.length ? <MetadataRow label="Deliverables" value={p.deliverables.join(", ")} /> : null}
-                  {p.impact?.length ? <MetadataRow label="Impact" value={p.impact.join(" · ")} /> : null}
-                </div>
-              )}
+              {p.disciplines?.length ? <MetadataRow label="Disciplines" value={p.disciplines.join(", ")} /> : null}
+              {p.deliverables?.length ? <MetadataRow label="Deliverables" value={p.deliverables.join(", ")} /> : null}
+              {p.impact?.length ? <MetadataRow label="Impact" value={p.impact.join(" · ")} /> : null}
             </aside>
 
             {p.context && (
@@ -110,29 +104,17 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       ) : null}
 
-      {/* Portable Text fallback — conflict/resolution if no editorial sections */}
+      {/* Portable Text fallback — conflict/resolution if no editorial sections.
+          Older docs sometimes stored `conflict` as a plain string rather than
+          Portable Text blocks; handle both or PortableText silently drops it. */}
       {moments.length === 0 && (p.conflict || p.resolution) && (
         <section className="px-[60px] py-[80px] max-[820px]:px-[24px] max-[820px]:py-[56px]">
           <div className="max-w-[740px] mx-auto space-y-[48px]">
             {p.conflict && (
-              <div>
-                <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[18px]">
-                  § 01 &nbsp; Conflict
-                </div>
-                <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink)] [&_p]:mb-[18px]">
-                  <PortableText value={p.conflict} />
-                </div>
-              </div>
+              <ConflictResolutionBlock counter="§ 01" value={p.conflict} />
             )}
             {p.resolution && (
-              <div>
-                <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[18px]">
-                  § 02 &nbsp; Resolution
-                </div>
-                <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink)] [&_p]:mb-[18px]">
-                  <PortableText value={p.resolution} />
-                </div>
-              </div>
+              <ConflictResolutionBlock counter="§ 02" value={p.resolution} />
             )}
           </div>
         </section>
@@ -160,11 +142,6 @@ function Moment({ section, index }: { section: EditorialSection; index: number }
             </div>
           </div>
           <div>
-            {section.sectionTitle && (
-              <h2 className="font-[family-name:var(--font-serif)] font-normal text-[clamp(28px,3.6vw,44px)] leading-[1.08] tracking-[-0.01em] m-0 mb-[24px] text-[var(--color-ink)]">
-                {section.sectionTitle}
-              </h2>
-            )}
             {section.copyBlock && (
               <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink-mid)] max-w-[62ch] [&_p]:mb-[18px]">
                 <PortableText value={section.copyBlock} />
@@ -205,6 +182,31 @@ function Moment({ section, index }: { section: EditorialSection; index: number }
         )}
       </div>
     </section>
+  );
+}
+
+function ConflictResolutionBlock({
+  counter,
+  value,
+}: {
+  counter: string;
+  value: string | NonNullable<Project["conflict"]>;
+}) {
+  return (
+    <div>
+      <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[18px]">
+        {counter}
+      </div>
+      <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink)] [&_p]:mb-[18px]">
+        {typeof value === "string" ? (
+          value
+            .split(/\n{2,}/)
+            .map((para, i) => <p key={i}>{para.trim()}</p>)
+        ) : (
+          <PortableText value={value} />
+        )}
+      </div>
+    </div>
   );
 }
 

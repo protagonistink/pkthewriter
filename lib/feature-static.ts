@@ -34,6 +34,8 @@ export const ALL_BRANDS = [
 export type StaticFeature = {
   key: FeatureKey;
   intro: string; // may contain <em>
+  /** Client / brand — displayed in the case-study handoff. */
+  brand?: string;
   title: string;
   kicker: string;
   copy: string; // may contain <em>
@@ -66,6 +68,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   airtable: {
     key: "airtable",
     intro: INTROS.airtable,
+    brand: "Airtable",
     title: "This is How",
     kicker: "Brand Campaign · 2024",
     copy: `Four :15 spots for Airtable's first national campaign. Product-first stories, written around how work actually flows when the system works.`,
@@ -79,6 +82,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   bp: {
     key: "bp",
     intro: INTROS.bp,
+    brand: "BP",
     title: "Team USA",
     kicker: "360 Brand Campaign · 2016",
     copy: `A 360 campaign built around the athletes BP was sponsoring for Rio. Sport as anthology, brand as patron.`,
@@ -92,6 +96,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   techsure: {
     key: "techsure",
     intro: INTROS.techsure,
+    brand: "Verizon",
     title: "Your Tech Should Work",
     kicker: "TV Campaign · 2020",
     copy: `Verizon Techsure — a warranty pitched as quiet competence instead of a fear sell.`,
@@ -105,6 +110,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   "verizon-up": {
     key: "verizon-up",
     intro: INTROS["verizon-up"],
+    brand: "Verizon",
     title: "Biggest Little Monsters",
     kicker: "Live Social Activation · 2021",
     copy: `Forty-foot inflatable monsters, a pop-up in Manhattan, and a live social feed that ran the campaign in real time.`,
@@ -118,6 +124,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   chevron: {
     key: "chevron",
     intro: INTROS.chevron,
+    brand: "Chevron",
     title: "Rebranding a Giant",
     kicker: "Brand Strategy & Identity · 2024",
     copy: `A top-to-bottom reframe: brand strategy, identity system, and .com. Turning a century-old energy company into something a thirty-year-old could work for.`,
@@ -131,6 +138,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   warnerbros: {
     key: "warnerbros",
     intro: INTROS.warnerbros,
+    brand: "Warner Bros.",
     title: "Steve Jobs",
     kicker: "Campaign · 2015",
     copy: `Campaign voice for Danny Boyle's <em>Steve Jobs</em>. An awards-season push that trusted the audience to sit with the ambiguity.`,
@@ -144,6 +152,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   att: {
     key: "att",
     intro: INTROS.att,
+    brand: "AT&T",
     title: "Lily's Gift Decider",
     kicker: "Digital Activation · 2021",
     copy: `A holiday gift-finder built around AT&T's spokesperson Lily. Forty-plus scripts, every path leading to a gift that fit.`,
@@ -157,6 +166,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   mpa: {
     key: "mpa",
     intro: INTROS.mpa,
+    brand: "MPA",
     title: "What Comes Next?",
     kicker: "Brand Campaign · 2016",
     copy: `A brand campaign for the Motion Picture Association — an industry body arguing for the future of cinema without sounding like one.`,

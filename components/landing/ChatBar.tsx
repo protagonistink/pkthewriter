@@ -32,6 +32,9 @@ type Props = {
   onReset: () => void;
   /** When true, focus the chat input after mount (e.g. arriving via /?ask=1). */
   autoFocus?: boolean;
+  /** When non-empty, pre-fill the input and auto-dispatch on mount — used by
+   *  the case-study "Ask" overlay which navigates back to /?q=<text>. */
+  initialQuery?: string;
 };
 
 export function ChatBar({
@@ -43,8 +46,9 @@ export function ChatBar({
   inResponse,
   onReset,
   autoFocus,
+  initialQuery,
 }: Props) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(initialQuery ?? "");
   const [status, setStatus] = useState<Status>("idle");
   const [mode, setMode] = useState<Mode>("initial");
   const [reply, setReply] = useState<string | null>(null);
@@ -162,6 +166,19 @@ export function ChatBar({
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [autoFocus]);
+
+  // If landing loaded with ?q=… (e.g. from the case-study Ask overlay), run
+  // that query through the dispatcher once on mount. Guarded by a ref so
+  // re-renders don't re-fire it.
+  const autoFiredRef = useRef(false);
+  useEffect(() => {
+    if (autoFiredRef.current) return;
+    const q = initialQuery?.trim();
+    if (!q) return;
+    autoFiredRef.current = true;
+    void dispatch(q);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function dispatch(message: string) {
     const trimmed = message.trim();

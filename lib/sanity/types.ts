@@ -23,8 +23,9 @@ export type Project = {
   heroImage?: SanityImage;
   mainImage?: SanityImage;
   context?: string;
-  conflict?: PortableTextBlock[];
-  resolution?: PortableTextBlock[];
+  // Older docs stored these as plain strings; newer ones as Portable Text.
+  conflict?: string | PortableTextBlock[];
+  resolution?: string | PortableTextBlock[];
   disciplines?: string[];
   deliverables?: string[];
   impact?: string[];

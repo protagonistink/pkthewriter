@@ -6,6 +6,7 @@ describe("nextCaseStudy", () => {
   it("airtable → bp (first peer in brandAlts)", () => {
     expect(nextCaseStudy("airtable")).toEqual({
       slug: "bp",
+      brand: STATIC_FEATURES.bp.brand,
       title: STATIC_FEATURES.bp.title,
       kicker: STATIC_FEATURES.bp.kicker,
     });
@@ -14,6 +15,7 @@ describe("nextCaseStudy", () => {
   it("bp → airtable", () => {
     expect(nextCaseStudy("bp")).toEqual({
       slug: "airtable",
+      brand: STATIC_FEATURES.airtable.brand,
       title: STATIC_FEATURES.airtable.title,
       kicker: STATIC_FEATURES.airtable.kicker,
     });
@@ -22,6 +24,7 @@ describe("nextCaseStudy", () => {
   it("mpa → airtable", () => {
     expect(nextCaseStudy("mpa")).toEqual({
       slug: "airtable",
+      brand: STATIC_FEATURES.airtable.brand,
       title: STATIC_FEATURES.airtable.title,
       kicker: STATIC_FEATURES.airtable.kicker,
     });

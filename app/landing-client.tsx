@@ -20,19 +20,27 @@ export function LandingClient({ featureMap }: Props) {
   const [contactCard, setContactCard] = useState<"hi" | "contact" | null>(null);
   const [autoFocus] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
+    const params = new URL(window.location.href).searchParams;
     return (
-      new URL(window.location.href).searchParams.get("ask") === "1" ||
+      params.get("ask") === "1" ||
+      !!params.get("q") ||
       window.location.hash === "#ask"
     );
+  });
+  const [initialQuery] = useState<string>(() => {
+    if (typeof window === "undefined") return "";
+    return new URL(window.location.href).searchParams.get("q") ?? "";
   });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
     const askParam = url.searchParams.get("ask") === "1";
+    const qParam = url.searchParams.get("q");
     const askHash = window.location.hash === "#ask";
-    if (askParam || askHash) {
+    if (askParam || askHash || qParam) {
       if (askParam) url.searchParams.delete("ask");
+      if (qParam) url.searchParams.delete("q");
       const clean =
         url.pathname +
         (url.searchParams.toString() ? `?${url.searchParams.toString()}` : "") +
@@ -98,6 +106,7 @@ export function LandingClient({ featureMap }: Props) {
         inResponse={inResponse}
         onReset={handleReset}
         autoFocus={autoFocus}
+        initialQuery={initialQuery}
       />
       {feature && (
         <ResponseFeature

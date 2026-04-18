@@ -2,6 +2,9 @@ import { ALTS, STATIC_FEATURES, type FeatureKey } from "./feature-static";
 
 export type NextCaseStudy = {
   slug: string;
+  /** Client brand — the label the handoff should lead with. */
+  brand: string;
+  /** Project title — kept as a fallback when brand is missing. */
   title: string;
   kicker: string;
 };
@@ -23,6 +26,7 @@ export function nextCaseStudy(currentSlug: string): NextCaseStudy | null {
   const feature = STATIC_FEATURES[nextAlt.key as FeatureKey];
   return {
     slug: nextAlt.key as string,
+    brand: feature.brand ?? feature.title,
     title: feature.title,
     kicker: feature.kicker,
   };
