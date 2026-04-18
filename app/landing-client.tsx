@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChatBar } from "@/components/landing/ChatBar";
+import { ContactCard } from "@/components/landing/ContactCard";
 import { HeroIntro } from "@/components/landing/HeroIntro";
 import { ResponseFeature } from "@/components/landing/ResponseFeature";
 import { PICard } from "@/components/canvas/PICard";
@@ -16,6 +17,7 @@ export function LandingClient({ featureMap }: Props) {
   const router = useRouter();
   const [piOpen, setPiOpen] = useState(false);
   const [feature, setFeature] = useState<FeatureCard | null>(null);
+  const [contactCard, setContactCard] = useState<"hi" | "contact" | null>(null);
   const [autoFocus] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return (
@@ -62,7 +64,16 @@ export function LandingClient({ featureMap }: Props) {
 
   function handleFeature(key: FeatureKey) {
     const card = resolveFeature(key, featureMap);
+    setContactCard(null);
     setFeature(card);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  function handleContactCard(variant: "hi" | "contact") {
+    setFeature(null);
+    setContactCard(variant);
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -70,9 +81,10 @@ export function LandingClient({ featureMap }: Props) {
 
   function handleReset() {
     setFeature(null);
+    setContactCard(null);
   }
 
-  const inResponse = feature !== null;
+  const inResponse = feature !== null || contactCard !== null;
 
   return (
     <div data-state={inResponse ? "response" : "idle"} className="flex-1 flex flex-col">
@@ -82,6 +94,7 @@ export function LandingClient({ featureMap }: Props) {
         onNavigate={handleNavigate}
         onCard={(id) => id === "pi" && setPiOpen(true)}
         onFeature={(key) => handleFeature(key)}
+        onContactCard={handleContactCard}
         inResponse={inResponse}
         onReset={handleReset}
         autoFocus={autoFocus}
@@ -90,6 +103,13 @@ export function LandingClient({ featureMap }: Props) {
         <ResponseFeature
           feature={feature}
           onAltSelect={(key) => handleFeature(key)}
+        />
+      )}
+      {contactCard && (
+        <ContactCard
+          variant={contactCard}
+          onLead={handleLead}
+          onFallback={handleReset}
         />
       )}
       {piOpen && <PICard onClose={() => setPiOpen(false)} />}

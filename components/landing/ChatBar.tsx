@@ -26,6 +26,7 @@ type Props = {
   onNavigate: (to: string) => void;
   onCard: (id: "pi") => void;
   onFeature: (key: FeatureKey, raw: string) => void;
+  onContactCard: (variant: "hi" | "contact") => void;
   /** Parent-controlled "response" state — renders × clear and adjusts helper copy. */
   inResponse: boolean;
   onReset: () => void;
@@ -38,6 +39,7 @@ export function ChatBar({
   onNavigate,
   onCard,
   onFeature,
+  onContactCard,
   inResponse,
   onReset,
   autoFocus,
@@ -191,6 +193,13 @@ export function ChatBar({
         setMode("initial");
         setReply(null);
         onCard(intent.id);
+        return;
+      }
+      case "contact-card": {
+        setMode("initial");
+        setReply(null);
+        setValue("");
+        onContactCard(intent.variant);
         return;
       }
       case "clarify": {
