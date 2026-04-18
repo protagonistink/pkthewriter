@@ -16,7 +16,13 @@ export function LandingClient({ featureMap }: Props) {
   const router = useRouter();
   const [piOpen, setPiOpen] = useState(false);
   const [feature, setFeature] = useState<FeatureCard | null>(null);
-  const [autoFocus, setAutoFocus] = useState(false);
+  const [autoFocus] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return (
+      new URL(window.location.href).searchParams.get("ask") === "1" ||
+      window.location.hash === "#ask"
+    );
+  });
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -24,7 +30,6 @@ export function LandingClient({ featureMap }: Props) {
     const askParam = url.searchParams.get("ask") === "1";
     const askHash = window.location.hash === "#ask";
     if (askParam || askHash) {
-      setAutoFocus(true);
       if (askParam) url.searchParams.delete("ask");
       const clean =
         url.pathname +
