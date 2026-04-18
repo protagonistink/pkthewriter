@@ -14,10 +14,11 @@ export function AboutView({ about }: { about: AboutPage }) {
           <h1 className="text-3xl sm:text-4xl font-medium mt-2 mb-6">Patrick.</h1>
           {resumeUrl && (
             <a
+              id="resume"
               href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block font-voice text-sm border border-[var(--color-paper-text)] text-[var(--color-paper-text)] px-4 py-2 rounded-full hover:bg-[var(--color-paper-text)] hover:text-[var(--color-paper)] transition-colors"
+              className="inline-block font-voice text-sm border border-[var(--color-paper-text)] text-[var(--color-paper-text)] px-4 py-2 rounded-full hover:bg-[var(--color-paper-text)] hover:text-[var(--color-paper)] transition-colors scroll-mt-24"
             >
               download resume ↓
             </a>
@@ -32,6 +33,18 @@ export function AboutView({ about }: { about: AboutPage }) {
         )}
       </div>
       {about.bio && <PortableText value={about.bio} />}
+      <p className="font-voice text-sm text-[var(--color-paper-text-muted)] mt-8">
+        I consult independently and through my studio,{" "}
+        <a
+          href="https://protagonistink.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[var(--color-paper-text)] underline decoration-[var(--color-paper-border)] underline-offset-4 hover:decoration-[var(--color-paper-text)] transition-colors"
+        >
+          Protagonist Ink
+        </a>
+        .
+      </p>
       {about.socialLinks?.length ? (
         <section className="not-prose mt-10 pt-8 border-t border-[var(--color-paper-border)]">
           <div className="font-voice text-sm text-[var(--color-paper-text-muted)] uppercase tracking-[0.2em] mb-3">

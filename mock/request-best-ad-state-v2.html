@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Request-First Best Ad State v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --page-bg: #131416;
+        --page-bg-alt: #17191d;
+        --surface: rgba(255, 255, 255, 0.04);
+        --surface-strong: rgba(255, 255, 255, 0.07);
+        --surface-border: rgba(255, 255, 255, 0.08);
+        --text: #f2eee7;
+        --text-muted: rgba(242, 238, 231, 0.72);
+        --text-soft: rgba(242, 238, 231, 0.48);
+        --accent: #c8693f;
+        --accent-soft: rgba(200, 105, 63, 0.22);
+        --shadow: 0 22px 48px rgba(0, 0, 0, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at top left, rgba(200, 105, 63, 0.08), transparent 28%),
+          linear-gradient(180deg, #16181c, #111316 62%);
+        color: var(--text);
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a,
+      button {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 24px 28px 40px;
+      }
+
+      .response-state {
+        min-height: calc(100vh - 64px);
+      }
+
+      .response-state__header {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: start;
+        gap: 20px;
+      }
+
+      .response-state__brand {
+        display: inline-flex;
+        width: 196px;
+        opacity: 0.94;
+      }
+
+      .response-state__brand img {
+        display: block;
+        width: 100%;
+        height: auto;
+        filter: invert(1) brightness(1.14);
+      }
+
+      .response-state__request {
+        justify-self: center;
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 14px;
+        border: 1px solid var(--surface-border);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+
+      .response-state__meta {
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding-top: 4px;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+
+      .response-state__back:hover,
+      .response-state__contact:hover {
+        color: var(--text);
+      }
+
+      .response-state__body {
+        margin-top: 54px;
+      }
+
+      .response-state__lead {
+        margin-bottom: 20px;
+        max-width: 680px;
+      }
+
+      .response-state__eyebrow {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+
+      .response-state__headline {
+        margin: 12px 0 0;
+        max-width: 11ch;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 62px;
+        line-height: 0.96;
+        font-weight: 400;
+        letter-spacing: -0.04em;
+      }
+
+      .response-state__summary {
+        margin: 18px 0 0;
+        max-width: 38ch;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 24px;
+        line-height: 1.36;
+        color: var(--text-muted);
+      }
+
+      .response-state__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(290px, 0.78fr);
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .response-state__hero {
+        position: relative;
+        min-height: 610px;
+        border: 1px solid var(--surface-border);
+        border-radius: 26px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 18% 24%, rgba(225, 138, 65, 0.9), transparent 18%),
+          radial-gradient(circle at 22% 48%, rgba(92, 33, 24, 0.88), transparent 18%),
+          radial-gradient(circle at 78% 24%, rgba(255, 192, 114, 0.14), transparent 18%),
+          linear-gradient(124deg, #241714 0%, #120e11 32%, #11161a 64%, #14161b 100%);
+        box-shadow: var(--shadow);
+        isolation: isolate;
+      }
+
+      .response-state__hero::before {
+        content: "";
+        position: absolute;
+        inset: auto auto 52px 56px;
+        width: 280px;
+        height: 420px;
+        border-radius: 110px 110px 42px 42px;
+        background:
+          radial-gradient(circle at 42% 28%, rgba(255, 233, 209, 0.92), transparent 16%),
+          radial-gradient(circle at 50% 54%, rgba(189, 79, 35, 0.82), rgba(65, 27, 16, 0.92) 68%),
+          linear-gradient(180deg, rgba(12, 10, 12, 0.98), rgba(27, 19, 21, 0.98));
+        box-shadow:
+          inset 0 0 0 2px rgba(255, 255, 255, 0.06),
+          0 24px 44px rgba(0, 0, 0, 0.44);
+        opacity: 0.96;
+      }
+
+      .response-state__hero::after {
+        content: "";
+        position: absolute;
+        left: 136px;
+        bottom: 168px;
+        width: 122px;
+        height: 122px;
+        border-radius: 24px;
+        transform: rotate(45deg);
+        border: 1px solid rgba(239, 210, 174, 0.42);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.64), transparent 42%),
+          linear-gradient(180deg, rgba(21, 18, 19, 0.92), rgba(10, 9, 10, 0.96));
+        box-shadow: 0 14px 26px rgba(0, 0, 0, 0.28);
+      }
+
+      .response-state__hero-content {
+        position: absolute;
+        right: 48px;
+        top: 52px;
+        z-index: 1;
+        width: min(100%, 380px);
+      }
+
+      .response-state__hero-kicker {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(242, 238, 231, 0.62);
+      }
+
+      .response-state__hero-line {
+        margin: 14px 0 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 50px;
+        line-height: 0.98;
+        letter-spacing: -0.04em;
+      }
+
+      .response-state__hero-note {
+        margin: 18px 0 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 21px;
+        line-height: 1.42;
+        color: var(--text-muted);
+      }
+
+      .response-state__why {
+        margin: 20px 0 0;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .response-state__chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        letter-spacing: 0.01em;
+        color: rgba(242, 238, 231, 0.74);
+      }
+
+      .response-state__actions {
+        margin-top: 22px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .response-state__primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 46px;
+        padding: 0 18px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 999px;
+        background: #f2eee7;
+        color: #171717;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 13px;
+        letter-spacing: 0.01em;
+      }
+
+      .response-state__secondary {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 13px;
+        letter-spacing: 0.01em;
+        color: var(--text-muted);
+      }
+
+      .response-state__alternates {
+        display: grid;
+        gap: 18px;
+        align-content: start;
+      }
+
+      .response-state__alternates-label {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.4;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+
+      .response-state__alternate {
+        position: relative;
+        min-height: 226px;
+        padding: 20px;
+        border: 1px solid var(--surface-border);
+        border-radius: 22px;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+          linear-gradient(140deg, rgba(255, 255, 255, 0.02), transparent 48%);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .response-state__alternate::before {
+        content: "";
+        position: absolute;
+        inset: auto 18px 18px auto;
+        width: 148px;
+        height: 148px;
+        border-radius: 28px;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12), transparent 32%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+        opacity: 0.88;
+      }
+
+      .response-state__alternate--apple::before {
+        width: 166px;
+        height: 166px;
+        border-radius: 50%;
+        right: -6px;
+        bottom: -2px;
+        background:
+          radial-gradient(circle at 32% 34%, rgba(255, 255, 255, 0.22), transparent 18%),
+          radial-gradient(circle at 50% 52%, rgba(196, 196, 196, 0.2), rgba(96, 96, 96, 0.16) 56%, transparent 58%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+      }
+
+      .response-state__alternate--mercedes::before {
+        width: 150px;
+        height: 150px;
+        right: 8px;
+        bottom: 2px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 50%, transparent 48%, rgba(255, 255, 255, 0.2) 49%, rgba(255, 255, 255, 0.2) 52%, transparent 53%),
+          conic-gradient(from 90deg, transparent 0deg 118deg, rgba(255, 255, 255, 0.22) 118deg 122deg, transparent 122deg 238deg, rgba(255, 255, 255, 0.22) 238deg 242deg, transparent 242deg 358deg, rgba(255, 255, 255, 0.22) 358deg 360deg);
+      }
+
+      .response-state__alternate-kicker {
+        position: relative;
+        z-index: 1;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+
+      .response-state__alternate-title {
+        position: relative;
+        z-index: 1;
+        margin: 14px 0 0;
+        max-width: 11ch;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 30px;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+
+      .response-state__alternate-meta {
+        position: relative;
+        z-index: 1;
+        margin: 10px 0 0;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.5;
+        color: var(--text-muted);
+      }
+
+      .response-state__alternate-link {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        margin-top: 22px;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        color: var(--text);
+      }
+
+      @media (max-width: 1180px) {
+        .response-state__grid {
+          grid-template-columns: 1fr;
+        }
+
+        .response-state__hero {
+          min-height: 560px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="response-state">
+        <header class="response-state__header">
+          <a class="response-state__brand" href="#" aria-label="Patrick Kirkland home">
+            <img src="./logo_signature.png" alt="Patrick Kirkland Writer" />
+          </a>
+          <div class="response-state__request">You asked for best ad</div>
+          <div class="response-state__meta">
+            <a class="response-state__back" href="./request-first-homepage.html">Back to chat</a>
+            <a class="response-state__contact" href="mailto:patrick@pkthewriter.com">Contact</a>
+          </div>
+        </header>
+
+        <main class="response-state__body">
+          <div class="response-state__lead">
+            <div class="response-state__eyebrow">Best way in</div>
+            <h1 class="response-state__headline">Start here. These are the strongest ways into the work.</h1>
+            <p class="response-state__summary">
+              For a broad ask like this, I wouldn’t pretend there’s only one answer. I’d start with the piece that
+              shows concept, scale, and follow-through most clearly, then give you two sharper alternate routes.
+            </p>
+          </div>
+
+          <div class="response-state__grid">
+            <section class="response-state__hero" aria-label="Featured Verizon route">
+              <div class="response-state__hero-content">
+                <div class="response-state__hero-kicker">Featured first · Verizon</div>
+                <h2 class="response-state__hero-line">The one that works as an idea and a system.</h2>
+                <p class="response-state__hero-note">
+                  This is where I’d begin. It shows the line, the film, the rollout thinking, and the ability to keep
+                  the whole thing intact at campaign scale.
+                </p>
+                <div class="response-state__why">
+                  <span class="response-state__chip">Launch platform</span>
+                  <span class="response-state__chip">Film + cutdowns</span>
+                  <span class="response-state__chip">Campaign system</span>
+                </div>
+                <div class="response-state__actions">
+                  <a class="response-state__primary" href="#">View Verizon case study</a>
+                  <a class="response-state__secondary" href="#">Why this one first</a>
+                </div>
+              </div>
+            </section>
+
+            <aside class="response-state__alternates" aria-label="Alternate routes">
+              <div class="response-state__alternates-label">Or go in another direction</div>
+
+              <article class="response-state__alternate response-state__alternate--apple">
+                <div class="response-state__alternate-kicker">Alternate route · Apple</div>
+                <h3 class="response-state__alternate-title">Sharper. Faster. More product-forward.</h3>
+                <p class="response-state__alternate-meta">Brand platform · launch line · product clarity</p>
+                <a class="response-state__alternate-link" href="#">Open Apple route</a>
+              </article>
+
+              <article class="response-state__alternate response-state__alternate--mercedes">
+                <div class="response-state__alternate-kicker">Alternate route · Mercedes-Benz</div>
+                <h3 class="response-state__alternate-title">Premium brand thinking, less telecom muscle.</h3>
+                <p class="response-state__alternate-meta">Luxury voice · system thinking · campaign restraint</p>
+                <a class="response-state__alternate-link" href="#">Open Mercedes route</a>
+              </article>
+            </aside>
+          </div>
+        </main>
+      </section>
+    </div>
+  </body>
+</html>

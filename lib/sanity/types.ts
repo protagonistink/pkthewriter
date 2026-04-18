@@ -52,27 +52,15 @@ export type Project = {
   }>;
 };
 
-export type Story = {
+export type WritingClip = {
   _id: string;
-  _type: "story";
-  title: string;
-  slug: { current: string };
-  excerpt?: string;
-  body?: PortableTextBlock[];
-  year?: string;
-  coverImage?: SanityImage;
-  featured?: boolean;
-};
-
-export type BlogPost = {
-  _id: string;
-  _type: "blogPost";
+  _type: "writingClip";
   title: string;
   outlet?: string;
+  clipType?: "essay" | "story" | "column" | "interview" | "other";
   year?: string;
   url: string;
   excerpt?: string;
-  coverImage?: SanityImage;
   featured?: boolean;
 };
 
@@ -82,7 +70,7 @@ export type Screenplay = {
   title: string;
   logline?: string;
   genre?: string;
-  status?: "spec" | "optioned" | "produced";
+  status?: "development" | "complete" | "optioned" | "produced";
   year?: string;
   coverImage?: SanityImage;
   samplePdf?: SanityFile;
@@ -92,17 +80,19 @@ export type Screenplay = {
 export type AboutPage = {
   _id: string;
   _type: "aboutPage";
+  headline?: string;
   bio?: PortableTextBlock[];
   photo?: SanityImage;
   resumePdf?: SanityFile;
   email?: string;
+  linkedinUrl?: string;
   socialLinks?: Array<{ label: string; url: string }>;
 };
 
 export type SuggestionItem =
-  | ({ _kind: "project" } & Pick<Project, "_id" | "title" | "slug" | "year" | "brand" | "type" | "mainImage">)
-  | ({ _kind: "story" } & Pick<Story, "_id" | "title" | "slug" | "year" | "coverImage" | "excerpt">)
-  | ({ _kind: "blogPost" } & Pick<BlogPost, "_id" | "title" | "outlet" | "year" | "url" | "coverImage" | "excerpt">);
+  | ({ _kind: "project" } & Pick<Project, "_id" | "title" | "slug" | "year" | "brand" | "mainImage"> & { excerpt?: string })
+  | ({ _kind: "writingClip" } & Pick<WritingClip, "_id" | "title" | "outlet" | "clipType" | "year" | "url" | "excerpt">)
+  | ({ _kind: "screenplay" } & Pick<Screenplay, "_id" | "title" | "year" | "logline" | "externalUrl">);
 
 export type SuggestionSet = {
   _id: string;

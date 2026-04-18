@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "pkthewriter-minimal",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3001
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev"],
+      "port": 3100,
+      "autoPort": true
     }
   ]
 }

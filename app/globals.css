@@ -1,44 +1,123 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Dark (landing) palette */
-  --color-bg: #121214;
-  --color-surface: #1A1A1D;
-  --color-border: #2A2A2E;
-  --color-text: #EAE8E3;
-  --color-text-muted: #888888;
-  --color-accent: #B0A38D;
+  /* Paper (landing) — primary surface */
+  --color-paper: #f4ece0;
+  --color-paper-panel: #faf3e7;
+  --color-paper-line: #d8ccb7;
+  --color-paper-line-soft: #e6dcc7;
+  --color-ink: #1b1a16;
+  --color-ink-mid: #5a564d;
+  --color-ink-soft: #8c8676;
+  --color-ink-faint: #b8b0a0;
+  --color-accent: #c0542e;
+  --color-accent-soft: rgba(192, 84, 46, 0.14);
 
-  /* Light (canvas) palette */
-  --color-paper: #F7F5EF;
-  --color-paper-surface: #FFFFFF;
-  --color-paper-border: #E4E0D6;
-  --color-paper-text: #1A1A1D;
-  --color-paper-text-muted: #6B6A64;
+  /* Dark (case study) — sibling palette, same token shape */
+  --color-dark-bg: #0f0e0c;
+  --color-dark-panel: #161411;
+  --color-dark-line: #2a2620;
+  --color-dark-ink: #ece3d1;
+  --color-dark-ink-mid: #b5ac9a;
+  --color-dark-ink-soft: #7a7366;
 
-  --font-ui: var(--font-inter), system-ui, sans-serif;
-  --font-voice: var(--font-space-mono), ui-monospace, monospace;
+  --font-serif: var(--font-newsreader), Georgia, serif;
+  --font-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  --shadow-soft: 0 24px 50px rgba(27, 26, 22, 0.08);
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html, body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-ui);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* 14px floor per user preference */
-.text-xs {
-  font-size: 14px;
-  line-height: 1.5;
+@layer base {
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; background: transparent; border: 0; cursor: pointer; padding: 0; color: inherit; }
+  input { font: inherit; }
+}
+
+/* ---------------------------------------------------------------- */
+/* Dark scope: case-study pages. Re-points the same tokens so child  */
+/* components don't need a parallel CSS surface.                      */
+/* ---------------------------------------------------------------- */
+[data-theme="dark"] {
+  --color-paper: var(--color-dark-bg);
+  --color-paper-panel: var(--color-dark-panel);
+  --color-paper-line: var(--color-dark-line);
+  --color-paper-line-soft: var(--color-dark-line);
+  --color-ink: var(--color-dark-ink);
+  --color-ink-mid: var(--color-dark-ink-mid);
+  --color-ink-soft: var(--color-dark-ink-soft);
+  --color-ink-faint: var(--color-dark-line);
+  --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.5);
+  background: var(--color-dark-bg);
+  color: var(--color-dark-ink);
+  color-scheme: dark;
+}
+
+/* ---------------------------------------------------------------- */
+/* Hero state transitions — mirrors Hifi.html hero + prompt rules    */
+/* ---------------------------------------------------------------- */
+[data-state] .hero-h1 {
+  transition: font-size 420ms cubic-bezier(.4,.0,.2,1), margin 420ms cubic-bezier(.4,.0,.2,1);
+}
+[data-state="response"] .hero-h1 {
+  font-size: clamp(26px, 2.8vw, 34px);
+  margin-top: 8px;
+  margin-bottom: 18px;
+}
+[data-state] .hero-sub {
+  max-height: 40px;
+  opacity: 1;
+  transition: max-height 380ms ease, opacity 300ms ease, margin 380ms ease;
+  overflow: hidden;
+}
+[data-state="response"] .hero-sub {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+[data-state] .prompt-help {
+  transition: opacity 200ms ease, max-height 260ms ease, margin 260ms ease;
+  max-height: 40px;
+}
+[data-state="response"] .prompt-help {
+  opacity: 0;
+  max-height: 0;
+  margin-top: -16px;
+  pointer-events: none;
+}
+[data-state] .prompt-clear {
+  display: none;
+}
+[data-state="response"] .prompt-clear {
+  display: flex;
+}
+[data-state] .response-slot {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity 400ms ease 120ms, transform 400ms ease 120ms;
+}
+[data-state="response"] .response-slot {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }

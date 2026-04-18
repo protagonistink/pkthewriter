@@ -8,9 +8,9 @@ export type Chip = {
 };
 
 export const CHIPS: Chip[] = [
-  { id: "case-study", label: "Show me a case study", kind: "internal", href: "/work" },
-  { id: "writing", label: "Read my writing", kind: "internal", href: "/writing" },
-  { id: "resume", label: "Get my resume", kind: "internal", href: "/about" },
-  { id: "pi", label: "Looking for Protagonist Ink?", kind: "card" },
-  { id: "screenwriter", label: "Aren't you a screenwriter?", kind: "internal", href: "/screenwriting" },
+  { id: "case-study", label: "Show me your best ad", kind: "internal", href: "/work" },
+  { id: "writing", label: "Read something short", kind: "internal", href: "/writing" },
+  { id: "screenwriter", label: "Are you really a screenwriter?", kind: "internal", href: "/screenwriting" },
+  { id: "resume", label: "Get the resume", kind: "internal", href: "/about#resume" },
+  { id: "pi", label: "Protagonist Ink?", kind: "card" },
 ];

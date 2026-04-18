@@ -11,7 +11,8 @@ export const suggestionSetQuery = /* groq */ `
       brand,
       outlet,
       url,
-      "excerpt": coalesce(excerpt, context),
+      logline,
+      "excerpt": coalesce(excerpt, context, logline),
       "coverImage": coalesce(coverImage, mainImage),
       "_kind": _type
     }, [])
@@ -43,19 +44,10 @@ export const caseStudyBySlugQuery = /* groq */ `
   }
 `;
 
-export const featuredWritingQuery = /* groq */ `
-  {
-    "stories": *[_type == "story" && featured == true] | order(year desc)[0...12]{
-      _id, _type, title, slug, year, excerpt, coverImage
-    },
-    "blogPosts": *[_type == "blogPost" && featured == true] | order(year desc)[0...12]{
-      _id, _type, title, outlet, year, url, excerpt, coverImage
-    }
+export const writingClipsQuery = /* groq */ `
+  *[_type == "writingClip" && featured == true] | order(year desc)[0...24]{
+    _id, _type, title, outlet, clipType, year, url, excerpt
   }
-`;
-
-export const storyBySlugQuery = /* groq */ `
-  *[_type == "story" && slug.current == $slug][0]
 `;
 
 export const screenplaysQuery = /* groq */ `
@@ -73,3 +65,53 @@ export const aboutPageQuery = /* groq */ `
     "resumePdf": resumePdf{ "asset": asset-> }
   }
 `;
+
+/**
+ * Landing feature-card preload — returns a lookup for the three brand cards
+ * plus the latest featured writing clip, all in one round trip.
+ */
+export const featureCardsQuery = /* groq */ `
+  {
+    "verizon": *[_type == "project" && defined(slug.current) && lower(brand) match "verizon*"] | order(year desc)[0]{
+      "slug": slug.current, title, brand, year, type, "excerpt": context,
+      "coverImage": coalesce(heroImage, mainImage)
+    },
+    "apple": *[_type == "project" && defined(slug.current) && lower(brand) match "apple*"] | order(year desc)[0]{
+      "slug": slug.current, title, brand, year, type, "excerpt": context,
+      "coverImage": coalesce(heroImage, mainImage)
+    },
+    "mercedes": *[_type == "project" && defined(slug.current) && (lower(brand) match "mercedes*" || lower(brand) match "*benz*")] | order(year desc)[0]{
+      "slug": slug.current, title, brand, year, type, "excerpt": context,
+      "coverImage": coalesce(heroImage, mainImage)
+    },
+    "writing": *[_type == "writingClip" && featured == true] | order(year desc)[0]{
+      title, outlet, clipType, year, url, excerpt
+    }
+  }
+`;
+
+export type FeatureCardsResult = {
+  verizon: RawProject | null;
+  apple: RawProject | null;
+  mercedes: RawProject | null;
+  writing: RawWriting | null;
+};
+
+type RawProject = {
+  slug: string;
+  title: string;
+  brand?: string;
+  year?: string;
+  type?: string;
+  excerpt?: string;
+  coverImage?: { asset: { _ref: string; _type: "reference" } };
+};
+
+type RawWriting = {
+  title: string;
+  outlet?: string;
+  clipType?: string;
+  year?: string;
+  url: string;
+  excerpt?: string;
+};

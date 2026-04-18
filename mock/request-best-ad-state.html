@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Request-First Best Ad State</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --page-bg: #f7f4ee;
+        --panel-bg: #fcf8f1;
+        --panel-bg-strong: #f0e7da;
+        --text: #171717;
+        --text-muted: #6d695f;
+        --text-soft: #928a7d;
+        --border: #d8d1c6;
+        --border-strong: #cbbfae;
+        --shadow: 0 20px 48px rgba(23, 23, 23, 0.08);
+        --headline-size: 43px;
+        --headline-leading: 1.02;
+        --input-size: 18px;
+        --column: 760px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--page-bg);
+        color: var(--text);
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a,
+      button,
+      input {
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .page {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 24px 38px 96px;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .site-header__logo {
+        display: inline-flex;
+        align-items: flex-start;
+        width: 210px;
+      }
+
+      .site-header__logo img {
+        display: block;
+        width: 100%;
+        height: auto;
+        mix-blend-mode: multiply;
+      }
+
+      .site-header__contact {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 13px;
+        line-height: 1.3;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 4px;
+        transition: color 140ms ease;
+      }
+
+      .site-header__contact:hover {
+        color: var(--text);
+      }
+
+      .stage {
+        display: grid;
+        grid-template-columns: 78px minmax(0, var(--column));
+        justify-content: center;
+        gap: 58px;
+        margin-top: 112px;
+      }
+
+      .command-rail {
+        position: relative;
+        min-height: 760px;
+        border-right: 1px solid rgba(216, 209, 198, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .command-rail__toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        margin-top: 6px;
+        color: var(--text-soft);
+        border-radius: 10px;
+      }
+
+      .command-rail__dock {
+        margin-top: 116px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .command-rail__icon-button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        color: var(--text-soft);
+        transition:
+          background 140ms ease,
+          color 140ms ease;
+      }
+
+      .command-rail__icon-button.is-active {
+        background: rgba(240, 231, 218, 0.75);
+        color: var(--text);
+      }
+
+      .command-rail__toggle:hover,
+      .command-rail__toggle:focus-visible,
+      .command-rail__icon-button:hover,
+      .command-rail__icon-button:focus-visible {
+        background: rgba(240, 231, 218, 0.55);
+        color: var(--text);
+        outline: none;
+      }
+
+      .command-rail__icon-button svg,
+      .command-rail__toggle svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .command-rail__tooltip {
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 7px 10px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: rgba(252, 248, 241, 0.98);
+        box-shadow: 0 8px 22px rgba(23, 23, 23, 0.08);
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        color: var(--text-muted);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 120ms ease;
+      }
+
+      .command-rail__icon-button:hover .command-rail__tooltip,
+      .command-rail__icon-button:focus-visible .command-rail__tooltip,
+      .command-rail__toggle:hover .command-rail__tooltip,
+      .command-rail__toggle:focus-visible .command-rail__tooltip {
+        opacity: 1;
+      }
+
+      .response-page {
+        position: relative;
+        min-width: 0;
+        min-height: 760px;
+      }
+
+      .response-page__content {
+        padding-top: 118px;
+      }
+
+      .response-page__headline {
+        margin: 0;
+        max-width: 610px;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: var(--headline-size);
+        line-height: var(--headline-leading);
+        font-weight: 400;
+        letter-spacing: -0.03em;
+      }
+
+      .response-page__subhead {
+        margin: 12px 0 0;
+        max-width: 440px;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 16px;
+        line-height: 1.45;
+        letter-spacing: 0.01em;
+        color: var(--text-muted);
+      }
+
+      .request-shell {
+        margin-top: 26px;
+      }
+
+      .request-field {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        min-height: 72px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--panel-bg);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      }
+
+      .request-field__slash {
+        position: absolute;
+        left: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 15px;
+        color: var(--text-soft);
+        pointer-events: none;
+      }
+
+      .request-input {
+        width: 100%;
+        height: 70px;
+        border: 0;
+        background: transparent;
+        color: var(--text-muted);
+        padding: 0 24px 0 46px;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: var(--input-size);
+        line-height: 1.3;
+        outline: none;
+      }
+
+      .request-note {
+        margin: 12px 0 0;
+        max-width: 720px;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.35;
+        letter-spacing: 0.01em;
+        color: var(--text-soft);
+        white-space: nowrap;
+      }
+
+      .match {
+        margin-top: 36px;
+        padding: 34px 34px 30px;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background: linear-gradient(180deg, rgba(252, 248, 241, 0.98), rgba(247, 244, 238, 0.98));
+        box-shadow: var(--shadow);
+      }
+
+      .match__label {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.4;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-soft);
+      }
+
+      .match__title {
+        margin: 12px 0 0;
+        max-width: 12ch;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 40px;
+        line-height: 0.98;
+        font-weight: 400;
+        letter-spacing: -0.03em;
+      }
+
+      .match__body {
+        margin: 14px 0 0;
+        max-width: 38ch;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 20px;
+        line-height: 1.44;
+        color: var(--text-muted);
+      }
+
+      .match__why {
+        margin: 22px 0 0;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .match__chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 12px;
+        line-height: 1;
+        color: var(--text-muted);
+        background: rgba(252, 248, 241, 0.72);
+      }
+
+      .match__media {
+        margin-top: 26px;
+        min-height: 278px;
+        padding: 28px;
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        background:
+          linear-gradient(180deg, rgba(240, 231, 218, 0.26), rgba(252, 248, 241, 0.42)),
+          radial-gradient(circle at top left, rgba(203, 191, 174, 0.18), transparent 42%);
+        display: grid;
+        align-items: end;
+      }
+
+      .match__frame {
+        display: grid;
+        gap: 10px;
+        width: min(100%, 430px);
+      }
+
+      .match__kicker,
+      .match__meta {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        color: var(--text-soft);
+      }
+
+      .match__kicker {
+        font-size: 12px;
+        line-height: 1.4;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .match__campaign {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 34px;
+        line-height: 1.02;
+        letter-spacing: -0.025em;
+      }
+
+      .match__meta {
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .match__actions {
+        margin-top: 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px 20px;
+        flex-wrap: wrap;
+      }
+
+      .match__primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border-radius: 999px;
+        border: 1px solid var(--border-strong);
+        background: var(--panel-bg-strong);
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .match__secondary {
+        font-family: "Space Mono", "SFMono-Regular", Consolas, monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-muted);
+      }
+
+      .logo-wall {
+        position: absolute;
+        right: 2px;
+        bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 18px;
+        opacity: 0.72;
+      }
+
+      .logo-wall__item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 20px;
+        opacity: 0.72;
+      }
+
+      .logo-wall__item img {
+        display: block;
+        width: auto;
+        height: 100%;
+      }
+
+      .logo-wall__item--verizon {
+        height: 17px;
+      }
+
+      .logo-wall__item--warnerbros {
+        height: 15px;
+        opacity: 0.64;
+      }
+
+      .logo-wall__item--warnerbros img {
+        filter: grayscale(1) brightness(0.86);
+      }
+
+      .logo-wall__item--mercedes {
+        height: 19px;
+      }
+
+      .logo-wall__item--apple {
+        height: 18px;
+      }
+
+      .logo-wall__item--airtable {
+        height: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="site-header__logo" href="#" aria-label="Patrick Kirkland home">
+          <img src="./logo_signature.png" alt="Patrick Kirkland Writer" />
+        </a>
+        <a class="site-header__contact" href="mailto:patrick@pkthewriter.com">Contact</a>
+      </header>
+
+      <main class="stage">
+        <aside class="command-rail" aria-label="Command shortcuts">
+          <button class="command-rail__toggle" type="button" aria-label="Expand command dock">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 6l6 6-6 6"></path>
+              <path d="M13 6l6 6-6 6"></path>
+            </svg>
+            <span class="command-rail__tooltip">Expand</span>
+          </button>
+
+          <div class="command-rail__dock">
+            <button class="command-rail__icon-button" type="button" aria-label="/home">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 11.5L12 5l8 6.5"></path>
+                <path d="M7 10.5V19h10v-8.5"></path>
+              </svg>
+              <span class="command-rail__tooltip">/home</span>
+            </button>
+
+            <button class="command-rail__icon-button is-active" type="button" aria-label="/campaigns current">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 13V7l11-2v12L4 15z"></path>
+                <path d="M15 8l3 2"></path>
+                <path d="M15 14l3-2"></path>
+                <path d="M7 15l1 3"></path>
+              </svg>
+              <span class="command-rail__tooltip">/campaigns</span>
+            </button>
+
+            <button class="command-rail__icon-button" type="button" aria-label="/blog offsite">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 7h9"></path>
+                <path d="M5 12h7"></path>
+                <path d="M5 17h5"></path>
+                <path d="M16 17l4-4"></path>
+                <path d="M17 12l3 3"></path>
+              </svg>
+              <span class="command-rail__tooltip">/blog ↗</span>
+            </button>
+
+            <button class="command-rail__icon-button" type="button" aria-label="/resume">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 4h7l4 4v12H7z"></path>
+                <path d="M14 4v4h4"></path>
+                <path d="M10 13h5"></path>
+                <path d="M10 17h5"></path>
+              </svg>
+              <span class="command-rail__tooltip">/resume</span>
+            </button>
+          </div>
+        </aside>
+
+        <section class="response-page">
+          <div class="response-page__content">
+            <h1 class="response-page__headline">Hey, I’m Patrick, writer and creative director.</h1>
+            <p class="response-page__subhead">What do you wanna see first?</p>
+
+            <section class="request-shell" aria-label="Requested work">
+              <label class="sr-only" for="request">Requested work</label>
+              <div class="request-field">
+                <span class="request-field__slash" aria-hidden="true">/</span>
+                <input id="request" class="request-input" type="text" value="best ad" readonly />
+              </div>
+              <p class="request-note">Tell me in your own words. (Want the old way? Use the side navigation.)</p>
+
+              <section class="match" aria-label="Best ad response">
+                <div class="match__label">Best Match</div>
+                <h2 class="match__title">Start here.</h2>
+                <p class="match__body">
+                  If you want the piece that shows concept, scale, and follow-through in the same breath, this is the
+                  one I’d lead with.
+                </p>
+
+                <div class="match__why" aria-label="Why this piece">
+                  <span class="match__chip">Big-brand brief</span>
+                  <span class="match__chip">Campaign system</span>
+                  <span class="match__chip">Film + line + rollout</span>
+                </div>
+
+                <div class="match__media" role="img" aria-label="Featured Verizon case study preview">
+                  <div class="match__frame">
+                    <div class="match__kicker">Featured Case Study</div>
+                    <div class="match__campaign">Verizon, built to work as an idea and a system.</div>
+                    <div class="match__meta">Concept • launch line • film • cutdown architecture • campaign scale</div>
+                  </div>
+                </div>
+
+                <div class="match__actions">
+                  <a class="match__primary" href="#">Open case study</a>
+                  <a class="match__secondary" href="#">See more campaign work</a>
+                  <a class="match__secondary" href="#">Ask for something else</a>
+                </div>
+              </section>
+
+              <div class="logo-wall" aria-label="Selected client logos">
+                <div class="logo-wall__item logo-wall__item--verizon">
+                  <img src="https://cdn.simpleicons.org/verizon/8f8778" alt="Verizon" />
+                </div>
+                <div class="logo-wall__item logo-wall__item--apple">
+                  <img src="https://cdn.simpleicons.org/apple/8f8778" alt="Apple" />
+                </div>
+                <div class="logo-wall__item logo-wall__item--warnerbros">
+                  <img
+                    src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Warner_Bros_logo.svg"
+                    alt="Warner Bros."
+                  />
+                </div>
+                <div class="logo-wall__item logo-wall__item--mercedes">
+                  <img
+                    src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Mercedes-Benz%20Star.svg"
+                    alt="Mercedes-Benz"
+                  />
+                </div>
+                <div class="logo-wall__item logo-wall__item--airtable">
+                  <img src="https://cdn.simpleicons.org/airtable/8f8778" alt="Airtable" />
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

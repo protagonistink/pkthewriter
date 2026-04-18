@@ -12,9 +12,20 @@ export const metadata = { title: "Case studies — Patrick" };
 export default async function WorkIndex() {
   const projects = await sanityClient.fetch<Project[]>(featuredCaseStudiesQuery);
 
+  // Distinct brand names for the "selected" meta line. Preserves order of
+  // appearance so it mirrors the grid below.
+  const selectedBrands = Array.from(
+    new Set(projects.map((p) => p.brand).filter((b): b is string => Boolean(b)))
+  );
+
   return (
     <CanvasTakeover>
-      <h1 className="font-voice text-3xl mb-8">Case studies</h1>
+      <h1 className="font-voice text-3xl mb-2">Case studies</h1>
+      {selectedBrands.length > 0 && (
+        <p className="font-voice text-xs text-[var(--color-paper-text-muted)] uppercase tracking-[0.2em] mb-8">
+          selected — {selectedBrands.join(" · ")}
+        </p>
+      )}
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {projects.map((p) => (
           <li key={p._id}>
