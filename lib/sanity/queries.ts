@@ -71,18 +71,31 @@ export const aboutPageQuery = /* groq */ `
  * projects by their slug. Writing is intentionally excluded until a
  * writingClip doc exists; the resolver falls back to static copy.
  */
+const FEATURE_PROJECTION = /* groq */ `
+  "slug": slug.current,
+  title,
+  brand,
+  year,
+  type,
+  "excerpt": context,
+  "coverImage": coalesce(heroImage, mainImage),
+  "thumbImages": coalesce(gallery[0...3], editorialScreenshots[0...3].image, [])
+`;
+
 export const featureCardsQuery = /* groq */ `
   {
-    "airtable":   *[_type == "project" && slug.current == "airtable"][0]   { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "bp":         *[_type == "project" && slug.current == "bp"][0]         { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "techsure":   *[_type == "project" && slug.current == "techsure"][0]   { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "verizon-up": *[_type == "project" && slug.current == "verizon-up"][0] { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "chevron":    *[_type == "project" && slug.current == "chevron"][0]    { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "warnerbros": *[_type == "project" && slug.current == "warnerbros"][0] { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "att":        *[_type == "project" && slug.current == "att"][0]        { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
-    "mpa":        *[_type == "project" && slug.current == "mpa"][0]        { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) }
+    "airtable":   *[_type == "project" && slug.current == "airtable"][0]   { ${FEATURE_PROJECTION} },
+    "bp":         *[_type == "project" && slug.current == "bp"][0]         { ${FEATURE_PROJECTION} },
+    "techsure":   *[_type == "project" && slug.current == "techsure"][0]   { ${FEATURE_PROJECTION} },
+    "verizon-up": *[_type == "project" && slug.current == "verizon-up"][0] { ${FEATURE_PROJECTION} },
+    "chevron":    *[_type == "project" && slug.current == "chevron"][0]    { ${FEATURE_PROJECTION} },
+    "warnerbros": *[_type == "project" && slug.current == "warnerbros"][0] { ${FEATURE_PROJECTION} },
+    "att":        *[_type == "project" && slug.current == "att"][0]        { ${FEATURE_PROJECTION} },
+    "mpa":        *[_type == "project" && slug.current == "mpa"][0]        { ${FEATURE_PROJECTION} }
   }
 `;
+
+type RawImageRef = { asset: { _ref: string; _type: "reference" } };
 
 type RawProject = {
   slug: string;
@@ -91,7 +104,8 @@ type RawProject = {
   year?: string;
   type?: string;
   excerpt?: string;
-  coverImage?: { asset: { _ref: string; _type: "reference" } };
+  coverImage?: RawImageRef;
+  thumbImages?: RawImageRef[];
 };
 
 export type FeatureCardsResult = {

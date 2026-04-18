@@ -135,25 +135,49 @@ function FeatureHero({ feature }: { feature: FeatureCard }) {
 }
 
 function FeatureThumbs({ feature }: { feature: FeatureCard }) {
-  const thumbs = feature.thumbs ?? [];
+  const labels = feature.thumbs ?? [];
+  const images = feature.thumbImageUrls ?? [];
+  const count = Math.max(labels.length, images.length, 3);
+  const slots = Array.from({ length: count }, (_, i) => ({
+    label: labels[i],
+    image: images[i],
+  }));
   return (
     <div className="flex flex-col gap-[4px] max-[820px]:flex-row">
-      {thumbs.map((label, i) => (
+      {slots.map((slot, i) => (
         <div
-          key={`${label}-${i}`}
-          className="flex-1 relative min-h-[58px] rounded-[10px] border border-[rgba(27,26,22,0.06)]"
-          style={{
-            background:
-              i === 1
-                ? "linear-gradient(135deg, #e4d7be 0%, #cebb99 100%)"
-                : i === 2
-                  ? "linear-gradient(135deg, #efe5d2 0%, #d0bd9b 100%)"
-                  : "radial-gradient(circle at 70% 30%, rgba(27,26,22,0.04), transparent 60%), linear-gradient(135deg, #ece1cc 0%, #dccba8 100%)",
-          }}
+          key={`thumb-${i}`}
+          className="flex-1 relative min-h-[58px] rounded-[10px] overflow-hidden border border-[rgba(27,26,22,0.06)]"
+          style={
+            slot.image
+              ? undefined
+              : {
+                  background:
+                    i === 1
+                      ? "linear-gradient(135deg, #e4d7be 0%, #cebb99 100%)"
+                      : i === 2
+                        ? "linear-gradient(135deg, #efe5d2 0%, #d0bd9b 100%)"
+                        : "radial-gradient(circle at 70% 30%, rgba(27,26,22,0.04), transparent 60%), linear-gradient(135deg, #ece1cc 0%, #dccba8 100%)",
+                }
+          }
         >
-          <span className="absolute left-[12px] bottom-[10px] font-[family-name:var(--font-mono)] text-[9px] tracking-[0.16em] uppercase text-[var(--color-ink-soft)]">
-            {label}
-          </span>
+          {slot.image && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={slot.image}
+              alt={slot.label ?? ""}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          {slot.label && (
+            <span
+              className={`absolute left-[12px] bottom-[10px] font-[family-name:var(--font-mono)] text-[9px] tracking-[0.16em] uppercase ${
+                slot.image ? "text-[var(--color-paper-panel)]" : "text-[var(--color-ink-soft)]"
+              }`}
+            >
+              {slot.label}
+            </span>
+          )}
         </div>
       ))}
     </div>

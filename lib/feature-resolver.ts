@@ -8,6 +8,8 @@ import { urlForImage } from "./sanity/image";
 
 export type FeatureCta = { label: string; href: string; variant: "primary" | "ghost" };
 
+type SanityImageRef = { asset: { _ref: string; _type: "reference" } };
+
 export type FeatureCard = {
   key: FeatureKey;
   intro: string;
@@ -17,6 +19,7 @@ export type FeatureCard = {
   ctas: FeatureCta[];
   heroTag?: string;
   thumbs?: string[];
+  thumbImageUrls?: string[];
   coverImageUrl?: string;
   alts: Array<{ key: FeatureKey | "work"; label: string; note?: string }>;
 };
@@ -28,7 +31,8 @@ export type SanityFeatureProject = {
   year?: string;
   type?: string;
   excerpt?: string;
-  coverImage?: { asset: { _ref: string; _type: "reference" } };
+  coverImage?: SanityImageRef;
+  thumbImages?: SanityImageRef[];
 };
 
 export type FeatureMap = {
@@ -57,6 +61,10 @@ function projectCard(key: BrandKey, project: SanityFeatureProject | null | undef
   if (!project) return { ...base, alts: ALTS[key] };
   const kickerParts = [project.brand, project.year, project.type].filter(Boolean);
   const coverImageUrl = project.coverImage ? urlForImage(project.coverImage).width(1600).url() : undefined;
+  const thumbImageUrls = (project.thumbImages ?? [])
+    .filter((img): img is SanityImageRef => !!img?.asset?._ref)
+    .slice(0, 3)
+    .map((img) => urlForImage(img).width(480).height(320).fit("crop").url());
   return {
     key,
     intro: INTROS[key],
@@ -70,6 +78,7 @@ function projectCard(key: BrandKey, project: SanityFeatureProject | null | undef
     ],
     heroTag: base.heroTag,
     thumbs: base.thumbs,
+    thumbImageUrls: thumbImageUrls.length ? thumbImageUrls : undefined,
     alts: ALTS[key],
   };
 }
