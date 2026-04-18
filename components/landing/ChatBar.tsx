@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { routeIntent } from "@/lib/intent-router";
 import type { FeatureKey } from "@/lib/feature-resolver";
+import { buildRotationPlan, LANDING_PLACEHOLDER } from "@/lib/placeholder-rotation";
 
 type Status = "idle" | "sending" | "sent" | "navigating" | "error";
 type Mode = "initial" | "clarify";
@@ -45,8 +46,88 @@ export function ChatBar({
   const [status, setStatus] = useState<Status>("idle");
   const [mode, setMode] = useState<Mode>("initial");
   const [reply, setReply] = useState<string | null>(null);
+  const [placeholder, setPlaceholder] = useState<string>(LANDING_PLACEHOLDER);
   const honeypotId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Animated rotating placeholder. Pauses on focus, on input, and on
+  // prefers-reduced-motion. Always lands on LANDING_PLACEHOLDER.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPlaceholder(LANDING_PLACEHOLDER);
+      return;
+    }
+
+    const plan = buildRotationPlan();
+    let cancelled = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    function wait(ms: number) {
+      return new Promise<void>((resolve) => {
+        const t = setTimeout(resolve, ms);
+        timers.push(t);
+      });
+    }
+
+    function typeOut(target: string) {
+      return new Promise<void>((resolve) => {
+        let i = 0;
+        function step() {
+          if (cancelled) return resolve();
+          i += 1;
+          setPlaceholder(target.slice(0, i));
+          if (i >= target.length) return resolve();
+          const t = setTimeout(step, 38);
+          timers.push(t);
+        }
+        step();
+      });
+    }
+
+    function eraseBack() {
+      return new Promise<void>((resolve) => {
+        function step() {
+          if (cancelled) return resolve();
+          setPlaceholder((prev) => {
+            const next = prev.slice(0, -1);
+            if (next.length === 0) {
+              const t = setTimeout(resolve, 0);
+              timers.push(t);
+              return next;
+            }
+            const t = setTimeout(step, 22);
+            timers.push(t);
+            return next;
+          });
+        }
+        step();
+      });
+    }
+
+    async function run() {
+      for (const target of plan) {
+        if (cancelled) return;
+        await typeOut(target);
+        if (target === LANDING_PLACEHOLDER) return;
+        await wait(1600);
+        if (cancelled) return;
+        await eraseBack();
+        await wait(140);
+      }
+    }
+
+    void run();
+
+    return () => {
+      cancelled = true;
+      for (const t of timers) clearTimeout(t);
+    };
+  }, []);
+
+  function stopRotation() {
+    setPlaceholder(LANDING_PLACEHOLDER);
+  }
 
   // Global "/" → focus input, "Escape" → reset. Mirrors Hifi.html.
   useEffect(() => {
@@ -177,10 +258,12 @@ export function ChatBar({
           type="text"
           value={value}
           onChange={(e) => {
+            stopRotation();
             setValue(e.target.value);
             if (mode === "clarify") setMode("initial");
           }}
-          placeholder="/ best ad"
+          onFocus={stopRotation}
+          placeholder={placeholder}
           aria-label="Ask Patrick a question"
           className="
             w-full px-[24px] pr-[48px] py-[22px]
