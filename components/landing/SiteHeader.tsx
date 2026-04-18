@@ -10,7 +10,13 @@ export function SiteHeader({ email }: { email?: string }) {
         <img
           src="/logo-signature.png"
           alt="Patrick Kirkland, writer"
-          className="site-logo w-full h-auto"
+          className="site-logo site-logo--paper w-full h-auto"
+        />
+        <img
+          src="/logo_white_trans.png"
+          alt=""
+          aria-hidden="true"
+          className="site-logo site-logo--dark w-full h-auto"
         />
       </Link>
       <a

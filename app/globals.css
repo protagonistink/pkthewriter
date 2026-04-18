@@ -57,12 +57,11 @@ body {
 .work-gallery:has(> li:hover) > li { opacity: 0.42; }
 .work-gallery > li:hover { opacity: 1 !important; }
 
-/* Signature logo — multiply against paper, invert-hue-preserve on dark */
-.site-logo { mix-blend-mode: multiply; }
-[data-theme="dark"] .site-logo {
-  mix-blend-mode: normal;
-  filter: invert(1) hue-rotate(180deg);
-}
+/* Signature logo — swap between ink-on-paper and white-on-dark variants */
+.site-logo--paper { mix-blend-mode: multiply; }
+.site-logo--dark { display: none; }
+[data-theme="dark"] .site-logo--paper { display: none; }
+[data-theme="dark"] .site-logo--dark { display: block; }
 
 /* ---------------------------------------------------------------- */
 /* Dark scope: case-study pages. Re-points the same tokens so child  */
