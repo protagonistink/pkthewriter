@@ -13,7 +13,7 @@ export function CaseStudyHandoff({ currentSlug }: { currentSlug: string }) {
             href={`/work/${next.slug}`}
             className="block group mb-[70px] max-[820px]:mb-[52px]"
           >
-            <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[22px]">
+            <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[22px]">
               NEXT —
             </div>
             <h2 className="font-[family-name:var(--font-serif)] font-normal text-[clamp(42px,5vw,72px)] leading-[1] tracking-[-0.015em] m-0 mb-[18px] text-[var(--color-ink)] transition-transform duration-200 group-hover:translate-x-[6px]">
@@ -22,7 +22,7 @@ export function CaseStudyHandoff({ currentSlug }: { currentSlug: string }) {
                 →
               </span>
             </h2>
-            <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-ink-soft)]">
+            <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.22em] uppercase text-[var(--color-ink-soft)]">
               {next.kicker}
             </div>
           </Link>

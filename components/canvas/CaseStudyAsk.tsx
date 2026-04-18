@@ -45,6 +45,20 @@ export function CaseStudyAsk() {
     };
   }, [open]);
 
+  // ⌘K / Ctrl+K — global accelerator to open the ask overlay from any surface
+  // where this component is mounted. Skipped when the panel is already open
+  // (the open-state effect above owns the keymap once inside).
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
+      if (!isCmdK) return;
+      e.preventDefault();
+      if (!open) openPanel();
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
   useEffect(() => {
     return () => {
       if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -79,7 +93,7 @@ export function CaseStudyAsk() {
           ${open ? "opacity-0 pointer-events-none scale-90" : "opacity-100 scale-100"}
         `}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 12c0 4.418-4.03 8-9 8a9.8 9.8 0 0 1-3.2-.53L4 21l1.6-4.1A7.8 7.8 0 0 1 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8Z" />
         </svg>
       </button>
@@ -117,7 +131,7 @@ export function CaseStudyAsk() {
             `}
           >
             <div className="flex items-center justify-between px-[22px] pt-[18px] pb-[10px]">
-              <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.28em] uppercase text-[var(--color-ink-soft)]">
+              <span className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.28em] uppercase text-[var(--color-ink-soft)]">
                 Ask
               </span>
               <button
@@ -132,7 +146,7 @@ export function CaseStudyAsk() {
                   transition-colors
                 "
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
                   <path d="M6 6l12 12M18 6l-12 12" />
                 </svg>
               </button>
@@ -163,7 +177,7 @@ export function CaseStudyAsk() {
                   transition-[border-color,box-shadow] duration-200
                 "
               />
-              <p className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.04em] text-[var(--color-ink-soft)] mt-[12px]">
+              <p className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.04em] text-[var(--color-ink-soft)] mt-[12px]">
                 [Enter] to ask · [Esc] to close
               </p>
             </form>

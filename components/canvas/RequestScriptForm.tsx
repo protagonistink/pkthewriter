@@ -31,7 +31,7 @@ export function RequestScriptForm({ title }: { title: string }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="font-voice text-sm border border-[var(--color-paper-border)] text-[var(--color-paper-text)] px-3 py-1.5 rounded-full hover:border-[var(--color-paper-text)] transition-colors"
+        className="font-[family-name:var(--font-mono)] text-sm border border-[var(--color-paper-line)] text-[var(--color-ink)] px-3 py-1.5 rounded-full hover:border-[var(--color-ink)] transition-colors"
       >
         request full script →
       </button>
@@ -39,7 +39,7 @@ export function RequestScriptForm({ title }: { title: string }) {
   }
 
   if (status === "sent") {
-    return <span className="font-voice text-sm text-[var(--color-paper-text-muted)]">thanks — you&apos;ll hear from me.</span>;
+    return <span className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-ink-soft)]">thanks — you&apos;ll hear from me.</span>;
   }
 
   return (
@@ -50,12 +50,12 @@ export function RequestScriptForm({ title }: { title: string }) {
         placeholder="your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="font-voice text-sm border border-[var(--color-paper-border)] bg-transparent px-3 py-1.5 rounded-full outline-none focus:border-[var(--color-paper-text)]"
+        className="font-[family-name:var(--font-mono)] text-sm border border-[var(--color-paper-line)] bg-transparent px-3 py-1.5 rounded-full outline-none focus:border-[var(--color-ink)]"
       />
       <button
         type="submit"
         disabled={status === "sending"}
-        className="font-voice text-sm border border-[var(--color-paper-text)] px-3 py-1.5 rounded-full hover:bg-[var(--color-paper-text)] hover:text-[var(--color-paper)] transition-colors disabled:opacity-50"
+        className="font-[family-name:var(--font-mono)] text-sm border border-[var(--color-ink)] px-3 py-1.5 rounded-full hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)] transition-colors disabled:opacity-50"
       >
         send →
       </button>

@@ -33,7 +33,7 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         <div className="absolute bottom-0 left-0 right-0 px-[60px] pb-[56px] max-[820px]:px-[24px] max-[820px]:pb-[36px]">
           <div className="max-w-[1200px] mx-auto">
             {kicker && (
-              <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-ink-mid)] mb-[14px]">
+              <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.22em] uppercase text-[var(--color-ink-mid)] mb-[14px]">
                 {kicker}
               </div>
             )}
@@ -159,7 +159,7 @@ function Moment({ section, index }: { section: EditorialSection; index: number }
               className="w-full object-cover"
             />
             {firstImage.caption && (
-              <figcaption className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] uppercase text-[var(--color-ink-soft)] mt-[12px] px-[60px] max-[820px]:px-[24px]">
+              <figcaption className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.12em] uppercase text-[var(--color-ink-soft)] mt-[12px] px-[60px] max-[820px]:px-[24px]">
                 {firstImage.caption}
               </figcaption>
             )}
@@ -194,7 +194,7 @@ function ConflictResolutionBlock({
 }) {
   return (
     <div>
-      <div className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[18px]">
+      <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[18px]">
         {counter}
       </div>
       <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink)] [&_p]:mb-[18px]">
@@ -214,7 +214,7 @@ function MetadataRow({ label, value }: { label: string; value?: string | null })
   if (!value) return null;
   return (
     <div className="mb-[18px]">
-      <div className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink-soft)] mb-[6px]">
+      <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.22em] uppercase text-[var(--color-ink-soft)] mb-[6px]">
         {label}
       </div>
       <div className="font-[family-name:var(--font-serif)] text-[17px] leading-[1.35] text-[var(--color-ink)]">

@@ -11,8 +11,8 @@ export default async function WritingIndex() {
 
   return (
     <CanvasTakeover>
-      <h1 className="font-voice text-3xl mb-8">Writing</h1>
-      <ul className="divide-y divide-[var(--color-paper-border)]">
+      <h1 className="font-[family-name:var(--font-mono)] text-3xl mb-8">Writing</h1>
+      <ul className="divide-y divide-[var(--color-paper-line)]">
         {clips.map((clip) => {
           const meta = [
             clip.clipType?.toUpperCase(),
@@ -31,15 +31,15 @@ export default async function WritingIndex() {
               >
                 <div className="group-hover:opacity-70 transition-opacity text-lg">
                   {clip.title}{" "}
-                  <span className="text-[var(--color-paper-text-muted)]">↗</span>
+                  <span className="text-[var(--color-ink-soft)]">↗</span>
                 </div>
                 {meta && (
-                  <div className="font-voice text-sm text-[var(--color-paper-text-muted)] mt-1 uppercase tracking-[0.2em]">
+                  <div className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-ink-soft)] mt-1 uppercase tracking-[0.2em]">
                     {meta}
                   </div>
                 )}
                 {clip.excerpt && (
-                  <p className="mt-2 text-[var(--color-paper-text-muted)]">
+                  <p className="mt-2 text-[var(--color-ink-soft)]">
                     {clip.excerpt}
                   </p>
                 )}
@@ -49,8 +49,8 @@ export default async function WritingIndex() {
         })}
       </ul>
       {clips.length === 0 && (
-        <p className="font-voice text-[var(--color-paper-text-muted)]">
-          No clips yet — add some in the studio and mark them featured.
+        <p className="font-[family-name:var(--font-mono)] text-[var(--color-ink-soft)]">
+          The published shelf is selectively light. Ask me for a sample and I&apos;ll send the right one.
         </p>
       )}
     </CanvasTakeover>

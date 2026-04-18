@@ -8,8 +8,8 @@
   --color-paper-line-soft: #e6dcc7;
   --color-ink: #1b1a16;
   --color-ink-mid: #5a564d;
-  --color-ink-soft: #8c8676;
-  --color-ink-faint: #b8b0a0;
+  --color-ink-soft: #6e6858;
+  --color-ink-faint: #857c68;
   --color-accent: #c0542e;
   --color-accent-soft: rgba(192, 84, 46, 0.14);
 
@@ -19,7 +19,7 @@
   --color-dark-line: #2a2620;
   --color-dark-ink: #ece3d1;
   --color-dark-ink-mid: #b5ac9a;
-  --color-dark-ink-soft: #7a7366;
+  --color-dark-ink-soft: #908876;
 
   --font-serif: var(--font-newsreader), Georgia, serif;
   --font-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -53,9 +53,41 @@ body {
   input { font: inherit; }
 }
 
-/* /work grid — spotlight the hovered tile by dimming siblings */
-.work-gallery:has(> li:hover) > li { opacity: 0.42; }
-.work-gallery > li:hover { opacity: 1 !important; }
+/* Keyboard focus ring — outside @layer base so Tailwind utility classes
+   like `outline-none` don't win the cascade. */
+:focus-visible {
+  outline: 2px solid var(--color-ink) !important;
+  outline-offset: 2px !important;
+  border-radius: 2px;
+}
+[data-theme="dark"] :focus-visible {
+  outline-color: var(--color-dark-ink) !important;
+}
+
+.skip-to-content {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  transform: translateY(-200%);
+  transition: transform 160ms ease;
+}
+.skip-to-content:focus-visible { transform: translateY(0); }
+
+/* /work grid — spotlight the hovered tile by dimming siblings.
+   Gated to hover-capable pointers so touch taps don't leave tiles stuck dim. */
+@media (hover: hover) and (pointer: fine) {
+  .work-gallery:has(> li:hover) > li { opacity: 0.42; }
+  .work-gallery > li:hover { opacity: 1 !important; }
+}
 
 /* Signature logo — swap between ink-on-paper and white-on-dark variants */
 .site-logo--paper { mix-blend-mode: multiply; }

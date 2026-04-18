@@ -20,7 +20,7 @@ const ITEMS: Item[] = [
     label: "Home",
     match: (p) => p === "/",
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
     ),
   },
   {
@@ -28,7 +28,7 @@ const ITEMS: Item[] = [
     label: "Work",
     match: (p) => p.startsWith("/work"),
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
     ),
   },
   {
@@ -36,7 +36,7 @@ const ITEMS: Item[] = [
     label: "Writing",
     match: (p) => p.startsWith("/writing"),
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
     ),
   },
   {
@@ -44,7 +44,7 @@ const ITEMS: Item[] = [
     label: "About",
     match: (p) => p.startsWith("/about"),
     icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
     ),
   },
 ];
@@ -55,7 +55,7 @@ const CONTACT_ITEM: Item = {
   match: () => false,
   external: true,
   icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
   ),
 };
 
@@ -87,6 +87,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
           className="w-[30px] h-[30px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
         >
           <svg
+            aria-hidden="true"
             width="18"
             height="18"
             viewBox="0 0 24 24"
@@ -103,7 +104,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
         </button>
       </div>
 
-      <nav className="flex flex-col gap-[2px] px-[10px]">
+      <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[10px]">
         {items.map((item) => {
           const current = item.match(pathname);
           const className = `
@@ -158,8 +159,8 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
       <div
         className={`
           mt-auto px-[20px] pt-[18px] pb-[22px] whitespace-nowrap
-          font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] uppercase
-          text-[var(--color-ink-faint)]
+          font-[family-name:var(--font-mono)] text-[11px] tracking-[0.14em] uppercase
+          text-[var(--color-ink-soft)]
           transition-opacity duration-[220ms] ease delay-[100ms]
           ${expanded ? "opacity-100" : "opacity-0"}
         `}

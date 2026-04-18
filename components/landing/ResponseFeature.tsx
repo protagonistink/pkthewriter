@@ -54,7 +54,7 @@ export function ResponseFeature({ feature, onAltSelect }: Props) {
             >
               {feature.title}
             </h2>
-            <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] uppercase text-[var(--color-ink-soft)]">
+            <span className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.2em] uppercase text-[var(--color-ink-soft)]">
               {feature.kicker}
             </span>
           </header>
@@ -77,7 +77,7 @@ export function ResponseFeature({ feature, onAltSelect }: Props) {
       </article>
 
       <div className="flex flex-wrap items-center gap-x-[16px] gap-y-[10px] mt-[22px] pt-[20px]">
-        <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)]">
+        <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)]">
           Or if you meant something else —
         </span>
         {feature.alts.map((alt, i) => (
@@ -101,7 +101,7 @@ function FeatureHero({ feature }: { feature: FeatureCard }) {
           alt={feature.title}
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <span className="absolute left-[16px] bottom-[14px] font-[family-name:var(--font-mono)] text-[10px] tracking-[0.16em] uppercase text-[var(--color-paper-panel)]">
+        <span className="absolute left-[16px] bottom-[14px] font-[family-name:var(--font-mono)] text-[12px] tracking-[0.16em] uppercase text-[var(--color-paper-panel)]">
           {feature.heroTag ?? feature.kicker}
         </span>
       </div>
@@ -127,7 +127,7 @@ function FeatureHero({ feature }: { feature: FeatureCard }) {
           mixBlendMode: "multiply",
         }}
       />
-      <span className="absolute left-[16px] bottom-[14px] font-[family-name:var(--font-mono)] text-[10px] tracking-[0.16em] uppercase text-[var(--color-ink-soft)]">
+      <span className="absolute left-[16px] bottom-[14px] font-[family-name:var(--font-mono)] text-[12px] tracking-[0.16em] uppercase text-[var(--color-ink-soft)]">
         {feature.heroTag ?? feature.kicker}
       </span>
     </div>
@@ -229,7 +229,7 @@ function AltLink({
         {alt.label}
       </span>
       {alt.note && (
-        <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-faint)]">
+        <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-faint)]">
           {alt.note}
         </span>
       )}

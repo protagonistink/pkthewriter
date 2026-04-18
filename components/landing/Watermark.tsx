@@ -22,13 +22,19 @@ export function Watermark() {
       >
         <polyline points="4 12 10 19 21 5" />
       </svg>
-      {/* Apple */}
+      {/* Chevron — stacked chevrons */}
       <svg
         className="w-[22px] h-[22px] max-[820px]:w-[18px] max-[820px]:h-[18px] text-[var(--color-ink)]"
         viewBox="0 0 24 24"
-        fill="currentColor"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       >
-        <path d="M16.4 12.5c0-2.5 2-3.7 2.1-3.8-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.1-2.9.9-3.6.9s-1.9-.9-3.1-.8c-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.1 1.2 9.5.8 1.1 1.8 2.4 3.1 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.3.9-1.3 1.3-2.6 1.3-2.6-.1 0-2.6-1-2.9-3.8zM14 4.8C14.6 4 15 3 14.9 1.9c-.9 0-2 .6-2.6 1.3C11.7 3.9 11.2 5 11.3 6c1 .1 2-.5 2.7-1.2z" />
+        <polyline points="4 9 12 3 20 9" />
+        <polyline points="4 15 12 9 20 15" />
+        <polyline points="4 21 12 15 20 21" />
       </svg>
       {/* Warner */}
       <svg
@@ -43,7 +49,7 @@ export function Watermark() {
         <path d="M4 4l4 16 4-10 4 10 4-16" />
         <path d="M3 4h18" />
       </svg>
-      {/* Mercedes */}
+      {/* AT&T — globe with meridians */}
       <svg
         className="w-[22px] h-[22px] max-[820px]:w-[18px] max-[820px]:h-[18px] text-[var(--color-ink)]"
         viewBox="0 0 24 24"
@@ -52,7 +58,8 @@ export function Watermark() {
         strokeWidth="1.6"
       >
         <circle cx="12" cy="12" r="10" />
-        <path d="M12 2v10m0 0l-8.5 4.8M12 12l8.5 4.8" />
+        <ellipse cx="12" cy="12" rx="4.2" ry="10" />
+        <path d="M2 12h20" />
       </svg>
       {/* Protagonist Ink */}
       <svg

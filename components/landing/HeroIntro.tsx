@@ -5,8 +5,9 @@ export function HeroIntro() {
         className="
           hero-h1
           font-[family-name:var(--font-serif)] font-normal
-          text-[clamp(36px,4.6vw,60px)] leading-[1.08] tracking-[-0.01em]
-          mt-[32px] mb-[22px] max-w-[22ch]
+          text-[clamp(30px,4.6vw,60px)] leading-[1.08] tracking-[-0.01em]
+          mt-[22px] mb-[18px] max-w-[22ch]
+          max-[820px]:text-[clamp(28px,7vw,40px)] max-[820px]:mt-[14px] max-[820px]:mb-[14px]
         "
       >
         Hey, I&apos;m Patrick, writer and creative director.
@@ -15,7 +16,8 @@ export function HeroIntro() {
         className="
           hero-sub
           font-[family-name:var(--font-serif)] text-[18px]
-          text-[var(--color-ink-mid)] m-0 mb-[34px]
+          text-[var(--color-ink-mid)] m-0 mb-[28px]
+          max-[820px]:text-[15px] max-[820px]:mb-[20px]
         "
       >
         What do you wanna see first?

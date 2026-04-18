@@ -33,10 +33,10 @@ export default async function WorkIndex() {
       <Rail />
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />
-        <main className="flex-1 mx-auto w-full max-w-[1280px] px-[48px] pt-[36px] pb-[160px] max-[820px]:px-[20px] max-[820px]:pt-[24px] max-[820px]:pb-[140px]">
+        <main id="main" className="flex-1 mx-auto w-full max-w-[1280px] px-[48px] pt-[36px] pb-[160px] max-[820px]:px-[20px] max-[820px]:pt-[24px] max-[820px]:pb-[140px]">
           <p
             className="
-              font-[family-name:var(--font-mono)] text-[11px]
+              font-[family-name:var(--font-mono)] text-[12px]
               tracking-[0.32em] uppercase
               text-[var(--color-accent)]
               mb-[28px] max-[820px]:mb-[20px]
@@ -48,7 +48,7 @@ export default async function WorkIndex() {
           {tiles.length > 0 ? (
             <WorkGallery tiles={tiles} />
           ) : (
-            <p className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-soft)]">
+            <p className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-mid)]">
               No featured case studies yet.
             </p>
           )}

@@ -112,14 +112,15 @@ export function ChatBar({
     }
 
     async function run() {
+      // Hold the canonical "/ surprise me" as a clean first impression.
+      await wait(1400);
       for (const target of plan) {
-        if (cancelled) return;
-        await typeOut(target);
-        if (target === LANDING_PLACEHOLDER) return;
-        await wait(1600);
         if (cancelled) return;
         await eraseBack();
         await wait(140);
+        await typeOut(target);
+        if (target === LANDING_PLACEHOLDER) return;
+        await wait(1600);
       }
     }
 
@@ -135,7 +136,7 @@ export function ChatBar({
     setPlaceholder(LANDING_PLACEHOLDER);
   }
 
-  // Global "/" → focus input, "Escape" → reset. Mirrors Hifi.html.
+  // Global "/" or ⌘K/Ctrl+K → focus input. "Escape" → reset.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const target = e.target as HTMLElement | null;
@@ -144,6 +145,12 @@ export function ChatBar({
         (target.tagName === "INPUT" ||
           target.tagName === "TEXTAREA" ||
           target.isContentEditable);
+      const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
+      if (isCmdK) {
+        e.preventDefault();
+        inputRef.current?.focus();
+        return;
+      }
       if (e.key === "/" && !inEditable) {
         e.preventDefault();
         inputRef.current?.focus();
@@ -301,7 +308,7 @@ export function ChatBar({
             outline-none
             placeholder:text-[var(--color-ink-faint)]
             focus:border-[var(--color-ink-soft)]
-            focus:shadow-[0_0_0_3px_rgba(27,26,22,0.04)]
+            focus:shadow-[0_0_0_3px_rgba(27,26,22,0.18)]
             transition-[border-color,box-shadow,background] duration-200
           "
         />
@@ -319,25 +326,44 @@ export function ChatBar({
             transition-colors
           "
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
             <path d="M6 6l12 12M18 6l-12 12" />
           </svg>
         </button>
+        {/* Desktop-only `/` keycap affordance — hidden on touch, and on response. */}
+        {!inResponse && (
+          <span
+            aria-hidden="true"
+            className="
+              prompt-keycap
+              hidden md:flex
+              absolute right-[18px] top-1/2 -translate-y-1/2
+              w-[22px] h-[22px] items-center justify-center
+              rounded-[6px] border border-[var(--color-paper-line)]
+              font-[family-name:var(--font-mono)] text-[12px]
+              text-[var(--color-ink-soft)] bg-[var(--color-paper)]
+              pointer-events-none
+              transition-opacity duration-200
+            "
+          >
+            /
+          </span>
+        )}
       </div>
       <p
         className="
           prompt-help
-          font-[family-name:var(--font-mono)] text-[11px]
+          font-[family-name:var(--font-mono)] text-[12px]
           text-[var(--color-ink-soft)] m-0 mx-[6px]
-          tracking-[0.02em]
+          tracking-[0.04em]
         "
       >
-        Tell me in your own words. [Enter] to respond.
+        Tell me in your own words. Press enter when you&apos;re done.
       </p>
 
       {mode === "clarify" && (
         <div className="mt-[18px] flex flex-wrap gap-[10px]">
-          <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)] tracking-[0.2em] uppercase self-center mr-1">
+          <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] tracking-[0.2em] uppercase self-center mr-1">
             try:
           </span>
           {CLARIFY_SUGGESTIONS.map((s) => (

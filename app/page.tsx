@@ -31,9 +31,9 @@ export default async function Page() {
       <Rail />
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />
-        <section className="flex-1 flex flex-col mx-auto w-full max-w-[1040px] px-[60px] pt-[40px] pb-[140px] max-[820px]:px-[28px] max-[820px]:pt-[30px] max-[820px]:pb-[160px]">
+        <main id="main" className="flex-1 flex flex-col mx-auto w-full max-w-[1040px] px-[60px] pt-[40px] pb-[140px] max-[820px]:px-[28px] max-[820px]:pt-[30px] max-[820px]:pb-[160px]">
           <LandingClient featureMap={featureMap} />
-        </section>
+        </main>
       </div>
       <Watermark />
     </div>
