@@ -53,6 +53,10 @@ body {
   input { font: inherit; }
 }
 
+/* /work grid — spotlight the hovered tile by dimming siblings */
+.work-gallery:has(> li:hover) > li { opacity: 0.42; }
+.work-gallery > li:hover { opacity: 1 !important; }
+
 /* ---------------------------------------------------------------- */
 /* Dark scope: case-study pages. Re-points the same tokens so child  */
 /* components don't need a parallel CSS surface.                      */

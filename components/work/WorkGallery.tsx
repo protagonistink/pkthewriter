@@ -15,18 +15,16 @@ export type WorkTile = {
 
 type Props = { tiles: WorkTile[] };
 
-// Curated aspect-ratio rotation. Each project claims one deterministically
-// from its index — no random() chaos, so the column always composes.
 const RATIOS = ["aspect-[4/5]", "aspect-[16/10]", "aspect-[3/4]", "aspect-[5/4]"] as const;
 
 export function WorkGallery({ tiles }: Props) {
   return (
     <ol
       className="
+        work-gallery
         list-none m-0 p-0
         columns-1 sm:columns-2 lg:columns-3
-        gap-x-[40px]
-        max-[820px]:gap-x-[22px]
+        gap-x-[28px] max-[820px]:gap-x-[18px]
       "
     >
       {tiles.map((tile, i) => (
@@ -38,28 +36,26 @@ export function WorkGallery({ tiles }: Props) {
 
 function Tile({ tile, index }: { tile: WorkTile; index: number }) {
   const ratio = RATIOS[index % RATIOS.length];
-  const counter = String(index + 1).padStart(2, "0");
-  const kickerParts = [tile.year, tile.type].filter(Boolean).join(" · ");
 
   const ref = useRef<HTMLLIElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
     const el = ref.current;
-    if (!el) {
-      setVisible(true);
-      return;
-    }
+    if (!el) return;
+
+    const reveal = () => setVisible(true);
+
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
+      const id = requestAnimationFrame(reveal);
+      return () => cancelAnimationFrame(id);
     }
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setVisible(true);
+            reveal();
             io.disconnect();
           }
         }
@@ -75,53 +71,17 @@ function Tile({ tile, index }: { tile: WorkTile; index: number }) {
       ref={ref}
       style={{ transitionDelay: `${(index % 3) * 70}ms` }}
       className={`
-        break-inside-avoid mb-[56px] max-[820px]:mb-[38px]
-        transition-[opacity,transform] duration-[700ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]
+        break-inside-avoid mb-[28px] max-[820px]:mb-[18px]
+        transition-[opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[28px]"}
       `}
     >
-      <Link href={`/work/${tile.slug}`} className="group block">
-        <header className="flex items-baseline gap-[14px] mb-[14px]">
-          <span
-            className="
-              font-[family-name:var(--font-mono)]
-              text-[10px] tracking-[0.28em] uppercase
-              text-[var(--color-accent)]
-              transition-colors duration-200
-            "
-          >
-            N° {counter}
-          </span>
-          <span className="flex-1 h-px bg-[var(--color-paper-line)]" aria-hidden />
-        </header>
-
-        <h2
-          className="
-            font-[family-name:var(--font-serif)] font-normal
-            text-[30px] leading-[1.05] tracking-[-0.012em]
-            text-[var(--color-ink)] m-0 mb-[6px]
-            transition-transform duration-[260ms] ease-out
-            group-hover:translate-x-[4px]
-            max-[820px]:text-[26px]
-          "
-        >
-          {tile.brand}
-        </h2>
-
-        <p
-          className="
-            font-[family-name:var(--font-mono)]
-            text-[11px] tracking-[0.2em] uppercase
-            text-[var(--color-ink-soft)] m-0 mb-[18px]
-            transition-colors duration-200
-            group-hover:text-[var(--color-accent)]
-          "
-        >
-          {kickerParts || tile.title}
-        </p>
-
+      <Link
+        href={`/work/${tile.slug}`}
+        className="group relative block overflow-hidden"
+      >
         {tile.imageUrl ? (
-          <figure className={`relative m-0 overflow-hidden ${ratio}`}>
+          <figure className={`relative m-0 ${ratio}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={tile.imageUrl}
@@ -129,11 +89,11 @@ function Tile({ tile, index }: { tile: WorkTile; index: number }) {
               loading="lazy"
               className="
                 absolute inset-0 w-full h-full object-cover
-                transition-[opacity,transform] duration-[500ms] ease-out
-                opacity-[0.92] group-hover:opacity-100
-                group-hover:scale-[1.01]
+                transition-transform duration-[600ms] ease-out
+                group-hover:scale-[1.015]
               "
             />
+            <Overlay tile={tile} />
           </figure>
         ) : (
           <div
@@ -142,24 +102,63 @@ function Tile({ tile, index }: { tile: WorkTile; index: number }) {
               background:
                 "radial-gradient(circle at 30% 30%, rgba(192,84,46,0.08), transparent 60%), linear-gradient(135deg, #efe4d0 0%, #d9c9ae 100%)",
             }}
-          />
-        )}
-
-        {tile.title && tile.title !== tile.brand && (
-          <figcaption
-            className="
-              font-[family-name:var(--font-serif)] italic
-              text-[15px] leading-[1.4] tracking-[-0.003em]
-              text-[var(--color-ink-mid)] m-0 mt-[14px]
-              max-w-[40ch]
-              transition-colors duration-200
-              group-hover:text-[var(--color-ink)]
-            "
           >
-            {tile.title}
-          </figcaption>
+            <Overlay tile={tile} dark />
+          </div>
         )}
       </Link>
     </li>
+  );
+}
+
+function Overlay({ tile, dark = false }: { tile: WorkTile; dark?: boolean }) {
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        className={`
+          absolute inset-x-0 bottom-0 h-[55%] pointer-events-none
+          ${dark ? "bg-gradient-to-t from-[rgba(27,26,22,0.35)] via-[rgba(27,26,22,0.08)] to-transparent" : "bg-gradient-to-t from-black/60 via-black/15 to-transparent"}
+        `}
+      />
+      <div
+        className={`
+          absolute left-[18px] right-[18px] bottom-[16px]
+          max-[820px]:left-[14px] max-[820px]:right-[14px] max-[820px]:bottom-[13px]
+          flex flex-col gap-[6px]
+          ${dark ? "text-[var(--color-ink)]" : "text-[var(--color-paper)]"}
+        `}
+      >
+        <span
+          className="
+            font-[family-name:var(--font-mono)]
+            text-[10px] tracking-[0.24em] uppercase
+            opacity-90
+          "
+        >
+          {tile.brand}
+        </span>
+        {tile.type && (
+          <span
+            className="
+              font-[family-name:var(--font-mono)]
+              text-[9px] tracking-[0.22em] uppercase
+              opacity-70
+            "
+          >
+            {tile.type}
+          </span>
+        )}
+        <span
+          className="
+            font-[family-name:var(--font-serif)] font-normal
+            text-[18px] leading-[1.2] tracking-[-0.005em]
+            mt-[2px] max-[820px]:text-[16px]
+          "
+        >
+          {tile.title}
+        </span>
+      </div>
+    </>
   );
 }
