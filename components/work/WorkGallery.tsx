@@ -24,7 +24,7 @@ export function WorkGallery({ tiles }: Props) {
         work-gallery
         list-none m-0 p-0
         columns-1 sm:columns-2 lg:columns-3
-        gap-x-[28px] max-[820px]:gap-x-[18px]
+        gap-x-[14px] max-[820px]:gap-x-[10px]
       "
     >
       {tiles.map((tile, i) => (
@@ -71,14 +71,14 @@ function Tile({ tile, index }: { tile: WorkTile; index: number }) {
       ref={ref}
       style={{ transitionDelay: `${(index % 3) * 70}ms` }}
       className={`
-        break-inside-avoid mb-[28px] max-[820px]:mb-[18px]
+        break-inside-avoid mb-[14px] max-[820px]:mb-[10px]
         transition-[opacity,transform] duration-[450ms] ease-[cubic-bezier(0.22,0.61,0.36,1)]
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[28px]"}
       `}
     >
       <Link
         href={`/work/${tile.slug}`}
-        className="group relative block overflow-hidden"
+        className="group relative block overflow-hidden rounded-[14px]"
       >
         {tile.imageUrl ? (
           <figure className={`relative m-0 ${ratio}`}>
@@ -97,13 +97,13 @@ function Tile({ tile, index }: { tile: WorkTile; index: number }) {
           </figure>
         ) : (
           <div
-            className={`relative ${ratio} border border-[var(--color-paper-line)]`}
+            className={`relative ${ratio}`}
             style={{
               background:
-                "radial-gradient(circle at 30% 30%, rgba(192,84,46,0.08), transparent 60%), linear-gradient(135deg, #efe4d0 0%, #d9c9ae 100%)",
+                "radial-gradient(circle at 30% 30%, rgba(192,84,46,0.22), transparent 60%), linear-gradient(135deg, #1a1814 0%, #2a2620 100%)",
             }}
           >
-            <Overlay tile={tile} dark />
+            <Overlay tile={tile} />
           </div>
         )}
       </Link>
@@ -111,29 +111,29 @@ function Tile({ tile, index }: { tile: WorkTile; index: number }) {
   );
 }
 
-function Overlay({ tile, dark = false }: { tile: WorkTile; dark?: boolean }) {
+function Overlay({ tile }: { tile: WorkTile }) {
   return (
     <>
       <div
         aria-hidden="true"
-        className={`
-          absolute inset-x-0 bottom-0 h-[55%] pointer-events-none
-          ${dark ? "bg-gradient-to-t from-[rgba(27,26,22,0.35)] via-[rgba(27,26,22,0.08)] to-transparent" : "bg-gradient-to-t from-black/60 via-black/15 to-transparent"}
-        `}
+        className="
+          absolute inset-x-0 bottom-0 h-[62%] pointer-events-none
+          bg-gradient-to-t from-black/85 via-black/40 to-transparent
+        "
       />
       <div
-        className={`
-          absolute left-[18px] right-[18px] bottom-[16px]
-          max-[820px]:left-[14px] max-[820px]:right-[14px] max-[820px]:bottom-[13px]
-          flex flex-col gap-[6px]
-          ${dark ? "text-[var(--color-ink)]" : "text-[var(--color-paper)]"}
-        `}
+        className="
+          absolute left-[22px] right-[22px] bottom-[20px]
+          max-[820px]:left-[16px] max-[820px]:right-[16px] max-[820px]:bottom-[16px]
+          flex flex-col gap-[10px]
+          text-white
+        "
       >
         <span
           className="
             font-[family-name:var(--font-mono)]
-            text-[10px] tracking-[0.24em] uppercase
-            opacity-90
+            text-[15px] leading-[1.1] tracking-[0.16em] uppercase
+            max-[820px]:text-[13px]
           "
         >
           {tile.brand}
@@ -142,22 +142,14 @@ function Overlay({ tile, dark = false }: { tile: WorkTile; dark?: boolean }) {
           <span
             className="
               font-[family-name:var(--font-mono)]
-              text-[9px] tracking-[0.22em] uppercase
-              opacity-70
+              text-[12px] leading-[1.2] tracking-[0.18em] uppercase
+              text-white/80
+              max-[820px]:text-[11px]
             "
           >
             {tile.type}
           </span>
         )}
-        <span
-          className="
-            font-[family-name:var(--font-serif)] font-normal
-            text-[18px] leading-[1.2] tracking-[-0.005em]
-            mt-[2px] max-[820px]:text-[16px]
-          "
-        >
-          {tile.title}
-        </span>
       </div>
     </>
   );
