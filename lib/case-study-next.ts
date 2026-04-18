@@ -6,7 +6,9 @@ export type NextCaseStudy = {
   kicker: string;
 };
 
-const CASE_STUDY_KEYS = ["verizon", "apple", "mercedes"] as const satisfies readonly FeatureKey[];
+const CASE_STUDY_KEYS = [
+  "airtable", "bp", "techsure", "verizon-up", "chevron", "warnerbros", "att", "mpa",
+] as const satisfies readonly FeatureKey[];
 type CaseStudyKey = (typeof CASE_STUDY_KEYS)[number];
 
 function isCaseStudyKey(x: string): x is CaseStudyKey {

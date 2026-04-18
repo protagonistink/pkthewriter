@@ -67,35 +67,22 @@ export const aboutPageQuery = /* groq */ `
 `;
 
 /**
- * Landing feature-card preload — returns a lookup for the three brand cards
- * plus the latest featured writing clip, all in one round trip.
+ * Landing feature-card preload — returns a lookup of the eight brand
+ * projects by their slug. Writing is intentionally excluded until a
+ * writingClip doc exists; the resolver falls back to static copy.
  */
 export const featureCardsQuery = /* groq */ `
   {
-    "verizon": *[_type == "project" && defined(slug.current) && lower(brand) match "verizon*"] | order(year desc)[0]{
-      "slug": slug.current, title, brand, year, type, "excerpt": context,
-      "coverImage": coalesce(heroImage, mainImage)
-    },
-    "apple": *[_type == "project" && defined(slug.current) && lower(brand) match "apple*"] | order(year desc)[0]{
-      "slug": slug.current, title, brand, year, type, "excerpt": context,
-      "coverImage": coalesce(heroImage, mainImage)
-    },
-    "mercedes": *[_type == "project" && defined(slug.current) && (lower(brand) match "mercedes*" || lower(brand) match "*benz*")] | order(year desc)[0]{
-      "slug": slug.current, title, brand, year, type, "excerpt": context,
-      "coverImage": coalesce(heroImage, mainImage)
-    },
-    "writing": *[_type == "writingClip" && featured == true] | order(year desc)[0]{
-      title, outlet, clipType, year, url, excerpt
-    }
+    "airtable":   *[_type == "project" && slug.current == "airtable"][0]   { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "bp":         *[_type == "project" && slug.current == "bp"][0]         { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "techsure":   *[_type == "project" && slug.current == "techsure"][0]   { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "verizon-up": *[_type == "project" && slug.current == "verizon-up"][0] { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "chevron":    *[_type == "project" && slug.current == "chevron"][0]    { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "warnerbros": *[_type == "project" && slug.current == "warnerbros"][0] { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "att":        *[_type == "project" && slug.current == "att"][0]        { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) },
+    "mpa":        *[_type == "project" && slug.current == "mpa"][0]        { "slug": slug.current, title, brand, year, type, "excerpt": context, "coverImage": coalesce(heroImage, mainImage) }
   }
 `;
-
-export type FeatureCardsResult = {
-  verizon: RawProject | null;
-  apple: RawProject | null;
-  mercedes: RawProject | null;
-  writing: RawWriting | null;
-};
 
 type RawProject = {
   slug: string;
@@ -107,11 +94,13 @@ type RawProject = {
   coverImage?: { asset: { _ref: string; _type: "reference" } };
 };
 
-type RawWriting = {
-  title: string;
-  outlet?: string;
-  clipType?: string;
-  year?: string;
-  url: string;
-  excerpt?: string;
+export type FeatureCardsResult = {
+  airtable: RawProject | null;
+  bp: RawProject | null;
+  techsure: RawProject | null;
+  "verizon-up": RawProject | null;
+  chevron: RawProject | null;
+  warnerbros: RawProject | null;
+  att: RawProject | null;
+  mpa: RawProject | null;
 };

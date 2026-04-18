@@ -1,12 +1,10 @@
 /**
- * Feature resolver — merges a Sanity-backed card map with the static intros
- * and static fallbacks in `feature-static.ts`.
- *
- * Pure, synchronous. Given a keyword map of Sanity items, produces the
- * FeatureCard for a given FeatureKey.
+ * Feature resolver — merges a Sanity-backed card map with the static
+ * intros in feature-static.ts. Pure, synchronous.
  */
 
 import { ALTS, INTROS, STATIC_FEATURES, type FeatureKey } from "./feature-static";
+import { urlForImage } from "./sanity/image";
 
 export type FeatureCta = { label: string; href: string; variant: "primary" | "ghost" };
 
@@ -19,9 +17,7 @@ export type FeatureCard = {
   ctas: FeatureCta[];
   heroTag?: string;
   thumbs?: string[];
-  /** Full-URL of the cover image, if Sanity supplied one. */
   coverImageUrl?: string;
-  /** The three alternates shown underneath. */
   alts: Array<{ key: FeatureKey | "work"; label: string; note?: string }>;
 };
 
@@ -32,39 +28,42 @@ export type SanityFeatureProject = {
   year?: string;
   type?: string;
   excerpt?: string;
-  coverImageUrl?: string;
-};
-
-export type SanityFeatureWriting = {
-  title: string;
-  outlet?: string;
-  clipType?: string;
-  year?: string;
-  url: string;
-  excerpt?: string;
+  coverImage?: { asset: { _ref: string; _type: "reference" } };
 };
 
 export type FeatureMap = {
-  verizon?: SanityFeatureProject | null;
-  apple?: SanityFeatureProject | null;
-  mercedes?: SanityFeatureProject | null;
-  writing?: SanityFeatureWriting | null;
+  airtable?: SanityFeatureProject | null;
+  bp?: SanityFeatureProject | null;
+  techsure?: SanityFeatureProject | null;
+  "verizon-up"?: SanityFeatureProject | null;
+  chevron?: SanityFeatureProject | null;
+  warnerbros?: SanityFeatureProject | null;
+  att?: SanityFeatureProject | null;
+  mpa?: SanityFeatureProject | null;
 };
 
-function projectCard(
-  key: "verizon" | "apple" | "mercedes",
-  project: SanityFeatureProject | null | undefined,
-): FeatureCard {
+type BrandKey = keyof FeatureMap;
+
+const BRAND_KEYS = new Set<string>([
+  "airtable", "bp", "techsure", "verizon-up", "chevron", "warnerbros", "att", "mpa",
+]);
+
+function isBrandKey(k: FeatureKey): k is BrandKey {
+  return BRAND_KEYS.has(k);
+}
+
+function projectCard(key: BrandKey, project: SanityFeatureProject | null | undefined): FeatureCard {
   const base = STATIC_FEATURES[key];
   if (!project) return { ...base, alts: ALTS[key] };
   const kickerParts = [project.brand, project.year, project.type].filter(Boolean);
+  const coverImageUrl = project.coverImage ? urlForImage(project.coverImage).width(1600).url() : undefined;
   return {
     key,
     intro: INTROS[key],
     title: project.title,
     kicker: kickerParts.join(" · ") || base.kicker,
     copy: project.excerpt ?? base.copy,
-    coverImageUrl: project.coverImageUrl,
+    coverImageUrl,
     ctas: [
       { label: "Read the story →", href: `/work/${project.slug}`, variant: "primary" },
       { label: "View the artifacts", href: `/work/${project.slug}#artifacts`, variant: "ghost" },
@@ -75,46 +74,9 @@ function projectCard(
   };
 }
 
-function writingCard(writing: SanityFeatureWriting | null | undefined): FeatureCard {
-  const base = STATIC_FEATURES.writing;
-  if (!writing) return { ...base, alts: ALTS.writing };
-  const kickerParts = [
-    writing.clipType ? writing.clipType.charAt(0).toUpperCase() + writing.clipType.slice(1) : "Essay",
-    writing.outlet,
-    writing.year,
-  ].filter(Boolean);
-  return {
-    key: "writing",
-    intro: INTROS.writing,
-    title: writing.title,
-    kicker: kickerParts.join(" · ") || base.kicker,
-    copy: writing.excerpt ?? base.copy,
-    ctas: [
-      { label: "Read the essay →", href: writing.url, variant: "primary" },
-      { label: "See all writing", href: "/writing", variant: "ghost" },
-    ],
-    heroTag: base.heroTag,
-    thumbs: base.thumbs,
-    alts: ALTS.writing,
-  };
-}
-
-/** Resolve a keyword (already routed) to a fully-populated feature card. */
 export function resolveFeature(key: FeatureKey, map?: FeatureMap): FeatureCard {
-  switch (key) {
-    case "verizon":
-      return projectCard("verizon", map?.verizon);
-    case "apple":
-      return projectCard("apple", map?.apple);
-    case "mercedes":
-      return projectCard("mercedes", map?.mercedes);
-    case "writing":
-      return writingCard(map?.writing);
-    case "screenwriting":
-      return { ...STATIC_FEATURES.screenwriting, alts: ALTS.screenwriting };
-    case "resume":
-      return { ...STATIC_FEATURES.resume, alts: ALTS.resume };
-  }
+  if (isBrandKey(key)) return projectCard(key, map?.[key]);
+  return { ...STATIC_FEATURES[key], alts: ALTS[key] };
 }
 
 export { type FeatureKey } from "./feature-static";

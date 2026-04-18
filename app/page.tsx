@@ -1,7 +1,6 @@
 import { sanityClient } from "@/lib/sanity/client";
 import { featureCardsQuery, aboutPageQuery, type FeatureCardsResult } from "@/lib/sanity/queries";
 import type { AboutPage } from "@/lib/sanity/types";
-import { urlForImage } from "@/lib/sanity/image";
 import { Rail } from "@/components/landing/Rail";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { Watermark } from "@/components/landing/Watermark";
@@ -17,46 +16,14 @@ export default async function Page() {
   ]);
 
   const featureMap: FeatureMap = {
-    verizon: featureCards?.verizon
-      ? {
-          slug: featureCards.verizon.slug,
-          title: featureCards.verizon.title,
-          brand: featureCards.verizon.brand,
-          year: featureCards.verizon.year,
-          type: featureCards.verizon.type,
-          excerpt: featureCards.verizon.excerpt,
-          coverImageUrl: featureCards.verizon.coverImage
-            ? urlForImage(featureCards.verizon.coverImage).width(1200).url()
-            : undefined,
-        }
-      : null,
-    apple: featureCards?.apple
-      ? {
-          slug: featureCards.apple.slug,
-          title: featureCards.apple.title,
-          brand: featureCards.apple.brand,
-          year: featureCards.apple.year,
-          type: featureCards.apple.type,
-          excerpt: featureCards.apple.excerpt,
-          coverImageUrl: featureCards.apple.coverImage
-            ? urlForImage(featureCards.apple.coverImage).width(1200).url()
-            : undefined,
-        }
-      : null,
-    mercedes: featureCards?.mercedes
-      ? {
-          slug: featureCards.mercedes.slug,
-          title: featureCards.mercedes.title,
-          brand: featureCards.mercedes.brand,
-          year: featureCards.mercedes.year,
-          type: featureCards.mercedes.type,
-          excerpt: featureCards.mercedes.excerpt,
-          coverImageUrl: featureCards.mercedes.coverImage
-            ? urlForImage(featureCards.mercedes.coverImage).width(1200).url()
-            : undefined,
-        }
-      : null,
-    writing: featureCards?.writing ?? null,
+    airtable: featureCards?.airtable ?? null,
+    bp: featureCards?.bp ?? null,
+    techsure: featureCards?.techsure ?? null,
+    "verizon-up": featureCards?.["verizon-up"] ?? null,
+    chevron: featureCards?.chevron ?? null,
+    warnerbros: featureCards?.warnerbros ?? null,
+    att: featureCards?.att ?? null,
+    mpa: featureCards?.mpa ?? null,
   };
 
   return (

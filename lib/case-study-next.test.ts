@@ -1,28 +1,29 @@
 import { describe, it, expect } from "vitest";
 import { nextCaseStudy } from "./case-study-next";
+import { STATIC_FEATURES } from "./feature-static";
 
 describe("nextCaseStudy", () => {
-  it("verizon → Apple", () => {
-    expect(nextCaseStudy("verizon")).toEqual({
-      slug: "apple",
-      title: "Apple",
-      kicker: "UX writing & product voice · 2021–2023",
+  it("airtable → bp (first peer in brandAlts)", () => {
+    expect(nextCaseStudy("airtable")).toEqual({
+      slug: "bp",
+      title: STATIC_FEATURES.bp.title,
+      kicker: STATIC_FEATURES.bp.kicker,
     });
   });
 
-  it("apple → Verizon", () => {
-    expect(nextCaseStudy("apple")).toEqual({
-      slug: "verizon",
-      title: "Verizon",
-      kicker: "Brand identity & campaign · 2017–2024",
+  it("bp → airtable", () => {
+    expect(nextCaseStudy("bp")).toEqual({
+      slug: "airtable",
+      title: STATIC_FEATURES.airtable.title,
+      kicker: STATIC_FEATURES.airtable.kicker,
     });
   });
 
-  it("mercedes → Verizon", () => {
-    expect(nextCaseStudy("mercedes")).toEqual({
-      slug: "verizon",
-      title: "Verizon",
-      kicker: "Brand identity & campaign · 2017–2024",
+  it("mpa → airtable", () => {
+    expect(nextCaseStudy("mpa")).toEqual({
+      slug: "airtable",
+      title: STATIC_FEATURES.airtable.title,
+      kicker: STATIC_FEATURES.airtable.kicker,
     });
   });
 
