@@ -20,13 +20,14 @@ export const suggestionSetQuery = /* groq */ `
 `;
 
 export const featuredCaseStudiesQuery = /* groq */ `
-  *[_type == "project" && featured == true && defined(slug.current)] | order(year desc)[0...12]{
+  *[_type == "project" && defined(slug.current)] | order(year desc, title asc){
     _id,
     title,
     slug,
     brand,
     year,
-    "mainImage": mainImage,
+    type,
+    "mainImage": coalesce(mainImage, heroImage),
     "excerpt": context
   }
 `;
