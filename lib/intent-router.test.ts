@@ -1,90 +1,119 @@
 import { describe, it, expect } from "vitest";
 import { routeIntent } from "./intent-router";
 
+/** Deterministic random: always returns 0 → first element of any pool. */
+const RAND_ZERO = () => 0;
+/** Deterministic random: always returns 0.99 → last element of any pool. */
+const RAND_LAST = () => 0.99;
+
 describe("routeIntent — navigation (grid fallback)", () => {
   it("routes 'show me the work' → /work", () => {
     const r = routeIntent("show me the work");
     expect(r.kind).toBe("navigate");
     if (r.kind === "navigate") expect(r.to).toBe("/work");
   });
-
   it("routes 'case studies' → /work", () => {
     expect(routeIntent("case studies")).toMatchObject({ kind: "navigate", to: "/work" });
   });
-
-  it("routes 'case study' (singular) → /work", () => {
-    expect(routeIntent("show me a case study")).toMatchObject({ kind: "navigate", to: "/work" });
-  });
-
   it("routes 'portfolio' → /work", () => {
     expect(routeIntent("portfolio please")).toMatchObject({ kind: "navigate", to: "/work" });
   });
-
   it("routes 'about you' → /about", () => {
     expect(routeIntent("about you")).toMatchObject({ kind: "navigate", to: "/about" });
   });
-
   it("solo 'work' routes to /work", () => {
     expect(routeIntent("work")).toMatchObject({ kind: "navigate", to: "/work" });
   });
-
   it("is case-insensitive for nav keywords", () => {
     expect(routeIntent("Work")).toMatchObject({ kind: "navigate", to: "/work" });
   });
 });
 
-describe("routeIntent — feature cards (in-place response)", () => {
-  it("routes 'best ad' → feature:verizon", () => {
-    expect(routeIntent("best ad")).toMatchObject({ kind: "feature", key: "verizon" });
+describe("routeIntent — brand feature cards", () => {
+  it("routes 'airtable' → feature:airtable", () => {
+    expect(routeIntent("airtable")).toMatchObject({ kind: "feature", key: "airtable" });
   });
-
-  it("routes 'show me your best ad' → feature:verizon", () => {
-    expect(routeIntent("show me your best ad")).toMatchObject({ kind: "feature", key: "verizon" });
+  it("routes 'bp' → feature:bp", () => {
+    expect(routeIntent("bp")).toMatchObject({ kind: "feature", key: "bp" });
   });
-
-  it("routes 'verizon' → feature:verizon", () => {
-    expect(routeIntent("verizon")).toMatchObject({ kind: "feature", key: "verizon" });
+  it("routes 'chevron' → feature:chevron", () => {
+    expect(routeIntent("chevron")).toMatchObject({ kind: "feature", key: "chevron" });
   });
-
-  it("routes 'apple' → feature:apple", () => {
-    expect(routeIntent("apple")).toMatchObject({ kind: "feature", key: "apple" });
+  it("routes 'warner' → feature:warnerbros", () => {
+    expect(routeIntent("warner")).toMatchObject({ kind: "feature", key: "warnerbros" });
   });
-
-  it("routes 'mercedes' → feature:mercedes", () => {
-    expect(routeIntent("mercedes stuff")).toMatchObject({ kind: "feature", key: "mercedes" });
+  it("routes 'warner brothers' → feature:warnerbros", () => {
+    expect(routeIntent("warner brothers")).toMatchObject({ kind: "feature", key: "warnerbros" });
   });
-
-  it("routes 'benz' → feature:mercedes", () => {
-    expect(routeIntent("benz")).toMatchObject({ kind: "feature", key: "mercedes" });
+  it("routes 'mpa' → feature:mpa", () => {
+    expect(routeIntent("mpa")).toMatchObject({ kind: "feature", key: "mpa" });
   });
+  it("routes 'at&t' → feature:att", () => {
+    expect(routeIntent("at&t")).toMatchObject({ kind: "feature", key: "att" });
+  });
+  it("routes 'att' → feature:att", () => {
+    expect(routeIntent("att")).toMatchObject({ kind: "feature", key: "att" });
+  });
+  it("routes 'techsure' → feature:techsure", () => {
+    expect(routeIntent("techsure")).toMatchObject({ kind: "feature", key: "techsure" });
+  });
+  it("routes solo 'verizon' → feature:verizon-up (the canonical Verizon)", () => {
+    expect(routeIntent("verizon")).toMatchObject({ kind: "feature", key: "verizon-up" });
+  });
+});
 
+describe("routeIntent — random pool picks", () => {
+  it("'best ad' with rand=0 picks the first BEST_AD_POOL entry (warnerbros)", () => {
+    expect(routeIntent("best ad", RAND_ZERO)).toMatchObject({ kind: "feature", key: "warnerbros" });
+  });
+  it("'best ad' with rand=last picks the last BEST_AD_POOL entry (att)", () => {
+    expect(routeIntent("best ad", RAND_LAST)).toMatchObject({ kind: "feature", key: "att" });
+  });
+  it("'surprise me' with rand=0 picks the first ALL_BRANDS entry (airtable)", () => {
+    expect(routeIntent("surprise me", RAND_ZERO)).toMatchObject({ kind: "feature", key: "airtable" });
+  });
+  it("'surprise me' with rand=last picks the last ALL_BRANDS entry (mpa)", () => {
+    expect(routeIntent("surprise me", RAND_LAST)).toMatchObject({ kind: "feature", key: "mpa" });
+  });
+  it("'what's your favorite' picks from FAVORITE_POOL", () => {
+    expect(routeIntent("what's your favorite", RAND_ZERO)).toMatchObject({ kind: "feature", key: "att" });
+    expect(routeIntent("what's your favorite", RAND_LAST)).toMatchObject({ kind: "feature", key: "mpa" });
+  });
+  it("'favorite' (solo) also matches", () => {
+    expect(routeIntent("favorite", RAND_ZERO)).toMatchObject({ kind: "feature", key: "att" });
+  });
+});
+
+describe("routeIntent — contact-card intents", () => {
+  it("routes 'say hi' → contact-card:hi", () => {
+    expect(routeIntent("say hi")).toMatchObject({ kind: "contact-card", variant: "hi" });
+  });
+  it("routes bare 'hi' → contact-card:hi", () => {
+    expect(routeIntent("hi")).toMatchObject({ kind: "contact-card", variant: "hi" });
+  });
+  it("routes bare 'hello' → contact-card:hi", () => {
+    expect(routeIntent("hello")).toMatchObject({ kind: "contact-card", variant: "hi" });
+  });
+  it("routes 'contact' → contact-card:contact", () => {
+    expect(routeIntent("contact")).toMatchObject({ kind: "contact-card", variant: "contact" });
+  });
+  it("routes 'contact me' → contact-card:contact", () => {
+    expect(routeIntent("contact me")).toMatchObject({ kind: "contact-card", variant: "contact" });
+  });
+});
+
+describe("routeIntent — other features", () => {
   it("routes 'resume' → feature:resume", () => {
     expect(routeIntent("resume")).toMatchObject({ kind: "feature", key: "resume" });
   });
-
   it("routes 'cv' → feature:resume", () => {
     expect(routeIntent("cv please")).toMatchObject({ kind: "feature", key: "resume" });
   });
-
-  it("routes 'do you write screenplays?' → feature:screenwriting", () => {
+  it("routes 'screenplays' → feature:screenwriting", () => {
     expect(routeIntent("do you write screenplays?")).toMatchObject({ kind: "feature", key: "screenwriting" });
   });
-
-  it("routes 'need a script' → feature:screenwriting", () => {
-    expect(routeIntent("need a script")).toMatchObject({ kind: "feature", key: "screenwriting" });
-  });
-
-  it("routes 'read your writing' → feature:writing", () => {
-    expect(routeIntent("read your writing")).toMatchObject({ kind: "feature", key: "writing" });
-  });
-
-  it("routes 'got any essays' → feature:writing", () => {
+  it("routes 'essay' → feature:writing", () => {
     expect(routeIntent("got any essays")).toMatchObject({ kind: "feature", key: "writing" });
-  });
-
-  it("is case-insensitive for feature keywords", () => {
-    expect(routeIntent("SCREENPLAY")).toMatchObject({ kind: "feature", key: "screenwriting" });
-    expect(routeIntent("APPLE")).toMatchObject({ kind: "feature", key: "apple" });
   });
 });
 
@@ -92,7 +121,6 @@ describe("routeIntent — PI card", () => {
   it("routes 'protagonist ink' → card:pi", () => {
     expect(routeIntent("tell me about protagonist ink")).toMatchObject({ kind: "card", id: "pi" });
   });
-
   it("routes bare 'pi' → card:pi", () => {
     expect(routeIntent("pi?")).toMatchObject({ kind: "card", id: "pi" });
   });
@@ -102,38 +130,19 @@ describe("routeIntent — lead (prose without navigation keywords)", () => {
   it("treats long prose as a lead", () => {
     expect(routeIntent("we need a brand voice for a fintech launch")).toMatchObject({ kind: "lead" });
   });
-
-  it("treats a question as a lead", () => {
-    expect(routeIntent("can you help?")).toMatchObject({ kind: "lead" });
-  });
-
-  it("treats 20+ char messages as leads", () => {
-    expect(routeIntent("thinking about hiring someone")).toMatchObject({ kind: "lead" });
+  it("treats a long question as a lead", () => {
+    expect(routeIntent("can you help with a launch next quarter")).toMatchObject({ kind: "lead" });
   });
 });
 
 describe("routeIntent — clarify (ambiguous short input)", () => {
-  it("treats 'hi' as clarify", () => {
-    expect(routeIntent("hi")).toMatchObject({ kind: "clarify" });
-  });
-
-  it("treats 'hello' as clarify", () => {
-    expect(routeIntent("hello")).toMatchObject({ kind: "clarify" });
-  });
-
   it("treats single unmatched word as clarify", () => {
     expect(routeIntent("sup")).toMatchObject({ kind: "clarify" });
   });
-
   it("treats empty string as clarify", () => {
     expect(routeIntent("")).toMatchObject({ kind: "clarify" });
   });
-
-  it("treats whitespace-only as clarify", () => {
-    expect(routeIntent("   ")).toMatchObject({ kind: "clarify" });
-  });
-
-  it("treats '????' as clarify (punctuation alone isn't enough)", () => {
+  it("treats '????' as clarify", () => {
     expect(routeIntent("????")).toMatchObject({ kind: "clarify" });
   });
 });

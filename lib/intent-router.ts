@@ -5,87 +5,73 @@
  * Keyword matching against a small map, with sensible lead/clarify fallback
  * when nothing matches.
  *
- * Match order matters — first hit wins. More specific keywords come before
- * broader ones (e.g. `verizon` before `work`, `resume` before `about`).
- *
- * v0.3: adds a `feature` intent — resolves certain keywords to an in-place
- * feature card on the landing page instead of navigating. Navigation is
- * still available via the rail.
+ * v0.4: brand keywords reconciled with Sanity's real catalog (8 brands),
+ * new `contact-card` intent for say-hi / contact flows, random-pool picks
+ * for `best ad` / `surprise me` / `what's your favorite`. Accepts an
+ * optional `random()` so tests can pin deterministic picks.
  */
 
-import type { FeatureKey } from "./feature-static";
+import { ALL_BRANDS, BEST_AD_POOL, FAVORITE_POOL, type FeatureKey } from "./feature-static";
 
 export type Intent =
   | { kind: "navigate"; to: string; label: string }
   | { kind: "feature"; key: FeatureKey }
   | { kind: "card"; id: "pi" }
+  | { kind: "contact-card"; variant: "hi" | "contact" }
   | { kind: "lead" }
   | { kind: "clarify" };
 
+type RandFn = () => number;
+
+function pick<T>(pool: readonly T[], rand: RandFn): T {
+  const i = Math.floor(rand() * pool.length);
+  return pool[Math.min(i, pool.length - 1)];
+}
+
 type Rule = {
   pattern: RegExp;
-  intent: Intent;
+  intent: Intent | ((rand: RandFn) => Intent);
 };
 
 const RULES: Rule[] = [
-  // PI card — check first so it doesn't fall through to lead.
-  {
-    pattern: /(protagonist\s+ink|\bprotagonist\b|\bpi\b)/i,
-    intent: { kind: "card", id: "pi" },
-  },
+  // PI card — check first so it doesn't fall through.
+  { pattern: /(protagonist\s+ink|\bprotagonist\b|\bpi\b)/i, intent: { kind: "card", id: "pi" } },
 
-  // Resume — in-place feature card; CTA opens /about#resume.
-  {
-    pattern: /\b(resume|résumé|cv)\b/i,
-    intent: { kind: "feature", key: "resume" },
-  },
+  // Contact-card intents — before feature matches so "contact" doesn't nav.
+  { pattern: /\b(contact\s+me|get\s+in\s+touch|contact)\b/i, intent: { kind: "contact-card", variant: "contact" } },
+  { pattern: /\b(say\s+hi|hi|hello|hey)\b/i, intent: { kind: "contact-card", variant: "hi" } },
 
-  // Screenwriting — in-place feature card.
-  {
-    pattern: /\b(screenplay|screenplays|script|scripts|screenwriting|screenwriter|screenwriters|pilot|pilots)\b/i,
-    intent: { kind: "feature", key: "screenwriting" },
-  },
+  // Random pools.
+  { pattern: /\bsurprise\s+me\b/i, intent: (r) => ({ kind: "feature", key: pick(ALL_BRANDS, r) }) },
+  { pattern: /(what'?s\s+your\s+favou?rite|\bfavou?rite\b)/i, intent: (r) => ({ kind: "feature", key: pick(FAVORITE_POOL, r) }) },
+  { pattern: /\bbest\s+(ad|work|campaign|spot|project)\b/i, intent: (r) => ({ kind: "feature", key: pick(BEST_AD_POOL, r) }) },
 
-  // Specific brands — in-place feature cards.
-  {
-    pattern: /\bverizon\b/i,
-    intent: { kind: "feature", key: "verizon" },
-  },
-  {
-    pattern: /\bapple\b/i,
-    intent: { kind: "feature", key: "apple" },
-  },
-  {
-    pattern: /\b(mercedes|benz)\b/i,
-    intent: { kind: "feature", key: "mercedes" },
-  },
+  // Resume (before screenwriting so "cv" matches here).
+  { pattern: /\b(resume|résumé|cv)\b/i, intent: { kind: "feature", key: "resume" } },
 
-  // "Best ad" default → Verizon feature.
-  {
-    pattern: /\bbest\s+(ad|work|campaign|spot|project)\b/i,
-    intent: { kind: "feature", key: "verizon" },
-  },
+  // Screenwriting.
+  { pattern: /\b(screenplay|screenplays|script|scripts|screenwriting|screenwriter|screenwriters|pilot|pilots)\b/i, intent: { kind: "feature", key: "screenwriting" } },
 
-  // Writing (clips, essays, stories) — in-place feature card.
-  {
-    pattern: /\b(writing|essay|essays|clip|clips|story|stories|column|columns|short|read\s+something)\b/i,
-    intent: { kind: "feature", key: "writing" },
-  },
+  // Brand keywords. Order matters — more specific first.
+  { pattern: /\b(techsure|your\s+tech\s+should\s+work)\b/i, intent: { kind: "feature", key: "techsure" } },
+  { pattern: /\b(verizon\s+up|biggest\s+little\s+monsters|verizon)\b/i, intent: { kind: "feature", key: "verizon-up" } },
+  { pattern: /\bairtable\b/i, intent: { kind: "feature", key: "airtable" } },
+  { pattern: /\bchevron\b/i, intent: { kind: "feature", key: "chevron" } },
+  { pattern: /\b(warner(\s*brothers|\s*bros)?|steve\s+jobs)\b/i, intent: { kind: "feature", key: "warnerbros" } },
+  { pattern: /(at\s*&\s*t|\batt\b|lily|gift\s+decider)/i, intent: { kind: "feature", key: "att" } },
+  { pattern: /\b(mpa|motion\s+picture\s+association|what\s+comes\s+next)\b/i, intent: { kind: "feature", key: "mpa" } },
+  { pattern: /\b(bp|team\s+usa)\b/i, intent: { kind: "feature", key: "bp" } },
 
-  // Work grid — route to /work (the "old-way" indexed list).
-  {
-    pattern: /(\bwork\b|case\s+stud(y|ies)|\bportfolio\b|\bad\b|\bads\b|\bcampaign\b|\bcampaigns\b|brand\s+work)/i,
-    intent: { kind: "navigate", to: "/work", label: "case studies" },
-  },
+  // Writing.
+  { pattern: /\b(writing|essay|essays|clip|clips|story|stories|column|columns|short|read\s+something)\b/i, intent: { kind: "feature", key: "writing" } },
 
-  // About — only match specific phrases. Solo "about" is handled by SOLO_NAV.
-  {
-    pattern: /(about\s+(you|patrick|yourself)|who\s+are\s+you|\bbio\b|meet\s+(you|patrick))/i,
-    intent: { kind: "navigate", to: "/about", label: "about" },
-  },
+  // Work grid (broader than brand keywords; last).
+  { pattern: /(\bwork\b|case\s+stud(y|ies)|\bportfolio\b|\bads\b|\bcampaigns\b|brand\s+work)/i, intent: { kind: "navigate", to: "/work", label: "case studies" } },
+
+  // About.
+  { pattern: /(about\s+(you|patrick|yourself)|who\s+are\s+you|\bbio\b|meet\s+(you|patrick))/i, intent: { kind: "navigate", to: "/about", label: "about" } },
 ];
 
-// Exact single-word navigation — the whole message is just this word (± punctuation).
 const SOLO_NAV: Record<string, Intent> = {
   about: { kind: "navigate", to: "/about", label: "about" },
   bio: { kind: "navigate", to: "/about", label: "about" },
@@ -93,25 +79,22 @@ const SOLO_NAV: Record<string, Intent> = {
   portfolio: { kind: "navigate", to: "/work", label: "case studies" },
 };
 
-export function routeIntent(input: string): Intent {
+export function routeIntent(input: string, rand: RandFn = Math.random): Intent {
   const trimmed = (input ?? "").trim();
   if (!trimmed) return { kind: "clarify" };
 
-  // Solo-word nav: the entire message is one token from SOLO_NAV.
   const solo = trimmed.replace(/[.!?]+$/, "").toLowerCase();
   if (SOLO_NAV[solo]) return SOLO_NAV[solo];
 
   for (const { pattern, intent } of RULES) {
-    if (pattern.test(trimmed)) return intent;
+    if (pattern.test(trimmed)) return typeof intent === "function" ? intent(rand) : intent;
   }
 
-  // No keyword matched — decide lead vs. clarify based on message shape.
   const words = trimmed.split(/\s+/).filter(Boolean);
   const hasAlpha = /[a-z]/i.test(trimmed);
   const hasQuestion = trimmed.includes("?");
 
   if (!hasAlpha) return { kind: "clarify" };
-
   if (words.length >= 3) return { kind: "lead" };
   if (trimmed.length >= 20) return { kind: "lead" };
   if (hasQuestion && trimmed.length >= 8) return { kind: "lead" };
