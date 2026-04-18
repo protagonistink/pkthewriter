@@ -1,83 +1,171 @@
 /**
  * Hardcoded feature content (interpretation intros + fallback cards).
  *
- * The interpretation intros are Patrick's voice — they stay in code so they
- * don't drift. Cards for `screenwriting` and `resume` are also static
- * (these pieces don't live in Sanity yet). Cards for Verizon/Apple/Mercedes/
- * writing come from Sanity via `featureCardsQuery` and are merged onto the
- * matching static intro by the resolver.
+ * The intros are Patrick's voice — they stay in code so they don't drift.
+ * Brand cards come from Sanity via `featureCardsQuery` (lib/sanity/queries)
+ * and are merged onto the matching static intro by the resolver.
+ * `screenwriting` and `resume` remain fully static — no Sanity doc yet.
  */
 
 export type FeatureKey =
-  | "verizon"
-  | "apple"
-  | "mercedes"
+  | "airtable"
+  | "bp"
+  | "techsure"
+  | "verizon-up"
+  | "chevron"
+  | "warnerbros"
+  | "att"
+  | "mpa"
   | "writing"
   | "screenwriting"
   | "resume";
 
+/** Keys in the `best ad` random pool. */
+export const BEST_AD_POOL = ["warnerbros", "airtable", "verizon-up", "att"] as const satisfies readonly FeatureKey[];
+
+/** Keys in the `what's your favorite` random pool. */
+export const FAVORITE_POOL = ["att", "warnerbros", "mpa"] as const satisfies readonly FeatureKey[];
+
+/** All brand keys — used by `surprise me`. Order mirrors the /work grid. */
+export const ALL_BRANDS = [
+  "airtable", "bp", "techsure", "verizon-up", "chevron", "warnerbros", "att", "mpa",
+] as const satisfies readonly FeatureKey[];
+
 export type StaticFeature = {
   key: FeatureKey;
-  intro: string; // may contain minimal inline markup: <em>
+  intro: string; // may contain <em>
   title: string;
   kicker: string;
   copy: string; // may contain <em>
   ctas: Array<{ label: string; href: string; variant: "primary" | "ghost" }>;
-  /** Label shown inside the hero gallery tile. */
   heroTag?: string;
-  /** Up to three short labels for the side thumbnails. */
   thumbs?: string[];
 };
 
 export const INTROS: Record<FeatureKey, string> = {
-  verizon: `Ah, the <em>"best ad"</em> question. Honestly, my best work isn't usually a single ad.`,
-  apple: `Apple. A different kind of discipline — product-first, every word weighed.`,
-  mercedes: `Mercedes. Cinema at thirty seconds. Voice before volume.`,
+  airtable: `Four :15 spots, one national launch. My best work isn't usually a single ad — but when it is, it's four.`,
+  bp: `Team USA. Brand-led storytelling the year Rio opened the doors.`,
+  techsure: `Verizon's pitch for the part of service no one sees.`,
+  "verizon-up": `Live activation. Forty-foot monsters. Biggest Little Monsters.`,
+  chevron: `Rebranding a giant. Strategy-first, identity downstream.`,
+  warnerbros: `Warner Brothers, <em>Steve Jobs</em>. Campaign voice for a biopic that wanted restraint.`,
+  att: `Pandemic holidays. A gift-finder that read like a choose-your-own-adventure.`,
+  mpa: `<em>"What Comes Next?"</em> — a brand campaign for the Motion Picture Association.`,
   writing: `The shorter the piece, the harder it usually is.`,
   screenwriting: `Yes, really. Two features optioned, one pilot in development.`,
   resume: `One page, current to 2026.`,
 };
 
-/** Full static cards (used when Sanity has no matching entry). */
+/**
+ * Static fallbacks for the three non-Sanity keys + minimal scaffolds for the
+ * brand keys so the resolver has heroTag / thumbs defaults when Sanity omits
+ * them. Brand copy is supplied by Sanity's `excerpt` (context) field; if that
+ * is missing the card uses `copy` here.
+ */
 export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
-  verizon: {
-    key: "verizon",
-    intro: INTROS.verizon,
-    title: "Verizon",
-    kicker: "Brand identity & campaign · 2017–2024",
-    copy: `People always ask for the <em>"best ad,"</em> but as a writer, my favorite work is rarely just one script. For Verizon, it was <em>seven years</em> of shifting a massive telecom ship. Yes, there were TV spots — but the real triumph was building a voice that worked across UX, retail, and retention. It's the project that taught me how to write for an ecosystem, not just a screen.`,
+  airtable: {
+    key: "airtable",
+    intro: INTROS.airtable,
+    title: "This is How",
+    kicker: "Brand Campaign · 2024",
+    copy: `Four :15 spots for Airtable's first national campaign. Product-first stories, written around how work actually flows when the system works.`,
     ctas: [
-      { label: "Read the story →", href: "/work/verizon", variant: "primary" },
-      { label: "View the artifacts", href: "/work/verizon#artifacts", variant: "ghost" },
+      { label: "Read the story →", href: "/work/airtable", variant: "primary" },
+      { label: "See the spots", href: "/work/airtable#artifacts", variant: "ghost" },
     ],
-    heroTag: "Brand Book · Pg. 12",
-    thumbs: ["Retail", "Digital", "OOH"],
+    heroTag: "Spot · :15",
+    thumbs: ["Design", "Publish", "Go Live"],
   },
-  apple: {
-    key: "apple",
-    intro: INTROS.apple,
-    title: "Apple",
-    kicker: "UX writing & product voice · 2021–2023",
-    copy: `With Apple, the job was subtraction. You're not writing <em>for</em> the product; you're getting out of its way. I worked on onboarding, in-app tone, and a handful of launch moments — the kind of work where a single adjective can cost you a week. I learned more about <em>restraint</em> here than anywhere else.`,
+  bp: {
+    key: "bp",
+    intro: INTROS.bp,
+    title: "Team USA",
+    kicker: "360 Brand Campaign · 2016",
+    copy: `A 360 campaign built around the athletes BP was sponsoring for Rio. Sport as anthology, brand as patron.`,
     ctas: [
-      { label: "Read the story →", href: "/work/apple", variant: "primary" },
-      { label: "View the artifacts", href: "/work/apple#artifacts", variant: "ghost" },
+      { label: "Read the story →", href: "/work/bp", variant: "primary" },
+      { label: "See the artifacts", href: "/work/bp#artifacts", variant: "ghost" },
     ],
-    heroTag: "Onboarding · v3",
-    thumbs: ["iOS", "Setup", "Launch"],
+    heroTag: "Campaign · 2016",
+    thumbs: ["Film", "Print", "Social"],
   },
-  mercedes: {
-    key: "mercedes",
-    intro: INTROS.mercedes,
-    title: "Mercedes-Benz",
-    kicker: "Film & brand voice · 2020–2022",
-    copy: `Luxury asks you to trust the audience. We built a voice that whispered where competitors shouted — long-copy print, a film series with real directors, and a brand book that treated silence as a design element. If you want to see <em>craft</em>, start here.`,
+  techsure: {
+    key: "techsure",
+    intro: INTROS.techsure,
+    title: "Your Tech Should Work",
+    kicker: "TV Campaign · 2020",
+    copy: `Verizon Techsure — a warranty pitched as quiet competence instead of a fear sell.`,
     ctas: [
-      { label: "Read the story →", href: "/work/mercedes", variant: "primary" },
-      { label: "View the artifacts", href: "/work/mercedes#artifacts", variant: "ghost" },
+      { label: "Read the story →", href: "/work/techsure", variant: "primary" },
+      { label: "See the spots", href: "/work/techsure#artifacts", variant: "ghost" },
     ],
-    heroTag: "Film · 2021",
-    thumbs: ["Print", "Film", "Brand Book"],
+    heroTag: "Spot · :30",
+    thumbs: ["Broadcast", "Digital", "Retail"],
+  },
+  "verizon-up": {
+    key: "verizon-up",
+    intro: INTROS["verizon-up"],
+    title: "Biggest Little Monsters",
+    kicker: "Live Social Activation · 2021",
+    copy: `Forty-foot inflatable monsters, a pop-up in Manhattan, and a live social feed that ran the campaign in real time.`,
+    ctas: [
+      { label: "Read the story →", href: "/work/verizon-up", variant: "primary" },
+      { label: "See the artifacts", href: "/work/verizon-up#artifacts", variant: "ghost" },
+    ],
+    heroTag: "Activation · 2021",
+    thumbs: ["Pop-up", "Social", "Press"],
+  },
+  chevron: {
+    key: "chevron",
+    intro: INTROS.chevron,
+    title: "Rebranding a Giant",
+    kicker: "Brand Strategy & Identity · 2024",
+    copy: `A top-to-bottom reframe: brand strategy, identity system, and .com. Turning a century-old energy company into something a thirty-year-old could work for.`,
+    ctas: [
+      { label: "Read the story →", href: "/work/chevron", variant: "primary" },
+      { label: "See the artifacts", href: "/work/chevron#artifacts", variant: "ghost" },
+    ],
+    heroTag: "Strategy · 2024",
+    thumbs: ["Identity", ".com", "System"],
+  },
+  warnerbros: {
+    key: "warnerbros",
+    intro: INTROS.warnerbros,
+    title: "Steve Jobs",
+    kicker: "Campaign · 2015",
+    copy: `Campaign voice for Danny Boyle's <em>Steve Jobs</em>. An awards-season push that trusted the audience to sit with the ambiguity.`,
+    ctas: [
+      { label: "Read the story →", href: "/work/warnerbros", variant: "primary" },
+      { label: "See the artifacts", href: "/work/warnerbros#artifacts", variant: "ghost" },
+    ],
+    heroTag: "Trailer Copy · 2015",
+    thumbs: ["Trailers", "OOH", "Digital"],
+  },
+  att: {
+    key: "att",
+    intro: INTROS.att,
+    title: "Lily's Gift Decider",
+    kicker: "Digital Activation · 2021",
+    copy: `A holiday gift-finder built around AT&T's spokesperson Lily. Forty-plus scripts, every path leading to a gift that fit.`,
+    ctas: [
+      { label: "Read the story →", href: "/work/att", variant: "primary" },
+      { label: "See the artifacts", href: "/work/att#artifacts", variant: "ghost" },
+    ],
+    heroTag: "Activation · 2021",
+    thumbs: ["Scripts", "Retail", "Digital"],
+  },
+  mpa: {
+    key: "mpa",
+    intro: INTROS.mpa,
+    title: "What Comes Next?",
+    kicker: "Brand Campaign · 2016",
+    copy: `A brand campaign for the Motion Picture Association — an industry body arguing for the future of cinema without sounding like one.`,
+    ctas: [
+      { label: "Read the story →", href: "/work/mpa", variant: "primary" },
+      { label: "See the artifacts", href: "/work/mpa#artifacts", variant: "ghost" },
+    ],
+    heroTag: "Campaign · 2016",
+    thumbs: ["Film", "Print", "Digital"],
   },
   writing: {
     key: "writing",
@@ -97,7 +185,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     intro: INTROS.screenwriting,
     title: "Screenwriting",
     kicker: "Features · pilots · shorts",
-    copy: `I treat ad work and screenwriting as the same job done under different word counts. Everything I learned about <em>structure</em> came from the pilot I couldn't sell; everything I learned about <em>economy</em> came from a thirty-second spot. The reel pulls from both. Say the word and I'll send a pilot PDF.`,
+    copy: `I treat ad work and screenwriting as the same job done under different word counts. Everything I learned about <em>structure</em> came from the pilot I couldn't sell; everything I learned about <em>economy</em> came from a thirty-second spot. Say the word and I'll send a pilot PDF.`,
     ctas: [
       { label: "See the reel →", href: "/screenwriting", variant: "primary" },
       { label: "Request a pilot PDF", href: "mailto:patrick@pkthewriter.com?subject=Pilot%20PDF", variant: "ghost" },
@@ -109,10 +197,10 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     key: "resume",
     intro: INTROS.resume,
     title: "Resume — 2026",
-    kicker: "PDF · 180kb · annotated",
-    copy: `The short version. Clients, titles, dates, and the three or four sentences that stitch it together. If you want the long version with case-study links, that lives on the About page. <em>Need the PDF emailed?</em> Say so and I'll send it.`,
+    kicker: "PDF · annotated",
+    copy: `The short version. Clients, titles, dates, and the three or four sentences that stitch it together.`,
     ctas: [
-      { label: "Open the resume →", href: "/about#resume", variant: "primary" },
+      { label: "Open the resume →", href: "/resume", variant: "primary" },
       { label: "Email me the PDF", href: "mailto:patrick@pkthewriter.com?subject=Resume%20PDF", variant: "ghost" },
     ],
     heroTag: "Resume · 2026",
@@ -120,35 +208,39 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   },
 };
 
-/** The three alternatives shown under the main feature card, per context. */
+/**
+ * The three alts under each feature. Rotates the feature pool so every card
+ * points to different peers. `work` is always the third escape hatch.
+ */
+const brandAlts = (self: FeatureKey): Array<{ key: FeatureKey | "work"; label: string; note?: string }> => {
+  const others = ALL_BRANDS.filter((k) => k !== self).slice(0, 2);
+  return [
+    ...others.map((k) => ({ key: k, label: STATIC_FEATURES[k].title, note: `(${STATIC_FEATURES[k].kicker.split(" · ")[0].toLowerCase()})` })),
+    { key: "work" as const, label: "See all work" },
+  ];
+};
+
 export const ALTS: Record<FeatureKey, Array<{ key: FeatureKey | "work"; label: string; note?: string }>> = {
-  verizon: [
-    { key: "apple", label: "Apple", note: "(UX writing)" },
-    { key: "mercedes", label: "Mercedes", note: "(film)" },
-    { key: "work", label: "See all work" },
-  ],
-  apple: [
-    { key: "verizon", label: "Verizon", note: "(ecosystem)" },
-    { key: "mercedes", label: "Mercedes", note: "(film)" },
-    { key: "work", label: "See all work" },
-  ],
-  mercedes: [
-    { key: "verizon", label: "Verizon", note: "(ecosystem)" },
-    { key: "apple", label: "Apple", note: "(UX writing)" },
-    { key: "work", label: "See all work" },
-  ],
+  airtable: brandAlts("airtable"),
+  bp: brandAlts("bp"),
+  techsure: brandAlts("techsure"),
+  "verizon-up": brandAlts("verizon-up"),
+  chevron: brandAlts("chevron"),
+  warnerbros: brandAlts("warnerbros"),
+  att: brandAlts("att"),
+  mpa: brandAlts("mpa"),
   writing: [
-    { key: "verizon", label: "Verizon", note: "(case study)" },
+    { key: "airtable", label: "Airtable", note: "(case study)" },
     { key: "screenwriting", label: "Screenwriting", note: "(reel)" },
     { key: "work", label: "See all work" },
   ],
   screenwriting: [
     { key: "writing", label: "Read something short" },
-    { key: "verizon", label: "Verizon", note: "(case study)" },
+    { key: "airtable", label: "Airtable", note: "(case study)" },
     { key: "work", label: "See all work" },
   ],
   resume: [
-    { key: "verizon", label: "Verizon", note: "(case study)" },
+    { key: "airtable", label: "Airtable", note: "(case study)" },
     { key: "writing", label: "Read something short" },
     { key: "work", label: "See all work" },
   ],
