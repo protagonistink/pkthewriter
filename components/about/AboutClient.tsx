@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { AboutThread } from "./AboutThread";
-import { AboutInput } from "./AboutInput";
+import { AboutInput, type AboutInputHandle } from "./AboutInput";
 import { AboutChips } from "./AboutChips";
 import { AboutPageView } from "./AboutPageView";
+import { AboutEscape } from "./AboutEscape";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
 import { createMatcher } from "@/lib/about-matcher";
 import { loadSession, saveSession, emptySession } from "@/lib/about-session";
@@ -47,6 +48,7 @@ export function AboutClient() {
     []
   );
   const prefersReduced = useReducedMotion();
+  const inputRef = useRef<AboutInputHandle>(null);
 
   // ── Opening thread ────────────────────────────────────────────────────────
   const [visibleCount, setVisibleCount] = useState(2);
@@ -111,6 +113,7 @@ export function AboutClient() {
     setBranchTypingIndex(null);
     setActiveChips(pendingChipsRef.current);
     pendingChipsRef.current = [];
+    inputRef.current?.focus();
   }, []);
 
   const handleSubmit = useCallback(
@@ -216,7 +219,7 @@ export function AboutClient() {
         aria-pressed={readMode === "page"}
         onClick={() => setReadMode((m) => (m === "chat" ? "page" : "chat"))}
         className="
-          fixed top-[24px] right-[24px] z-[50]
+          fixed top-[64px] right-[24px] z-[50]
           font-[family-name:var(--font-mono)] text-[12px] tracking-[0.06em]
           px-[12px] py-[6px]
           border border-[var(--color-paper-line)]
@@ -242,6 +245,7 @@ export function AboutClient() {
             />
             <AboutChips chips={activeChips} onSelect={handleSubmit} />
             <AboutInput
+              ref={inputRef}
               placeholders={PLACEHOLDERS}
               onSubmit={handleSubmit}
               ghostComplete={matcher.ghostComplete}
@@ -250,6 +254,7 @@ export function AboutClient() {
           </div>
         </section>
       )}
+      {readMode === "chat" && <AboutEscape email={links.email} />}
       <CaseStudyAsk />
     </>
   );

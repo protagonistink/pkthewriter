@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { forwardRef, useCallback, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 
 type Props = {
@@ -11,10 +11,19 @@ type Props = {
   disabled: boolean;
 };
 
-export function AboutInput({ placeholders, onSubmit, ghostComplete, disabled }: Props) {
+export type AboutInputHandle = { focus: () => void };
+
+export const AboutInput = forwardRef<AboutInputHandle, Props>(function AboutInput(
+  { placeholders, onSubmit, ghostComplete, disabled },
+  ref
+) {
   const prefersReduced = useReducedMotion();
   const honeypotId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => requestAnimationFrame(() => inputRef.current?.focus()),
+  }));
 
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
@@ -148,4 +157,5 @@ export function AboutInput({ placeholders, onSubmit, ghostComplete, disabled }: 
       )}
     </form>
   );
-}
+});
+
