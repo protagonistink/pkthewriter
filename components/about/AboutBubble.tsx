@@ -1,6 +1,7 @@
 "use client";
 
 import type { Exchange } from "@/lib/about-types";
+import { AboutTyper } from "./AboutTyper";
 
 type TypingConfig = {
   speed: number;
@@ -79,10 +80,13 @@ function RenderedText({
   typing?: TypingConfig;
   instant?: boolean;
 }) {
-  // Static render — typing is wired in Task 7 via AboutTyper
-  if (!typing || instant) {
-    return <>{text}</>;
-  }
-  // Placeholder until AboutTyper is ready (Task 7 replaces this)
-  return <>{text}</>;
+  if (!typing) return <>{text}</>;
+  return (
+    <AboutTyper
+      text={text}
+      speed={typing.speed}
+      instant={!!instant}
+      onDone={typing.onDone}
+    />
+  );
 }
