@@ -51,8 +51,9 @@ export function AboutClient() {
   const inputRef = useRef<AboutInputHandle>(null);
 
   // ── Opening thread ────────────────────────────────────────────────────────
-  const [visibleCount, setVisibleCount] = useState(2);
-  const [isPlaying, setIsPlaying] = useState(true);
+  // Lazy initializers read prefersReduced directly, avoiding setState-in-effect.
+  const [visibleCount, setVisibleCount] = useState(() => prefersReduced ? OPENING.length : 2);
+  const [isPlaying, setIsPlaying] = useState(() => !prefersReduced);
   const [fastForward, setFastForward] = useState(false);
   const instant = !!(fastForward || prefersReduced);
 
@@ -73,14 +74,6 @@ export function AboutClient() {
       window.removeEventListener("keydown", onInteract);
     };
   }, [isPlaying, handleFastForward]);
-
-  useEffect(() => {
-    if (prefersReduced) {
-      setFastForward(true);
-      setVisibleCount(OPENING.length);
-      setIsPlaying(false);
-    }
-  }, [prefersReduced]);
 
   const onBubbleDone = useCallback((index: number) => {
     const next = index + 1;
@@ -104,10 +97,11 @@ export function AboutClient() {
 
   // Refs for stale-closure-safe access inside callbacks
   const branchLengthRef = useRef(0);
-  branchLengthRef.current = branchExchanges.length;
   const sessionRef = useRef(session);
-  sessionRef.current = session;
   const pendingChipsRef = useRef<ChipItem[]>([]);
+
+  useEffect(() => { branchLengthRef.current = branchExchanges.length; }, [branchExchanges.length]);
+  useEffect(() => { sessionRef.current = session; }, [session]);
 
   const onBranchTypingDone = useCallback(() => {
     setBranchTypingIndex(null);

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 type Props = {
   email: string;
 };
@@ -13,7 +15,7 @@ export function AboutEscape({ email }: Props) {
         flex gap-[24px] z-[40]
       "
     >
-      <a
+      <Link
         href="/work"
         className="
           font-[family-name:var(--font-mono)] text-[13px] tracking-[0.04em]
@@ -23,7 +25,7 @@ export function AboutEscape({ email }: Props) {
         "
       >
         see the work →
-      </a>
+      </Link>
       <a
         href={`mailto:${email}`}
         className="

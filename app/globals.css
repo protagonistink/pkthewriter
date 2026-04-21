@@ -267,26 +267,3 @@ body {
   pointer-events: auto;
 }
 
-/* ---------------------------------------------------------------- */
-/* About page — keyframes for marquee, dot pulse, caret blink.       */
-/* ---------------------------------------------------------------- */
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.5; transform: scale(0.85); }
-}
-
-@keyframes caret-blink {
-  0%, 49%   { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .about-marquee-track { animation: none !important; }
-  .about-pulse-dot { animation: none !important; }
-  .about-caret { animation: none !important; opacity: 0 !important; }
-}
