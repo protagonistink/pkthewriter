@@ -1,15 +1,33 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { AboutThread } from "./AboutThread";
+import { AboutInput } from "./AboutInput";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
+import { createMatcher } from "@/lib/about-matcher";
 import openingData from "@/data/about-opening.json";
+import intentsData from "@/data/about-intents.json";
+import fallbacksData from "@/data/about-fallbacks.json";
 import type { Exchange } from "@/lib/about-types";
 
 const OPENING: Exchange[] = openingData.exchanges as Exchange[];
 
+// Canonical triggers (first trigger per intent) for placeholder cycling
+const PLACEHOLDERS = intentsData.intents
+  .filter((i) => i.id !== "nice-try")
+  .map((i) => i.triggers[0])
+  .filter(Boolean);
+
 export function AboutClient() {
+  const matcher = useMemo(
+    () =>
+      createMatcher({
+        intents: intentsData.intents as Parameters<typeof createMatcher>[0]["intents"],
+        fallbacks: fallbacksData.fallbacks.map((f) => f.text),
+      }),
+    []
+  );
   const prefersReduced = useReducedMotion();
   // Exchange 0 is the prefilled visitor line — shown statically.
   // Start with 2 so exchange 1 (first Patrick reply) begins typing immediately.
@@ -82,6 +100,12 @@ export function AboutClient() {
             exchanges={visibleExchanges}
             typingMap={typingMap}
             instant={instant}
+          />
+          <AboutInput
+            placeholders={PLACEHOLDERS}
+            onSubmit={() => {}}
+            ghostComplete={matcher.ghostComplete}
+            disabled={isPlaying}
           />
         </div>
       </section>
