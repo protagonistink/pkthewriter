@@ -1,0 +1,508 @@
+{
+  "intents": [
+    {
+      "id": "what-i-do",
+      "category": "essentials",
+      "triggers": [
+        "what do you do",
+        "what's your job",
+        "are you a copywriter or a creative director",
+        "what's your role",
+        "tell me what you do for a living"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. The honest one-liner version of your role. Lead with verb, end with the *kind* of problem you like. No agency-speak.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences, lighter register. Same substance as the default, but with the wink you'd use at a bar. Only served when visitor types in caps or with exclamation.]"
+        }
+      ],
+      "followups": ["years-experience", "how-to-work-with-me", "see-the-work"]
+    },
+    {
+      "id": "where-im-based",
+      "category": "essentials",
+      "triggers": [
+        "where are you based",
+        "where do you work from",
+        "what city are you in",
+        "are you remote",
+        "where do you live"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. City, remote status, any travel/on-site nuance. Keep it brief.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same facts, lighter delivery. Maybe a one-liner about the city.]"
+        }
+      ],
+      "followups": ["how-to-work-with-me", "am-i-available", "what-i-do"]
+    },
+    {
+      "id": "am-i-available",
+      "category": "essentials",
+      "triggers": [
+        "are you available for work",
+        "are you taking projects",
+        "are you free right now",
+        "can I hire you",
+        "do you have bandwidth",
+        "are you open to freelance"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Honest availability status. If open, say what you're looking for. End with email nudge.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same availability info, looser tone. A touch of personality around the availability answer.]"
+        }
+      ],
+      "followups": ["how-to-work-with-me", "rate-question", "email-me"]
+    },
+    {
+      "id": "how-to-work-with-me",
+      "category": "essentials",
+      "triggers": [
+        "how do I work with you",
+        "what's your process for new projects",
+        "how do we get started",
+        "what does engagement look like",
+        "how do you typically work"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Brief walk through how a project typically starts. Concrete, not abstract. Ends with email or contact action.]"
+        },
+        {
+          "mood": "formal",
+          "text": "[PLACEHOLDER — Patrick writes: same process, slightly more structured framing. For the person writing a longer, more considered inquiry.]"
+        }
+      ],
+      "followups": ["rate-question", "am-i-available", "email-me"]
+    },
+    {
+      "id": "rate-question",
+      "category": "essentials",
+      "triggers": [
+        "what's your rate",
+        "how much do you charge",
+        "what are your fees",
+        "what do you cost",
+        "do you work on retainer"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Honest about how rates work without naming a number. Scope-first framing. Points toward email for real conversation.]"
+        },
+        {
+          "mood": "formal",
+          "text": "[PLACEHOLDER — Patrick writes: same rate philosophy, more direct. Good for someone writing a longer project brief.]"
+        }
+      ],
+      "followups": ["how-to-work-with-me", "am-i-available", "email-me"]
+    },
+    {
+      "id": "years-experience",
+      "category": "essentials",
+      "triggers": [
+        "how long have you been doing this",
+        "how many years of experience do you have",
+        "how long have you been a writer",
+        "how long in advertising",
+        "what's your background"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Years, the arc of how you got here, what changed. Concrete, not a résumé recitation.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same timeline, different angle. Maybe the version you'd tell at a dinner party.]"
+        }
+      ],
+      "followups": ["what-i-do", "brands", "working-with-me"]
+    },
+    {
+      "id": "brands",
+      "category": "essentials",
+      "triggers": [
+        "what brands have you worked on",
+        "who are your clients",
+        "what companies have you worked with",
+        "show me your client list",
+        "any big brands"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Name the brands worth naming, note the categories. Don't over-list — pick the ones that signal range or quality. Point to /work.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same brands, but with a line about what you actually remember from each gig.]"
+        }
+      ],
+      "followups": ["see-the-work", "what-i-do", "years-experience"]
+    },
+    {
+      "id": "see-the-work",
+      "category": "essentials",
+      "triggers": [
+        "can I see your work",
+        "show me your portfolio",
+        "where's your portfolio",
+        "do you have case studies",
+        "I want to see examples"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. Brief framing of what they'll find, then a clear pointer to /work. Don't over-sell the portfolio — let it speak.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: shorter, punchier pointer. Maybe a one-liner that sets expectations with a wink.]"
+        }
+      ],
+      "followups": ["brands", "what-i-do", "email-me"]
+    },
+    {
+      "id": "working-with-me",
+      "category": "character",
+      "triggers": [
+        "what's it like working with you",
+        "are you easy to work with",
+        "how do you collaborate",
+        "describe your working style",
+        "what kind of partner are you"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–5 sentences. Specific, not aspirational. Describe how you actually show up — pace, communication, what you ask for, what you don't. Name one thing you're good at and one thing you're upfront about.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same substance, lighter. The version you'd say after the second drink.]"
+        }
+      ],
+      "followups": ["feedback-style", "process", "how-to-work-with-me"]
+    },
+    {
+      "id": "feedback-style",
+      "category": "character",
+      "triggers": [
+        "how do you take feedback",
+        "are you precious about your work",
+        "how do you handle revisions",
+        "what's your revision process",
+        "do you push back on notes"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. Honest take on feedback. Where you push back, where you defer. What makes a good creative brief versus a bad one. Specific, not virtuous.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same honest take, slightly wry. Good for the visitor who's asking because they've been burned before.]"
+        }
+      ],
+      "followups": ["working-with-me", "process", "writing-beliefs"]
+    },
+    {
+      "id": "process",
+      "category": "character",
+      "triggers": [
+        "what's your writing process",
+        "how do you approach a brief",
+        "walk me through how you work",
+        "how do you start a project",
+        "what does your workflow look like"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–5 sentences. Concrete verbs. Brief intake → territory exploration → draft approach. Name the moments you push for more time or more context. Avoid 'I start by researching the audience.']"
+        },
+        {
+          "mood": "formal",
+          "text": "[PLACEHOLDER — Patrick writes: structured version. Same process, laid out more explicitly. Good for someone who needs to brief their team on what to expect.]"
+        }
+      ],
+      "followups": ["working-with-me", "feedback-style", "how-to-work-with-me"]
+    },
+    {
+      "id": "writing-beliefs",
+      "category": "character",
+      "triggers": [
+        "what do you believe about writing",
+        "what's your philosophy on copy",
+        "what makes good advertising",
+        "what do you think makes writing work",
+        "what's your take on craft"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–5 sentences. A real opinion, not a manifesto. Name something you believe that not everyone agrees with. Writing as: thinking, argument, specificity. No 'storytelling is everything.']"
+        },
+        {
+          "mood": "formal",
+          "text": "[PLACEHOLDER — Patrick writes: same opinions, more considered. For someone who sent you a long question.]"
+        }
+      ],
+      "followups": ["feedback-style", "process", "why-writer-and-cd"]
+    },
+    {
+      "id": "why-writer-and-cd",
+      "category": "character",
+      "triggers": [
+        "why are you both a writer and a CD",
+        "how do you do both writing and creative direction",
+        "what's the difference between your writer self and your CD self",
+        "do you prefer writing or directing",
+        "why not just be one or the other"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. The real answer — how the two roles feed each other. Where one informs the other. What you can do because you hold both that most people can't.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same substance, lighter. Maybe the analogy that actually explains it.]"
+        }
+      ],
+      "followups": ["what-i-do", "writing-beliefs", "working-with-me"]
+    },
+    {
+      "id": "whats-on-my-desk",
+      "category": "character",
+      "triggers": [
+        "what's on your desk",
+        "what are you working on right now",
+        "what projects are you on",
+        "what does your day look like",
+        "what are you up to these days"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. What you're actually working on — as specific as NDA allows. What's holding your attention. What's next.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same work, different angle — the version that would make a good story at a party.]"
+        }
+      ],
+      "followups": ["what-i-do", "brands", "see-the-work"]
+    },
+    {
+      "id": "what-im-reading",
+      "category": "character",
+      "triggers": [
+        "what are you reading",
+        "what do you read",
+        "what books do you recommend",
+        "any book recommendations",
+        "what do you read to stay sharp"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. Actual titles, what you got from each, one recommendation with a note on who it's for. Not a list — a recommendation with a reason.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same books, but include the one embarrassing one and why.]"
+        }
+      ],
+      "followups": ["writing-beliefs", "whats-on-my-desk", "favorite-ad-i-didnt-make"]
+    },
+    {
+      "id": "real-person-check",
+      "category": "oddball",
+      "triggers": [
+        "are you a real person",
+        "is this actually you",
+        "wait is this AI",
+        "am I talking to a bot",
+        "is there a real human here"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. Yes, real person, here's the tell. Lean into the humor of being asked this on a pre-written conversational page.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same answer, more deadpan. End with a line that only a person would write.]"
+        }
+      ],
+      "followups": ["what-i-do", "working-with-me", "tell-me-a-secret"]
+    },
+    {
+      "id": "protagonist-ink",
+      "category": "oddball",
+      "triggers": [
+        "what is protagonist ink",
+        "tell me about protagonist ink",
+        "what's your company",
+        "is protagonist ink your agency",
+        "did you start a company"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. What Protagonist Ink is, why you started it, what kind of work comes through it. Keep it short — this isn't the homepage for PI.]"
+        }
+      ],
+      "followups": ["what-i-do", "how-to-work-with-me", "see-the-work"]
+    },
+    {
+      "id": "empty-shelf-explanation",
+      "category": "oddball",
+      "triggers": [
+        "why is your writing shelf empty",
+        "why don't you have writing samples",
+        "where are your writing samples",
+        "the writing page is empty",
+        "I don't see any writing examples"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. The /writing page joke + the real reason. The self-editing posture that explains it. End with 'ask me for a sample.']"
+        }
+      ],
+      "followups": ["see-the-work", "email-me", "what-i-do"]
+    },
+    {
+      "id": "favorite-ad-i-didnt-make",
+      "category": "oddball",
+      "triggers": [
+        "what's your favorite ad you didn't make",
+        "what's the best ad you've seen",
+        "what ads do you actually like",
+        "what advertising inspires you",
+        "name an ad you wish you'd written"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. A real answer — name the work, what it did, why you still think about it. Not the safe 'it's brilliant' — what actually stayed with you.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: same answer, slightly more confessional. The version that reveals something about your taste.]"
+        }
+      ],
+      "followups": ["writing-beliefs", "what-im-reading", "tell-me-a-secret"]
+    },
+    {
+      "id": "tell-me-a-secret",
+      "category": "oddball",
+      "triggers": [
+        "tell me a secret",
+        "what's something most people don't know about you",
+        "what's your most unpopular opinion",
+        "what's something surprising about you",
+        "give me something unexpected"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. An actual surprise — something specific, not humble-braggy. The version that makes someone remember you.]"
+        },
+        {
+          "mood": "playful",
+          "text": "[PLACEHOLDER — Patrick writes: a different secret. Lighter, maybe weirder. The kind you'd text a friend.]"
+        }
+      ],
+      "followups": ["real-person-check", "protagonist-ink", "what-im-reading"]
+    },
+    {
+      "id": "email-me",
+      "category": "escape",
+      "triggers": [
+        "how do I reach you",
+        "what's your email",
+        "send me your contact info",
+        "I want to get in touch",
+        "how do I contact you"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1 sentence + email link. Direct. The mailto link will be wired by the UI from the links object.]"
+        }
+      ],
+      "followups": ["how-to-work-with-me", "am-i-available", "resume"]
+    },
+    {
+      "id": "resume",
+      "category": "escape",
+      "triggers": [
+        "can I see your resume",
+        "do you have a CV",
+        "send me your resume",
+        "where's your CV",
+        "I need your resume"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1 sentence + resume link. Offer to send it directly too if they prefer a version tailored to their brief.]"
+        }
+      ],
+      "followups": ["email-me", "see-the-work", "am-i-available"]
+    },
+    {
+      "id": "more-work",
+      "category": "escape",
+      "triggers": [
+        "show me more work",
+        "is there more in your portfolio",
+        "what else have you done",
+        "are there more case studies",
+        "I want to see more"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: 1 sentence pointing to /work. Optional: note that what's there is a selection and email can get them more.]"
+        }
+      ],
+      "followups": ["see-the-work", "brands", "email-me"]
+    },
+    {
+      "id": "nice-try",
+      "category": "oddball",
+      "triggers": [],
+      "replies": [
+        {
+          "mood": "default",
+          "text": "[PLACEHOLDER — Patrick writes: one sentence. Catch the prompt-injection attempt with humor, not a scolding. End with a small shrug toward email.]"
+        }
+      ],
+      "followups": []
+    }
+  ],
+  "links": {
+    "email": "patrick@pkthewriter.com",
+    "resume": "/resume",
+    "work": "/work"
+  }
+}

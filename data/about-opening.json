@@ -1,0 +1,29 @@
+{
+  "exchanges": [
+    { "role": "visitor", "text": "/ tell me about you", "prefilled": true },
+    {
+      "role": "patrick",
+      "text": "[PLACEHOLDER reply 1 — framing: 3–4 sentences. Who you are in your own words, end with a hook that invites the next question. Tone: warm, declarative.]"
+    },
+    { "role": "visitor", "text": "what do you actually do day-to-day?", "auto": true },
+    {
+      "role": "patrick",
+      "text": "[PLACEHOLDER reply 2 — the work: 3–4 sentences. Concrete verbs, name the collaborators you partner with. Avoid a brand list here — that has its own intent.]"
+    },
+    { "role": "visitor", "text": "what's it like working with you?", "auto": true },
+    {
+      "role": "patrick",
+      "text": "[PLACEHOLDER reply 3 — collaboration: 3–5 sentences. How you give feedback, where you push, where you defer. Specific, not aspirational.]"
+    },
+    { "role": "visitor", "text": "why is the writing shelf so empty?", "auto": true },
+    {
+      "role": "patrick",
+      "text": "[PLACEHOLDER reply 4 — self-editing posture: 2–3 sentences. The /writing page joke, plus the real reason. Ends with 'ask me for a sample.']"
+    },
+    { "role": "visitor", "text": "are you taking projects?", "auto": true },
+    {
+      "role": "patrick",
+      "text": "[PLACEHOLDER reply 5 — close + email CTA: 2–3 sentences. Availability, how to reach you, why email beats a form. End with the mailto link in plain text — the UI will wire it.]"
+    }
+  ]
+}

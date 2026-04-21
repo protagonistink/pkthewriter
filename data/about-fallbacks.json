@@ -1,0 +1,9 @@
+{
+  "fallbacks": [
+    { "text": "[PLACEHOLDER — Patrick writes fallback A: 2 sentences. Acknowledge you don't have a pre-written answer for that; invite email. Warm, not apologetic.]" },
+    { "text": "[PLACEHOLDER — Patrick writes fallback B: similar, different angle.]" },
+    { "text": "[PLACEHOLDER — Patrick writes fallback C: shorter, punchier.]" },
+    { "text": "[PLACEHOLDER — Patrick writes fallback D: longer, more curious about what they actually meant.]" },
+    { "text": "[PLACEHOLDER — Patrick writes fallback E: tongue-in-cheek variant.]" }
+  ]
+}
