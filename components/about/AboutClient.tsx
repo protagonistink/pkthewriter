@@ -5,6 +5,7 @@ import { useReducedMotion } from "motion/react";
 import { AboutThread } from "./AboutThread";
 import { AboutInput } from "./AboutInput";
 import { AboutChips } from "./AboutChips";
+import { AboutPageView } from "./AboutPageView";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
 import { createMatcher } from "@/lib/about-matcher";
 import { loadSession, saveSession, emptySession } from "@/lib/about-session";
@@ -12,7 +13,7 @@ import { detectInjection } from "@/lib/about-injection";
 import openingData from "@/data/about-opening.json";
 import intentsData from "@/data/about-intents.json";
 import fallbacksData from "@/data/about-fallbacks.json";
-import type { Exchange, Intent, SessionState } from "@/lib/about-types";
+import type { Exchange, Intent, ReadMode, SessionState } from "@/lib/about-types";
 
 const OPENING: Exchange[] = openingData.exchanges as Exchange[];
 
@@ -87,6 +88,9 @@ export function AboutClient() {
       setIsPlaying(false);
     }
   }, []);
+
+  // ── Read mode ─────────────────────────────────────────────────────────────
+  const [readMode, setReadMode] = useState<ReadMode>("chat");
 
   // ── Branch state ──────────────────────────────────────────────────────────
   const [branchExchanges, setBranchExchanges] = useState<Exchange[]>([]);
@@ -202,24 +206,50 @@ export function AboutClient() {
 
   const typingMap = openingTypingMap ?? branchTypingMap;
 
+  const links = intentsData.links;
+
   return (
     <>
-      <section className="relative text-[var(--color-ink)] pt-[6vh] pb-[24vh] px-4 sm:px-6 lg:px-8">
-        <div className="max-w-[720px] mx-auto">
-          <AboutThread
-            exchanges={allExchanges}
-            typingMap={typingMap}
-            instant={instant}
-          />
-          <AboutChips chips={activeChips} onSelect={handleSubmit} />
-          <AboutInput
-            placeholders={PLACEHOLDERS}
-            onSubmit={handleSubmit}
-            ghostComplete={matcher.ghostComplete}
-            disabled={isPlaying}
-          />
-        </div>
-      </section>
+      {/* Read / chat toggle — pinned top-right */}
+      <button
+        type="button"
+        aria-pressed={readMode === "page"}
+        onClick={() => setReadMode((m) => (m === "chat" ? "page" : "chat"))}
+        className="
+          fixed top-[24px] right-[24px] z-[50]
+          font-[family-name:var(--font-mono)] text-[12px] tracking-[0.06em]
+          px-[12px] py-[6px]
+          border border-[var(--color-paper-line)]
+          text-[var(--color-ink-soft)]
+          bg-[var(--color-paper)]
+          rounded-[3px]
+          hover:text-[var(--color-ink)] hover:border-[var(--color-ink-soft)]
+          transition-colors
+        "
+      >
+        {readMode === "chat" ? "read as a page" : "read as a chat"}
+      </button>
+
+      {readMode === "page" ? (
+        <AboutPageView exchanges={allExchanges} links={links} />
+      ) : (
+        <section className="relative text-[var(--color-ink)] pt-[6vh] pb-[24vh] px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[720px] mx-auto">
+            <AboutThread
+              exchanges={allExchanges}
+              typingMap={typingMap}
+              instant={instant}
+            />
+            <AboutChips chips={activeChips} onSelect={handleSubmit} />
+            <AboutInput
+              placeholders={PLACEHOLDERS}
+              onSubmit={handleSubmit}
+              ghostComplete={matcher.ghostComplete}
+              disabled={isPlaying}
+            />
+          </div>
+        </section>
+      )}
       <CaseStudyAsk />
     </>
   );
