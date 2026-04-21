@@ -16,7 +16,7 @@ type Props = {
 
 export function AboutBubble({ exchange, typing, instant }: Props) {
   const isVisitor = exchange.role === "visitor";
-  const label = isVisitor ? "VISITOR" : "PATRICK";
+  const label = isVisitor ? "YOU" : "ME";
   // Strip leading "/ " so the bubble's own accent token doesn't double-up
   // with opening-thread prefilled entries that include it in the text.
   const bodyText =
