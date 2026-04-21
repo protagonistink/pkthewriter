@@ -29,7 +29,7 @@ export default async function WorkIndex() {
   }));
 
   return (
-    <div data-theme="dark" className="grid grid-cols-[auto_1fr] min-h-screen">
+    <div className="grid grid-cols-[auto_1fr] min-h-screen">
       <Rail />
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />

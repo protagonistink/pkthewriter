@@ -11,7 +11,12 @@ export default async function WritingIndex() {
 
   return (
     <CanvasTakeover>
-      <h1 className="font-[family-name:var(--font-mono)] text-3xl mb-8">Writing</h1>
+      <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.32em] uppercase text-[var(--color-accent)] mb-[14px]">
+        — Writing
+      </div>
+      <h1 className="font-[family-name:var(--font-serif)] font-normal text-[clamp(48px,7vw,96px)] leading-[0.96] tracking-[-0.02em] mb-[56px]">
+        A shelf, thinly stocked.
+      </h1>
       <ul className="divide-y divide-[var(--color-paper-line)]">
         {clips.map((clip) => {
           const meta = [

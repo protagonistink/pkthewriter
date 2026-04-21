@@ -45,13 +45,19 @@ export function CaseStudyAsk() {
     };
   }, [open]);
 
-  // ⌘K / Ctrl+K — global accelerator to open the ask overlay from any surface
-  // where this component is mounted. Skipped when the panel is already open
-  // (the open-state effect above owns the keymap once inside).
+  // ⌘K / Ctrl+K or "/" — global accelerator to open the ask overlay.
+  // Skipped when the panel is already open.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
-      if (!isCmdK) return;
+      const target = e.target as HTMLElement | null;
+      const inEditable =
+        !!target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable);
+      const isSlash = e.key === "/" && !inEditable;
+      if (!isCmdK && !isSlash) return;
       e.preventDefault();
       if (!open) openPanel();
     }

@@ -1,6 +1,8 @@
-export function HeroIntro() {
+type HeroIntroProps = { mode?: "full" | "receded" };
+
+export function HeroIntro({ mode = "full" }: HeroIntroProps) {
   return (
-    <div>
+    <div data-hero-mode={mode}>
       <h1
         className="
           hero-h1
@@ -9,6 +11,7 @@ export function HeroIntro() {
           mt-[22px] mb-[18px] max-w-[22ch]
           max-[820px]:text-[clamp(28px,7vw,40px)] max-[820px]:mt-[14px] max-[820px]:mb-[14px]
         "
+        style={{ viewTransitionName: "hero-title" }}
       >
         Hey, I&apos;m Patrick, writer and creative director.
       </h1>

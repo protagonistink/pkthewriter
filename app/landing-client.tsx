@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { ChatBar } from "@/components/landing/ChatBar";
 import { ContactCard } from "@/components/landing/ContactCard";
-import { HeroIntro } from "@/components/landing/HeroIntro";
 import { ResponseFeature } from "@/components/landing/ResponseFeature";
 import { PICard } from "@/components/canvas/PICard";
 import { resolveFeature, type FeatureKey, type FeatureMap, type FeatureCard } from "@/lib/feature-resolver";
@@ -13,27 +12,40 @@ type Props = {
   featureMap: FeatureMap;
 };
 
+type UrlIntent = { autoFocus: boolean; initialQuery: string };
+const URL_INTENT_SERVER: UrlIntent = { autoFocus: false, initialQuery: "" };
+// Cache so useSyncExternalStore gets a stable reference across renders.
+let urlIntentCache: UrlIntent | null = null;
+function subscribeNever(): () => void { return () => {}; }
+function getUrlIntentSnapshot(): UrlIntent {
+  if (urlIntentCache) return urlIntentCache;
+  const url = new URL(window.location.href);
+  const askParam = url.searchParams.get("ask") === "1";
+  const qParam = url.searchParams.get("q");
+  const askHash = window.location.hash === "#ask";
+  urlIntentCache = {
+    autoFocus: askParam || !!qParam || askHash,
+    initialQuery: qParam ?? "",
+  };
+  return urlIntentCache;
+}
+function getUrlIntentServer(): UrlIntent { return URL_INTENT_SERVER; }
+
 export function LandingClient({ featureMap }: Props) {
   const router = useRouter();
   const [piOpen, setPiOpen] = useState(false);
   const [feature, setFeature] = useState<FeatureCard | null>(null);
   const [contactCard, setContactCard] = useState<"hi" | "contact" | null>(null);
-  const [autoFocus] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    const params = new URL(window.location.href).searchParams;
-    return (
-      params.get("ask") === "1" ||
-      !!params.get("q") ||
-      window.location.hash === "#ask"
-    );
-  });
-  const [initialQuery] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    return new URL(window.location.href).searchParams.get("q") ?? "";
-  });
+  // Read URL-driven intent (?ask=1, ?q=…, #ask) on the client without a
+  // SSR/CSR divergence: server renders defaults, client subscribes once and
+  // delivers the actual values post-hydration. Cached so renders are stable.
+  const { autoFocus, initialQuery } = useSyncExternalStore(
+    subscribeNever,
+    getUrlIntentSnapshot,
+    getUrlIntentServer,
+  );
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
     const askParam = url.searchParams.get("ask") === "1";
     const qParam = url.searchParams.get("q");
@@ -95,8 +107,7 @@ export function LandingClient({ featureMap }: Props) {
   const inResponse = feature !== null || contactCard !== null;
 
   return (
-    <div data-state={inResponse ? "response" : "idle"} className="flex-1 flex flex-col">
-      <HeroIntro />
+    <div data-state={inResponse ? "response" : "idle"} className="contents">
       <ChatBar
         onLead={handleLead}
         onNavigate={handleNavigate}

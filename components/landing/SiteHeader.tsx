@@ -33,7 +33,8 @@ export function SiteHeader({ email, rightSlot }: Props) {
           className="
             inline-block pt-[10px]
             font-[family-name:var(--font-mono)] text-[12px] tracking-[0.2em] uppercase
-            text-[var(--color-ink-mid)] hover:text-[var(--color-ink)] transition-colors
+            text-[var(--color-ink-mid)] hover:text-[var(--color-ink)] hover:tracking-[0.24em]
+            transition-[color,letter-spacing] duration-[320ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
           "
         >
           Contact

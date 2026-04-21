@@ -5,10 +5,7 @@ import { SiteHeader } from "@/components/landing/SiteHeader";
 
 export default function CaseStudyLayout({ children }: { children: ReactNode }) {
   return (
-    <div
-      data-theme="dark"
-      className="min-h-screen bg-[var(--color-paper)] text-[var(--color-ink)]"
-    >
+    <div className="min-h-screen bg-[var(--color-paper)] text-[var(--color-ink)]">
       <div className="absolute top-0 left-0 right-0 z-20">
         <SiteHeader
           rightSlot={

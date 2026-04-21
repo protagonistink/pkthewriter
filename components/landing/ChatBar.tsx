@@ -267,7 +267,7 @@ export function ChatBar({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full" autoComplete="off">
+    <form onSubmit={handleSubmit} className="w-full" autoComplete="off" style={{ viewTransitionName: "chat-input" }}>
       <label htmlFor="chat" className="sr-only">Ask me something</label>
       {/* honeypot */}
       <input
@@ -304,11 +304,11 @@ export function ChatBar({
             text-[var(--color-ink)]
             bg-[var(--color-paper-panel)]
             border border-[var(--color-paper-line)]
-            rounded-[18px]
+            rounded-[3px]
             outline-none
             placeholder:text-[var(--color-ink-faint)]
             focus:border-[var(--color-ink-soft)]
-            focus:shadow-[0_0_0_3px_rgba(27,26,22,0.18)]
+            focus:shadow-[0_0_0_2px_rgba(27,26,22,0.12)]
             transition-[border-color,box-shadow,background] duration-200
           "
         />
@@ -339,7 +339,7 @@ export function ChatBar({
               hidden md:flex
               absolute right-[18px] top-1/2 -translate-y-1/2
               w-[22px] h-[22px] items-center justify-center
-              rounded-[6px] border border-[var(--color-paper-line)]
+              rounded-[3px] border border-[var(--color-paper-line)]
               font-[family-name:var(--font-mono)] text-[12px]
               text-[var(--color-ink-soft)] bg-[var(--color-paper)]
               pointer-events-none
@@ -353,8 +353,8 @@ export function ChatBar({
       <p
         className="
           prompt-help
-          font-[family-name:var(--font-mono)] text-[12px]
-          text-[var(--color-ink-soft)] m-0 mx-[6px]
+          font-[family-name:var(--font-mono)] text-[13px]
+          text-[var(--color-ink-soft)] m-0 mt-[8px] mx-[6px]
           tracking-[0.04em]
         "
       >

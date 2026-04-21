@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Paper (landing) — primary surface */
-  --color-paper: #f4ece0;
-  --color-paper-panel: #faf3e7;
-  --color-paper-line: #d8ccb7;
-  --color-paper-line-soft: #e6dcc7;
+  /* Paper (landing) — Moleskine ivory, a committed light-side identity */
+  --color-paper: #f0ece2;
+  --color-paper-panel: #f5f1e8;
+  --color-paper-line: #c8c0b0;
+  --color-paper-line-soft: #ddd8cc;
   --color-ink: #1b1a16;
   --color-ink-mid: #5a564d;
   --color-ink-soft: #6e6858;
@@ -23,8 +23,15 @@
 
   --font-serif: var(--font-newsreader), Georgia, serif;
   --font-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, Consolas, monospace;
+  --font-scrawl: var(--font-hand), "Caveat", cursive;
 
   --shadow-soft: 0 24px 50px rgba(27, 26, 22, 0.08);
+
+  /* Motion — one place to tune energy across the site */
+  --ease-resist: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-tactile: 260ms;
+  --dur-scene: 700ms;
 }
 
 :root {
@@ -38,6 +45,46 @@ html, body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
+}
+
+html, body {
+  transition: background-color var(--dur-scene) var(--ease-resist), color var(--dur-scene) var(--ease-resist);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { transition: none; }
+}
+
+/* Paper grain — a fine fiber layer that makes the ivory feel like stock */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.065;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+  transition: opacity var(--dur-scene) var(--ease-resist);
+}
+
+[data-theme="dark"] body::before {
+  opacity: 0.015;
+  mix-blend-mode: screen;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(ellipse 90% 85% at 50% 42%, transparent 50%, rgba(8, 6, 4, 0.14) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { transition: none; }
 }
 
 body {
@@ -136,6 +183,53 @@ body {
   opacity: 0;
   margin-bottom: 0;
 }
+
+/* ---------------------------------------------------------------- */
+/* Hero receded mode — /about and any chat state with hero receded.  */
+/* ---------------------------------------------------------------- */
+[data-hero-mode] .hero-h1 {
+  transition: font-size 420ms cubic-bezier(.4,.0,.2,1), margin 420ms cubic-bezier(.4,.0,.2,1);
+}
+[data-hero-mode="receded"] .hero-h1 {
+  font-size: clamp(26px, 2.8vw, 34px);
+  margin-top: 8px;
+  margin-bottom: 18px;
+}
+[data-hero-mode] .hero-sub {
+  max-height: 40px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-height 380ms ease, opacity 300ms ease, margin 380ms ease;
+}
+[data-hero-mode="receded"] .hero-sub {
+  max-height: 0;
+  opacity: 0;
+  margin-bottom: 0;
+}
+
+/* ---------------------------------------------------------------- */
+/* View transitions — hero title, signature, chat input morph.       */
+/* ---------------------------------------------------------------- */
+.hero-h1 { view-transition-name: hero-title; }
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(hero-title),
+  ::view-transition-new(hero-title),
+  ::view-transition-old(hero-signature),
+  ::view-transition-new(hero-signature),
+  ::view-transition-old(chat-input),
+  ::view-transition-new(chat-input) {
+    animation-duration: 420ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
 [data-state] .prompt-help {
   transition: opacity 200ms ease, max-height 260ms ease, margin 260ms ease;
   max-height: 40px;
@@ -152,6 +246,15 @@ body {
 [data-state="response"] .prompt-clear {
   display: flex;
 }
+/* In response state, the input recedes — the content below is the subject now. */
+[data-state="response"] #chat {
+  border-color: var(--color-paper-line-soft);
+  box-shadow: none;
+}
+[data-state="response"] #chat:focus {
+  border-color: var(--color-paper-line);
+  box-shadow: 0 0 0 2px rgba(27,26,22,0.08);
+}
 [data-state] .response-slot {
   opacity: 0;
   transform: translateY(10px);
@@ -162,4 +265,28 @@ body {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+/* ---------------------------------------------------------------- */
+/* About page — keyframes for marquee, dot pulse, caret blink.       */
+/* ---------------------------------------------------------------- */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.85); }
+}
+
+@keyframes caret-blink {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee-track { animation: none !important; }
+  .about-pulse-dot { animation: none !important; }
+  .about-caret { animation: none !important; opacity: 0 !important; }
 }

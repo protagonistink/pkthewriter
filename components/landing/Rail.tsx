@@ -82,6 +82,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
         <button
           type="button"
           aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
+          title={expanded ? "Collapse" : "Expand"}
           aria-expanded={expanded}
           onClick={() => setExpanded((v) => !v)}
           className="w-[30px] h-[30px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
@@ -107,28 +108,35 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
       <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[10px]">
         {items.map((item) => {
           const current = item.match(pathname);
+          const isContact = item.label === "Contact";
           const className = `
-            relative flex items-center gap-[14px] px-[10px] py-[10px]
+            group relative flex items-center gap-[14px] px-[10px] py-[10px]
             rounded-[8px] whitespace-nowrap overflow-hidden
             text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
-            hover:bg-[rgba(27,26,22,0.03)]
-            transition-colors duration-150
+            hover:bg-[rgba(27,26,22,0.05)]
+            transition duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
             ${current ? "!text-[var(--color-ink)]" : ""}
           `;
           const content = (
             <>
-              {current && (
+              {current ? (
                 <span
                   aria-hidden="true"
                   className="absolute -left-[10px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-[2px] bg-[var(--color-accent)]"
+                />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[10px] top-1/2 -translate-y-1/2 w-[1px] h-[14px] rounded-[1px] bg-[var(--color-ink)] opacity-0 group-hover:opacity-50 transition-opacity duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]"
                 />
               )}
               <span className="shrink-0 w-[20px] flex justify-center">{item.icon}</span>
               <span
                 className={`
                   font-[family-name:var(--font-serif)] text-[15px]
-                  transition-[opacity,transform] duration-[220ms] ease delay-[60ms]
+                  transition-[opacity,transform,letter-spacing] duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] delay-[60ms]
                   ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[6px] pointer-events-none"}
+                  ${isContact && expanded ? "group-hover:tracking-[0.06em]" : ""}
                 `}
               >
                 {item.label}
@@ -156,17 +164,6 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
         })}
       </nav>
 
-      <div
-        className={`
-          mt-auto px-[20px] pt-[18px] pb-[22px] whitespace-nowrap
-          font-[family-name:var(--font-mono)] text-[11px] tracking-[0.14em] uppercase
-          text-[var(--color-ink-soft)]
-          transition-opacity duration-[220ms] ease delay-[100ms]
-          ${expanded ? "opacity-100" : "opacity-0"}
-        `}
-      >
-        The old way
-      </div>
     </aside>
   );
 }

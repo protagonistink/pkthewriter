@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Newsreader, Space_Mono } from "next/font/google";
+import { Caveat, Newsreader, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeBoundary } from "@/components/ThemeBoundary";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -18,6 +19,12 @@ const spaceMono = Space_Mono({
   style: ["normal", "italic"],
 });
 
+const caveat = Caveat({
+  variable: "--font-hand",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3003"),
   title: { default: "Patrick Kirkland — writer and creative director", template: "%s — Patrick Kirkland" },
@@ -32,9 +39,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${newsreader.variable} ${spaceMono.variable} ${caveat.variable}`}>
       <body>
         <a href="#main" className="skip-to-content">Skip to content</a>
+        <ThemeBoundary />
         {children}
         <Analytics />
         <SpeedInsights />
