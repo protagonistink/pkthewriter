@@ -4,20 +4,37 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { AboutThread } from "./AboutThread";
 import { AboutInput } from "./AboutInput";
+import { AboutChips } from "./AboutChips";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
 import { createMatcher } from "@/lib/about-matcher";
+import { loadSession, saveSession, emptySession } from "@/lib/about-session";
+import { detectInjection } from "@/lib/about-injection";
 import openingData from "@/data/about-opening.json";
 import intentsData from "@/data/about-intents.json";
 import fallbacksData from "@/data/about-fallbacks.json";
-import type { Exchange } from "@/lib/about-types";
+import type { Exchange, Intent, SessionState } from "@/lib/about-types";
 
 const OPENING: Exchange[] = openingData.exchanges as Exchange[];
 
-// Canonical triggers (first trigger per intent) for placeholder cycling
 const PLACEHOLDERS = intentsData.intents
   .filter((i) => i.id !== "nice-try")
   .map((i) => i.triggers[0])
   .filter(Boolean);
+
+const INTENTS_BY_ID = new Map<string, (typeof intentsData.intents)[number]>(
+  intentsData.intents.map((i) => [i.id, i])
+);
+
+type ChipItem = { id: string; label: string };
+
+function computeChips(intent: { followups?: string[] }): ChipItem[] {
+  return (intent.followups ?? [])
+    .map((fid) => {
+      const fi = INTENTS_BY_ID.get(fid);
+      return fi ? { id: fid, label: fi.triggers[0] ?? fid } : null;
+    })
+    .filter((c): c is ChipItem => c !== null);
+}
 
 export function AboutClient() {
   const matcher = useMemo(
@@ -29,15 +46,13 @@ export function AboutClient() {
     []
   );
   const prefersReduced = useReducedMotion();
-  // Exchange 0 is the prefilled visitor line — shown statically.
-  // Start with 2 so exchange 1 (first Patrick reply) begins typing immediately.
+
+  // ── Opening thread ────────────────────────────────────────────────────────
   const [visibleCount, setVisibleCount] = useState(2);
   const [isPlaying, setIsPlaying] = useState(true);
   const [fastForward, setFastForward] = useState(false);
-
   const instant = !!(fastForward || prefersReduced);
 
-  // Fast-forward on first click or keydown while still playing
   const handleFastForward = useCallback(() => {
     if (!isPlaying) return;
     setFastForward(true);
@@ -56,7 +71,6 @@ export function AboutClient() {
     };
   }, [isPlaying, handleFastForward]);
 
-  // Reduced-motion: skip all typing from mount
   useEffect(() => {
     if (prefersReduced) {
       setFastForward(true);
@@ -65,45 +79,142 @@ export function AboutClient() {
     }
   }, [prefersReduced]);
 
-  // Called when a bubble finishes typing — advance to the next exchange
-  const onBubbleDone = useCallback(
-    (index: number) => {
-      const next = index + 1;
-      if (next < OPENING.length) {
-        setVisibleCount(next + 1);
-      } else {
-        setIsPlaying(false);
-      }
-    },
-    []
+  const onBubbleDone = useCallback((index: number) => {
+    const next = index + 1;
+    if (next < OPENING.length) {
+      setVisibleCount(next + 1);
+    } else {
+      setIsPlaying(false);
+    }
+  }, []);
+
+  // ── Branch state ──────────────────────────────────────────────────────────
+  const [branchExchanges, setBranchExchanges] = useState<Exchange[]>([]);
+  const [branchTypingIndex, setBranchTypingIndex] = useState<number | null>(null);
+  const [activeChips, setActiveChips] = useState<ChipItem[]>([]);
+  const [session, setSession] = useState<SessionState>(() =>
+    typeof window === "undefined" ? emptySession() : loadSession()
   );
 
-  const visibleExchanges = OPENING.slice(0, visibleCount);
+  // Refs for stale-closure-safe access inside callbacks
+  const branchLengthRef = useRef(0);
+  branchLengthRef.current = branchExchanges.length;
+  const sessionRef = useRef(session);
+  sessionRef.current = session;
+  const pendingChipsRef = useRef<ChipItem[]>([]);
 
-  // Build typing map: only the last visible exchange gets a typer
-  const typingMap =
+  const onBranchTypingDone = useCallback(() => {
+    setBranchTypingIndex(null);
+    setActiveChips(pendingChipsRef.current);
+    pendingChipsRef.current = [];
+  }, []);
+
+  const handleSubmit = useCallback(
+    (raw: string) => {
+      const query = raw.trim();
+      if (!query) return;
+
+      setActiveChips([]);
+      setBranchTypingIndex(null);
+      pendingChipsRef.current = [];
+
+      const currentSession = sessionRef.current;
+      const visitorTurn: Exchange = { role: "visitor", text: query };
+      let patrickTurn: Exchange;
+
+      if (detectInjection(query)) {
+        const niceTry = INTENTS_BY_ID.get("nice-try");
+        if (!niceTry) return;
+        const { reply } = matcher.pickReply(niceTry as Intent, currentSession, query);
+        patrickTurn = { role: "patrick", text: reply.text, intentId: "nice-try" };
+      } else {
+        const intent = matcher.match(query);
+        if (intent) {
+          const { reply, variantIndex } = matcher.pickReply(
+            intent as Intent,
+            currentSession,
+            query
+          );
+          patrickTurn = { role: "patrick", text: reply.text, intentId: intent.id };
+          pendingChipsRef.current = computeChips(intent);
+
+          const updated: SessionState = {
+            seenIntentIds: new Set([...currentSession.seenIntentIds, intent.id]),
+            servedReplyKeys: new Set([
+              ...currentSession.servedReplyKeys,
+              `${intent.id}:${variantIndex}`,
+            ]),
+            servedFallbackIndices: currentSession.servedFallbackIndices,
+            moodHistory: [
+              ...currentSession.moodHistory,
+              matcher.detectMood(query),
+            ].slice(-5),
+          };
+          setSession(updated);
+          saveSession(updated);
+        } else {
+          const { text, index } = matcher.pickFallback(currentSession);
+          patrickTurn = { role: "patrick", text };
+
+          const updated: SessionState = {
+            ...currentSession,
+            servedFallbackIndices: new Set([
+              ...currentSession.servedFallbackIndices,
+              index,
+            ]),
+          };
+          setSession(updated);
+          saveSession(updated);
+        }
+      }
+
+      // Patrick is at branchLength + 1 (visitor at +0, Patrick at +1)
+      const patrickBranchIndex = branchLengthRef.current + 1;
+      setBranchTypingIndex(patrickBranchIndex);
+      setBranchExchanges((prev) => [...prev, visitorTurn, patrickTurn]);
+    },
+    [matcher] // session/branchExchanges accessed via refs
+  );
+
+  // ── Assemble thread ───────────────────────────────────────────────────────
+  const openingExchanges = OPENING.slice(0, visibleCount);
+  const allExchanges: Exchange[] = [...openingExchanges, ...branchExchanges];
+
+  const openingTypingMap =
     isPlaying && !instant
       ? {
           [visibleCount - 1]: {
-            speed:
-              OPENING[visibleCount - 1]?.role === "visitor" ? 40 : 25,
+            speed: OPENING[visibleCount - 1]?.role === "visitor" ? 40 : 25,
             onDone: () => onBubbleDone(visibleCount - 1),
           },
         }
       : undefined;
+
+  const branchTypingMap =
+    !isPlaying && branchTypingIndex !== null
+      ? {
+          [openingExchanges.length + branchTypingIndex]: {
+            speed: 25,
+            onDone: onBranchTypingDone,
+          },
+        }
+      : undefined;
+
+  const typingMap = openingTypingMap ?? branchTypingMap;
 
   return (
     <>
       <section className="relative text-[var(--color-ink)] pt-[6vh] pb-[24vh] px-4 sm:px-6 lg:px-8">
         <div className="max-w-[720px] mx-auto">
           <AboutThread
-            exchanges={visibleExchanges}
+            exchanges={allExchanges}
             typingMap={typingMap}
             instant={instant}
           />
+          <AboutChips chips={activeChips} onSelect={handleSubmit} />
           <AboutInput
             placeholders={PLACEHOLDERS}
-            onSubmit={() => {}}
+            onSubmit={handleSubmit}
             ghostComplete={matcher.ghostComplete}
             disabled={isPlaying}
           />
