@@ -15,21 +15,32 @@ type Mode = "initial" | "clarify";
 const CLARIFY_SUGGESTIONS = [
   "/ best ad",
   "/ screenwriting",
-  "/ work with me",
+  "/ hire me",
 ];
 
 // Slow, confident rotation. Pauses while the visitor is typing. The pool
-// surfaces the same high-intent doors the chip row used to expose.
+// surfaces the same high-intent doors the chip row used to expose, mixing
+// slash commands, plain-English sentences, and questions so the prompt
+// reads like a real conversation starter rather than a menu of commands.
+// Every entry has a clean route through lib/intent-router.ts.
 const ROTATING_PLACEHOLDERS = [
   "/ resume",
-  "/ work",
+  "Show me your best campaign.",
+  "What did you do for Airtable?",
   "/ rates",
-  "/ availability",
+  "Tell me about Protagonist Ink.",
+  "Are you available in Q3?",
   "/ writing samples",
-  "/ brand voice",
+  "Show me a script.",
+  "Who are you?",
   "/ surprise me",
 ] as const;
-const PLACEHOLDER_INTERVAL_MS = 3500;
+
+// Per-character typing speed and post-type hold + fade-out durations. The
+// fade duration must match the .prompt-placeholder-rotator CSS transition.
+const TYPE_CHAR_MS = 38;
+const HOLD_MS = 1900;
+const FADE_MS = 420;
 
 const THINKING_LINES = [
   "Hmmm…",
@@ -73,11 +84,17 @@ export function ChatBar({
   const [status, setStatus] = useState<Status>("idle");
   const [mode, setMode] = useState<Mode>("initial");
   const [reply, setReply] = useState<string | null>(null);
-  const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [clarifyQuery, setClarifyQuery] = useState("");
   const [isTouchLike, setIsTouchLike] = useState(false);
   const [dismissedGhostFor, setDismissedGhostFor] = useState("");
-  const placeholder = ROTATING_PLACEHOLDERS[placeholderIdx];
+  // Placeholder rotation state. `displayed` is the partial string visible
+  // during typing; `phase` drives the CSS opacity transition for the fade-
+  // out segment. The full target for the current rotation is exposed via
+  // a ref so the empty-submit fallback dispatches the whole prompt rather
+  // than whatever has been typed so far.
+  const [displayed, setDisplayed] = useState<string>(ROTATING_PLACEHOLDERS[0]);
+  const [phase, setPhase] = useState<"typing" | "holding" | "fading">("holding");
+  const targetRef = useRef<string>(ROTATING_PLACEHOLDERS[0]);
   // Lead-flow state: after a free-text prompt fires the lead intent we keep
   // the original message and surface an inline email-capture form so the
   // visitor isn't dead-ended.
@@ -99,20 +116,69 @@ export function ChatBar({
     [clarifyQuery, mode, value]
   );
 
-  // Slow placeholder rotation. Pauses while the visitor is typing or in
-  // clarify/response, and on prefers-reduced-motion. The actual fade is
-  // CSS-driven via the .prompt-placeholder-fade keyframe; this only steps
-  // the index.
+  // Placeholder rotation: type the next prompt in character-by-character,
+  // hold the full string visible, fade out, advance, repeat. Pauses while
+  // the visitor is typing, in clarify, or while a feature/lead dispatch is
+  // in flight. Honors prefers-reduced-motion (renders the resting target
+  // statically with no animation).
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (value.length > 0) return;
     if (mode === "clarify") return;
     if (status === "sending" || status === "sent") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setInterval(() => {
-      setPlaceholderIdx((i) => (i + 1) % ROTATING_PLACEHOLDERS.length);
-    }, PLACEHOLDER_INTERVAL_MS);
-    return () => window.clearInterval(id);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplayed(targetRef.current);
+      setPhase("holding");
+      return;
+    }
+
+    let cancelled = false;
+    const timers: number[] = [];
+    let idx = (ROTATING_PLACEHOLDERS as readonly string[]).indexOf(targetRef.current);
+    if (idx < 0) idx = 0;
+
+    const wait = (ms: number) =>
+      new Promise<void>((resolve) => {
+        const t = window.setTimeout(resolve, ms);
+        timers.push(t);
+      });
+
+    async function typeOut(target: string) {
+      setPhase("typing");
+      setDisplayed("");
+      for (let i = 1; i <= target.length; i += 1) {
+        if (cancelled) return;
+        setDisplayed(target.slice(0, i));
+        await wait(TYPE_CHAR_MS);
+      }
+    }
+
+    async function run() {
+      // First frame sits on the resting target so there's no blank flash
+      // before the first fade.
+      targetRef.current = ROTATING_PLACEHOLDERS[idx];
+      setDisplayed(targetRef.current);
+      setPhase("holding");
+      await wait(HOLD_MS);
+      while (!cancelled) {
+        setPhase("fading");
+        await wait(FADE_MS);
+        if (cancelled) return;
+        idx = (idx + 1) % ROTATING_PLACEHOLDERS.length;
+        targetRef.current = ROTATING_PLACEHOLDERS[idx];
+        await typeOut(targetRef.current);
+        if (cancelled) return;
+        setPhase("holding");
+        await wait(HOLD_MS);
+      }
+    }
+
+    void run();
+
+    return () => {
+      cancelled = true;
+      timers.forEach((t) => clearTimeout(t));
+    };
   }, [value, mode, status]);
 
   useEffect(() => {
@@ -268,7 +334,7 @@ export function ChatBar({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    void dispatch(value.trim() ? value : placeholder);
+    void dispatch(value.trim() ? value : targetRef.current);
   }
 
   function handleSuggestion(text: string) {
@@ -371,16 +437,18 @@ export function ChatBar({
         />
         {value === "" && !followupMode && mode !== "clarify" && status === "idle" && (
           <span
-            key={placeholderIdx}
             aria-hidden="true"
+            data-phase={phase}
             className="
-              prompt-placeholder-fade
+              prompt-placeholder-rotator
               pointer-events-none absolute left-[24px] top-1/2 -translate-y-1/2
               font-[family-name:var(--font-mono)] text-[16px] text-[var(--color-ink-faint)]
               max-[430px]:left-[16px]
+              whitespace-nowrap overflow-hidden max-w-[calc(100%-104px)]
+              max-[430px]:max-w-[calc(100%-78px)]
             "
           >
-            {placeholder}
+            {displayed}
           </span>
         )}
         {ghostSuffix && (
@@ -420,7 +488,7 @@ export function ChatBar({
         {!inResponse && (
           <button
             type="submit"
-            aria-label={value.trim() ? "Submit prompt" : `Run ${placeholder}`}
+            aria-label={value.trim() ? "Submit prompt" : `Run ${targetRef.current}`}
             className="
               prompt-keycap prompt-submit
               flex

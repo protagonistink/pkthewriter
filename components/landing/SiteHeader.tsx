@@ -7,7 +7,7 @@ import { ContactModal } from "./ContactModal";
 type Props = {
   email?: string;
   /** Override the right-hand link. Case-study and takeover surfaces pass a
-   *  lateral nav link (e.g. "← All work") instead of the Work With Me CTA. */
+   *  lateral nav link (e.g. "← All work") instead of the Hire Me CTA. */
   rightSlot?: ReactNode;
 };
 
@@ -51,7 +51,7 @@ export function SiteHeader({ email: _email, rightSlot }: Props) {
                 hover:opacity-85 transition-opacity
               "
             >
-              Work With Me
+              Hire Me
             </button>
           </div>
         )}

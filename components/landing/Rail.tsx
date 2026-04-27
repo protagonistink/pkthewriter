@@ -47,12 +47,26 @@ const ITEMS: Item[] = [
   },
 ];
 
+// Mobile drawer adds a Contact entry that opens the Hire Me modal. Desktop
+// keeps the lean rail (Home / Work / Writing / About only) since the
+// header CTA is always visible there.
+const DRAWER_CONTACT_ITEM: Item = {
+  href: "#contact",
+  label: "Contact",
+  match: () => false,
+  external: true,
+  icon: (
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+  ),
+};
+
 export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
 
   const items = ITEMS;
+  const drawerItems = [...ITEMS, DRAWER_CONTACT_ITEM];
 
   useEffect(() => {
     const handler = () => {
@@ -243,12 +257,13 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
               </button>
             </div>
             <nav aria-label="Primary" className="flex flex-col px-[28px] gap-[8px]">
-              {items.map((item) => {
+              {drawerItems.map((item) => {
                 const current = item.match(pathname);
+                const isContact = item.href === "#contact";
                 const className = `
                   group relative flex items-baseline gap-[18px] py-[10px]
                   text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
-                  transition-colors
+                  transition-colors text-left
                   ${current ? "!text-[var(--color-ink)]" : ""}
                 `;
                 const content = (
@@ -264,6 +279,21 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                     </span>
                   </>
                 );
+                if (isContact) {
+                  return (
+                    <button
+                      key={item.label}
+                      type="button"
+                      onClick={() => {
+                        setMobileOpen(false);
+                        document.dispatchEvent(new CustomEvent("open-contact-modal"));
+                      }}
+                      className={className}
+                    >
+                      {content}
+                    </button>
+                  );
+                }
                 if (item.external) {
                   return (
                     <a key={item.label} href={item.href} className={className}>
