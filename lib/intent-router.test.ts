@@ -103,8 +103,8 @@ describe("routeIntent — contact-card intents", () => {
   it("routes 'say hi' → contact-card:hi", () => {
     expect(routeIntent("say hi")).toMatchObject({ kind: "contact-card", variant: "hi" });
   });
-  it("routes bare 'hi' → contact-card:hi", () => {
-    expect(routeIntent("hi")).toMatchObject({ kind: "contact-card", variant: "hi" });
+  it("routes bare 'hi' → clarify (show chips)", () => {
+    expect(routeIntent("hi")).toMatchObject({ kind: "clarify" });
   });
   it("routes bare 'hello' → contact-card:hi", () => {
     expect(routeIntent("hello")).toMatchObject({ kind: "contact-card", variant: "hi" });
