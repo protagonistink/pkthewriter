@@ -243,21 +243,26 @@ export function ContactModal({ open, onClose }: Props) {
               >
                 {status === "sending" ? "Sending…" : "Send →"}
               </button>
-              <div className="flex gap-[16px] justify-center pt-[4px]">
+              <div className="flex flex-col items-center gap-[12px] pt-[4px] text-center">
                 <a
                   href="mailto:patrick@pkthewriter.com"
                   className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
                 >
-                  Or email directly
+                  Or email me
                 </a>
-                <a
-                  href={CALENDLY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
-                >
-                  Book 15 min →
-                </a>
+                <div>
+                  <p className="font-[family-name:var(--font-serif)] text-[13px] text-[var(--color-ink-mid)] mb-[4px]">
+                    Want to Zoom instead?
+                  </p>
+                  <a
+                    href={CALENDLY_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+                  >
+                    Book 15 min →
+                  </a>
+                </div>
               </div>
             </div>
           </form>

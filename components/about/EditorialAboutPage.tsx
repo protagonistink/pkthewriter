@@ -188,9 +188,21 @@ export function EditorialAboutPage({ about, projects }: Props) {
               <FactBlock label="[ VITAL STATS ]">
                 Available for freelance CD, copy, narrative strategy, and founder-story work.
               </FactBlock>
-              <FactBlock label="[ HIT LIST ]">
-                Apple, HBO, Verizon, AT&T, Beats, Chevron, Google, Meta, founders, arts organizations, and the occasional screenplay.
-              </FactBlock>
+              <div className="mb-[44px]">
+                <h2 className="mb-[12px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.26em] text-[var(--color-accent)]">
+                  [ RECOGNITION ]
+                </h2>
+                <ul className="m-0 p-0 list-none flex flex-col gap-[5px]">
+                  {ACCOLADES.map((award) => (
+                    <li
+                      key={award}
+                      className="font-[family-name:var(--font-serif)] text-[20px] leading-[1.3] tracking-[-0.018em] text-[var(--color-ink)]"
+                    >
+                      {award}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="flex flex-col items-start gap-[12px] pt-[10px]">
                 <AboutButton href={resumeUrl} newTab>Get the PDF</AboutButton>
                 <AboutButton href={`mailto:${email}`}>Say hello</AboutButton>
