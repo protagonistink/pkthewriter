@@ -89,11 +89,11 @@ const CLIENTS: ClientEntry[] = [
 ];
 
 const ACCOLADES = [
-  "Cannes Lions",
-  "The One Show",
-  "Webby Awards",
-  "Clio Awards",
+  "ADDYs",
   "Austin Film Festival",
+  "CES Expo Winner",
+  "#1 iBooks Nonfiction Bestseller",
+  "New York Times · RACies Silver",
 ];
 
 export function EditorialAboutPage({ about, projects }: Props) {

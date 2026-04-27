@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { track } from "@vercel/analytics";
 import { useCaseStudyTransition } from "@/lib/use-case-study-transition";
 
 export type WorkTile = {
@@ -106,7 +107,7 @@ export function WorkList({ tiles }: Props) {
               <Link
                 href={`/work/${t.slug}`}
                 data-active={activeId === t.id ? "true" : "false"}
-                onClick={(e) => navigate(e, t.slug, t.id)}
+                onClick={(e) => { track("work_card_click", { slug: t.slug }); navigate(e, t.slug, t.id); }}
                 onMouseEnter={() => { markInteracted(); setActiveId(t.id); }}
                 onMouseLeave={() => setActiveId((cur) => (cur === t.id ? null : cur))}
                 onFocus={() => { markInteracted(); setActiveId(t.id); }}

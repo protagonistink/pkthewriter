@@ -169,7 +169,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
           {items.map((item) => {
             const current = item.match(pathname);
             const className = `
-              group relative flex items-center gap-[14px] px-[10px] py-[10px]
+              group relative flex items-center gap-[14px] px-[10px] py-[12px]
               rounded-[8px] whitespace-nowrap overflow-hidden
               text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
               hover:bg-[rgba(27,26,22,0.05)]
@@ -260,7 +260,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                 const current = item.match(pathname);
                 const isContact = item.href === "#contact";
                 const className = `
-                  group relative flex items-baseline gap-[18px] py-[10px]
+                  group relative flex items-baseline gap-[18px] py-[12px]
                   text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
                   transition-colors text-left
                   ${current ? "!text-[var(--color-ink)]" : ""}

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type RefObject } from "react";
 import Link from "next/link";
+import { track } from "@vercel/analytics";
 import { ABOUT_FOLLOWUPS, type AboutFollowup } from "@/lib/about-response";
 import type { FeatureCard, FeatureKey } from "@/lib/feature-resolver";
 import { useCaseStudyTransition } from "@/lib/use-case-study-transition";
@@ -436,7 +437,13 @@ function CtaButton({
   if (external) {
     const openInTab = href.startsWith("http") || isResume;
     return (
-      <a href={href} className={`${base} ${style}`} target={openInTab ? "_blank" : undefined} rel={openInTab ? "noopener noreferrer" : undefined}>
+      <a
+        href={href}
+        className={`${base} ${style}`}
+        target={openInTab ? "_blank" : undefined}
+        rel={openInTab ? "noopener noreferrer" : undefined}
+        onClick={isResume ? () => track("resume_click") : undefined}
+      >
         {label}
       </a>
     );

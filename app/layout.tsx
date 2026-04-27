@@ -37,8 +37,9 @@ export const metadata: Metadata = {
     title: "Patrick Kirkland — writer and creative director",
     description: "Writer and creative director. Ask me what you want to see.",
     type: "website",
+    images: [{ url: "/about-patrick.jpg", width: 1200, height: 630, alt: "Patrick Kirkland" }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: ["/about-patrick.jpg"] },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

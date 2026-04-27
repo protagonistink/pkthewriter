@@ -239,7 +239,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
       "20+ years — agency and brand side",
       "Apple · HBO · Verizon · AT&amp;T · Airtable · Chevron · BP · Warner Bros.",
       "Writer · Creative Director · Narrative Strategy",
-      "Cannes Lions · The One Show · Webby · Clio · AFF",
+      "ADDYs · Austin Film Festival · CES · iBooks #1 · RACies Silver",
     ],
     ctas: [
       { label: "Open the PDF →", href: "/resume", variant: "primary" },

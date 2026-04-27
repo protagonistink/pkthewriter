@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { track } from "@vercel/analytics";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -77,6 +78,7 @@ export function ContactModal({ open, onClose }: Props) {
       });
       if (!r.ok) throw new Error();
       setStatus("sent");
+      track("contact_form_submit");
     } catch {
       setStatus("error");
     }

@@ -5,6 +5,11 @@ import type { FeatureMap } from "@/lib/feature-resolver";
 
 export const revalidate = 60;
 
+export const metadata = {
+  title: "Patrick Kirkland — Writer & Creative Director",
+  description: "Freelance creative director and copywriter. 20+ years. Verizon, AT&T, Chevron, Warner Bros., Airtable. Ask me something.",
+};
+
 export default async function Page() {
   const featureCards = await sanityClient
     .fetch<FeatureCardsResult | null>(featureCardsQuery)
