@@ -87,14 +87,15 @@ export function CaseStudyAsk() {
         aria-label="Ask for something else"
         aria-expanded={open}
         onClick={openPanel}
+        style={{ animation: open ? "none" : "ask-glimmer 5s ease-in-out 3s infinite" }}
         className={`
           fixed bottom-[28px] right-[28px] z-30
           w-[52px] h-[52px] rounded-full
           bg-[var(--color-ink)] text-[var(--color-paper)]
           shadow-[0_12px_32px_rgba(0,0,0,0.35)]
-          flex items-center justify-center relative
+          flex items-center justify-center
           hover:scale-[1.04] hover:bg-[var(--color-accent)]
-          transition-all duration-200
+          transition-[opacity,transform,background-color] duration-200
           max-[820px]:bottom-[18px] max-[820px]:right-[18px]
           ${open ? "opacity-0 pointer-events-none scale-90" : "opacity-100 scale-100"}
         `}
@@ -102,12 +103,6 @@ export function CaseStudyAsk() {
         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 12c0 4.418-4.03 8-9 8a9.8 9.8 0 0 1-3.2-.53L4 21l1.6-4.1A7.8 7.8 0 0 1 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8Z" />
         </svg>
-        <span
-          aria-hidden="true"
-          className="absolute -top-[5px] -right-[5px] font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.1em] bg-[var(--color-accent)] text-[var(--color-paper)] px-[5px] py-[1px] rounded-full pointer-events-none leading-[1.6]"
-        >
-          Ask
-        </span>
       </button>
 
       {open && (

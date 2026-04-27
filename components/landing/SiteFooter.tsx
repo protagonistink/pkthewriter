@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 const CALENDLY_URL = "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl";
-const PI_URL = "https://protagonistink.com"; // PRE-LAUNCH: confirm URL
+const PI_URL = "https://protagonist.ink";
 
 const SITE_LINKS = [
   { href: "/work", label: "Work" },
