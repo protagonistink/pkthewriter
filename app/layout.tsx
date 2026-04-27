@@ -33,6 +33,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    shortcut: "/favicon.ico",
+    icon: [
+      { url: "/icon-light.png", media: "(prefers-color-scheme: light)", sizes: "64x64", type: "image/png" },
+      { url: "/icon-dark.png",  media: "(prefers-color-scheme: dark)",  sizes: "64x64", type: "image/png" },
+    ],
+  },
   openGraph: {
     title: "Patrick Kirkland | writer and creative director",
     description: "Patrick Kirkland | freelance writer and creative director. 20+ years. Verizon, AT&T, Chevron, Warner Bros., Airtable.",
