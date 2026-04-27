@@ -61,11 +61,7 @@ const DRAWER_CONTACT_ITEM: Item = {
 };
 
 export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean }) {
-  const [expanded, setExpanded] = useState(false); // SSR-safe; corrected on mount
-  useEffect(() => {
-    setExpanded(window.matchMedia("(min-width: 769px)").matches);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [expanded, setExpanded] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
 
@@ -150,7 +146,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
             title={expanded ? "Collapse" : "Expand"}
             aria-expanded={expanded}
             onClick={() => setExpanded((v) => !v)}
-            className="w-[30px] h-[30px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+            className="w-[30px] h-[30px] grid place-items-center text-[var(--color-accent)] hover:opacity-70 transition-opacity"
           >
             <svg
               aria-hidden="true"
@@ -198,8 +194,8 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                 <span
                   className={`
                     font-[family-name:var(--font-serif)] text-[15px]
-                    transition-[opacity,transform,letter-spacing] duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] delay-[60ms]
-                    ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[6px] pointer-events-none"}
+                    transition-[opacity,transform] duration-[420ms] [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] delay-[40ms]
+                    ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[8px] pointer-events-none"}
                   `}
                 >
                   {item.label}

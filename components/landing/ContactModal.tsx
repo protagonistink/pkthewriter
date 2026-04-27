@@ -90,7 +90,7 @@ export function ContactModal({ open, onClose }: Props) {
     placeholder:text-[var(--color-ink-faint)]
     text-[var(--color-ink)]
   `;
-  const labelClass = `font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.2em] text-[var(--color-ink-soft)] block mb-[6px]`;
+  const labelClass = `font-[family-name:var(--font-mono)] text-[13px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)] block mb-[6px]`;
 
   return (
     <>
@@ -225,7 +225,7 @@ export function ContactModal({ open, onClose }: Props) {
               />
             </div>
             {status === "error" && (
-              <p className="font-[family-name:var(--font-mono)] text-[12px] text-red-700">
+              <p className="font-[family-name:var(--font-mono)] text-[13px] text-red-700">
                 Something broke on my end. Email patrick@pkthewriter.com directly.
               </p>
             )}
@@ -246,7 +246,7 @@ export function ContactModal({ open, onClose }: Props) {
               <div className="flex flex-col items-center gap-[12px] pt-[4px] text-center">
                 <a
                   href="mailto:patrick@pkthewriter.com"
-                  className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+                  className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
                 >
                   Or email me
                 </a>
@@ -258,7 +258,7 @@ export function ContactModal({ open, onClose }: Props) {
                     href={CALENDLY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+                    className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
                   >
                     Book 15 min →
                   </a>

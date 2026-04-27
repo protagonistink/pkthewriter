@@ -138,30 +138,30 @@ export function WorkList({ tiles }: Props) {
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
-                <span
-                  className="
-                    work-list__title
-                    font-[family-name:var(--font-serif)]
-                    font-[500]
-                    text-[clamp(64px,9vw,160px)]
-                    max-[1023px]:text-[clamp(28px,5.5vw,48px)]
-                    max-[430px]:text-[clamp(22px,6vw,32px)]
-                    leading-[0.88]
-                    tracking-[-0.02em]
-                    [text-wrap:balance]
-                    min-w-0 max-w-full [overflow-wrap:break-word]
-                    max-[1023px]:mt-[14px]
-                  "
-                >
-                  {t.brand}
+                <span className="flex flex-col items-start min-w-0 max-[1023px]:w-full max-[1023px]:mt-[14px]">
+                  <span
+                    className="
+                      work-list__title
+                      font-[family-name:var(--font-serif)]
+                      font-[500]
+                      text-[clamp(64px,9vw,160px)]
+                      max-[1023px]:text-[clamp(28px,5.5vw,48px)]
+                      max-[430px]:text-[clamp(22px,6vw,32px)]
+                      leading-[0.88]
+                      tracking-[-0.02em]
+                      [text-wrap:balance]
+                      max-w-full [overflow-wrap:break-word]
+                    "
+                  >
+                    {t.brand}
+                  </span>
+                  {t.type && (
+                    <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[6px] tracking-[0.06em] max-[1023px]:hidden">
+                      {t.type}
+                    </span>
+                  )}
                 </span>
               </Link>
-
-              {t.type && (
-                <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[4px] mb-0 tracking-[0.06em] max-[1023px]:hidden">
-                  {t.type}
-                </p>
-              )}
 
               {pillText && (
                 <span

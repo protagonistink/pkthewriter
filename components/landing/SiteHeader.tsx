@@ -51,7 +51,7 @@ export function SiteHeader({ email: _email, rightSlot }: Props) {
                 hover:opacity-85 transition-opacity
               "
             >
-              Hire Me
+              Contact Me
             </button>
           </div>
         )}
