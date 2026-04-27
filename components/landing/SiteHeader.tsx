@@ -13,7 +13,7 @@ type Props = {
 export function SiteHeader({ email, rightSlot }: Props) {
   const mailto = `mailto:${email ?? FALLBACK_EMAIL}`;
   return (
-    <header className="flex items-start justify-between pt-[22px] px-[44px] max-[820px]:px-[28px] max-[820px]:pt-[14px]">
+    <header className="flex items-start justify-between pt-[22px] px-[44px] max-[820px]:px-[28px] max-[820px]:pt-[14px] max-[768px]:pl-[72px]">
       <Link href="/" aria-label="Patrick Kirkland — Home" className="inline-block w-[200px]">
         <img
           src="/logo-signature.png"

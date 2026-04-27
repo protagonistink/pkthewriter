@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -61,109 +61,248 @@ const CONTACT_ITEM: Item = {
 
 export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
 
   const items = [...ITEMS, CONTACT_ITEM];
 
+  useEffect(() => {
+    const handler = () => {
+      if (window.innerWidth > 768) setMobileOpen(false);
+    };
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
   return (
-    <aside
-      aria-label="Site navigation"
-      data-expanded={expanded}
-      className="
-        relative flex flex-col self-stretch
-        bg-[var(--color-paper)]
-        border-r border-[var(--color-paper-line)]
-        pt-[22px]
-        transition-[width] duration-[260ms] ease
-        w-[68px] data-[expanded=true]:w-[210px]
-      "
-    >
-      <div className="px-[18px] pb-[34px] flex justify-start">
-        <button
-          type="button"
-          aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
-          title={expanded ? "Collapse" : "Expand"}
-          aria-expanded={expanded}
-          onClick={() => setExpanded((v) => !v)}
-          className="w-[30px] h-[30px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
-        >
-          <svg
-            aria-hidden="true"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`transition-transform duration-[260ms] ease ${expanded ? "rotate-180" : ""}`}
-          >
-            <polyline points="8 6 14 12 8 18" />
-            <polyline points="14 6 20 12 14 18" />
+    <>
+      {/* Mobile hamburger trigger — fixed, visible under 769px */}
+      <button
+        type="button"
+        aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+        aria-expanded={mobileOpen}
+        aria-controls="mobile-nav-drawer"
+        onClick={() => setMobileOpen((v) => !v)}
+        className="
+          fixed top-[14px] left-[14px] z-50
+          w-[44px] h-[44px] grid place-items-center
+          bg-[var(--color-paper-panel)] border border-[var(--color-paper-line)]
+          rounded-[8px] text-[var(--color-ink-soft)]
+          hover:text-[var(--color-ink)] transition-colors
+          min-[769px]:hidden
+        "
+      >
+        {mobileOpen ? (
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <path d="M6 6l12 12M18 6l-12 12" />
           </svg>
-        </button>
-      </div>
+        ) : (
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        )}
+      </button>
 
-      <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[10px]">
-        {items.map((item) => {
-          const current = item.match(pathname);
-          const isContact = item.label === "Contact";
-          const className = `
-            group relative flex items-center gap-[14px] px-[10px] py-[10px]
-            rounded-[8px] whitespace-nowrap overflow-hidden
-            text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
-            hover:bg-[rgba(27,26,22,0.05)]
-            transition duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-            ${current ? "!text-[var(--color-ink)]" : ""}
-          `;
-          const content = (
-            <>
-              {current ? (
-                <span
-                  aria-hidden="true"
-                  className="absolute -left-[10px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-[2px] bg-[var(--color-accent)]"
-                />
-              ) : (
-                <span
-                  aria-hidden="true"
-                  className="absolute -left-[10px] top-1/2 -translate-y-1/2 w-[1px] h-[14px] rounded-[1px] bg-[var(--color-ink)] opacity-0 group-hover:opacity-50 transition-opacity duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]"
-                />
-              )}
-              <span className="shrink-0 w-[20px] flex justify-center">{item.icon}</span>
-              <span
-                className={`
-                  font-[family-name:var(--font-serif)] text-[15px]
-                  transition-[opacity,transform,letter-spacing] duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] delay-[60ms]
-                  ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[6px] pointer-events-none"}
-                  ${isContact && expanded ? "group-hover:tracking-[0.06em]" : ""}
-                `}
-              >
-                {item.label}
-              </span>
-            </>
-          );
-          if (item.external) {
-            return (
-              <a key={item.label} href={item.href} title={item.label} className={className}>
-                {content}
-              </a>
-            );
-          }
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              title={item.label}
-              aria-current={current ? "page" : undefined}
-              className={className}
+      {/* Desktop static rail — hidden on mobile */}
+      <aside
+        aria-label="Site navigation"
+        data-expanded={expanded}
+        className="
+          relative flex flex-col self-stretch
+          bg-[var(--color-paper)]
+          border-r border-[var(--color-paper-line)]
+          pt-[22px]
+          transition-[width] duration-[260ms] ease
+          w-[68px] data-[expanded=true]:w-[210px]
+          max-[768px]:hidden
+        "
+      >
+        <div className="px-[18px] pb-[34px] flex justify-start">
+          <button
+            type="button"
+            aria-label={expanded ? "Collapse navigation" : "Expand navigation"}
+            title={expanded ? "Collapse" : "Expand"}
+            aria-expanded={expanded}
+            onClick={() => setExpanded((v) => !v)}
+            className="w-[30px] h-[30px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+          >
+            <svg
+              aria-hidden="true"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`transition-transform duration-[260ms] ease ${expanded ? "rotate-180" : ""}`}
             >
-              {content}
-            </Link>
-          );
-        })}
-      </nav>
+              <polyline points="8 6 14 12 8 18" />
+              <polyline points="14 6 20 12 14 18" />
+            </svg>
+          </button>
+        </div>
 
-    </aside>
+        <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[10px]">
+          {items.map((item) => {
+            const current = item.match(pathname);
+            const isContact = item.label === "Contact";
+            const className = `
+              group relative flex items-center gap-[14px] px-[10px] py-[10px]
+              rounded-[8px] whitespace-nowrap overflow-hidden
+              text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
+              hover:bg-[rgba(27,26,22,0.05)]
+              transition duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
+              ${current ? "!text-[var(--color-ink)]" : ""}
+            `;
+            const content = (
+              <>
+                {current ? (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-[10px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-[2px] bg-[var(--color-accent)]"
+                  />
+                ) : (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -left-[10px] top-1/2 -translate-y-1/2 w-[1px] h-[14px] rounded-[1px] bg-[var(--color-ink)] opacity-0 group-hover:opacity-50 transition-opacity duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]"
+                  />
+                )}
+                <span className="shrink-0 w-[20px] flex justify-center">{item.icon}</span>
+                <span
+                  className={`
+                    font-[family-name:var(--font-serif)] text-[15px]
+                    transition-[opacity,transform,letter-spacing] duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] delay-[60ms]
+                    ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[6px] pointer-events-none"}
+                    ${isContact && expanded ? "group-hover:tracking-[0.06em]" : ""}
+                  `}
+                >
+                  {item.label}
+                </span>
+              </>
+            );
+            if (item.external) {
+              return (
+                <a key={item.label} href={item.href} title={item.label} className={className}>
+                  {content}
+                </a>
+              );
+            }
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                title={item.label}
+                aria-current={current ? "page" : undefined}
+                className={className}
+              >
+                {content}
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Mobile drawer — full-height overlay, visible when mobileOpen */}
+      {mobileOpen && (
+        <>
+          <div
+            aria-hidden="true"
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-40 bg-[rgba(0,0,0,0.32)] min-[769px]:hidden"
+          />
+          <div
+            id="mobile-nav-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site navigation"
+            className="
+              fixed inset-y-0 left-0 z-50 w-[260px] max-w-[80vw]
+              bg-[var(--color-paper)] border-r border-[var(--color-paper-line)]
+              flex flex-col pt-[14px]
+              min-[769px]:hidden
+            "
+          >
+            <div className="px-[14px] pb-[18px] flex justify-end">
+              <button
+                type="button"
+                aria-label="Close navigation"
+                onClick={() => setMobileOpen(false)}
+                className="w-[44px] h-[44px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+              >
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M6 6l12 12M18 6l-12 12" />
+                </svg>
+              </button>
+            </div>
+            <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[14px]">
+              {items.map((item) => {
+                const current = item.match(pathname);
+                const className = `
+                  group relative flex items-center gap-[14px] px-[12px] py-[12px]
+                  rounded-[8px] whitespace-nowrap
+                  text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
+                  hover:bg-[rgba(27,26,22,0.05)]
+                  transition-colors
+                  ${current ? "!text-[var(--color-ink)]" : ""}
+                `;
+                const content = (
+                  <>
+                    {current && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -left-[14px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-[2px] bg-[var(--color-accent)]"
+                      />
+                    )}
+                    <span className="shrink-0 w-[20px] flex justify-center">{item.icon}</span>
+                    <span className="font-[family-name:var(--font-serif)] text-[16px]">
+                      {item.label}
+                    </span>
+                  </>
+                );
+                if (item.external) {
+                  return (
+                    <a key={item.label} href={item.href} className={className}>
+                      {content}
+                    </a>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    aria-current={current ? "page" : undefined}
+                    className={className}
+                  >
+                    {content}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </>
+      )}
+    </>
   );
 }
