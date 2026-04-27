@@ -70,6 +70,10 @@ const RULES: Rule[] = [
   // Writing.
   { pattern: /\b(writing|essay|essays|clip|clips|story|stories|column|columns|short|read\s+something)\b/i, intent: { kind: "feature", key: "writing" } },
 
+  // Rates / availability — hire-readiness questions, before the work grid.
+  { pattern: /\b(rates?|day\s+rate|pricing|how\s+much|what\s+do\s+you\s+charge|cost)\b/i, intent: { kind: "feature", key: "rates" } },
+  { pattern: /\b(available|availability|booking|can\s+you\s+start|when\s+can\s+you|are\s+you\s+free|taking\s+on\s+work|freelance\s+work)\b/i, intent: { kind: "feature", key: "availability" } },
+
   // Work grid (broader than brand keywords; last).
   { pattern: /(\bwork\b|case\s+stud(y|ies)|\bportfolio\b|\bads\b|\bcampaigns\b|brand\s+work)/i, intent: { kind: "navigate", to: "/work", label: "case studies" } },
 
@@ -83,6 +87,8 @@ const SOLO_NAV: Record<string, Intent> = {
   bio: { kind: "feature", key: "about" },
   work: { kind: "navigate", to: "/work", label: "case studies" },
   portfolio: { kind: "navigate", to: "/work", label: "case studies" },
+  rates: { kind: "feature", key: "rates" },
+  availability: { kind: "feature", key: "availability" },
 };
 
 export function routeIntent(input: string, rand: RandFn = Math.random): Intent {

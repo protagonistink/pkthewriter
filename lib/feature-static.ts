@@ -19,7 +19,9 @@ export type FeatureKey =
   | "about"
   | "writing"
   | "screenwriting"
-  | "resume";
+  | "resume"
+  | "rates"
+  | "availability";
 
 /** Keys in the `best ad` random pool. */
 export const BEST_AD_POOL = ["warnerbros", "airtable", "verizon-up", "att"] as const satisfies readonly FeatureKey[];
@@ -64,6 +66,9 @@ export const INTROS: Record<FeatureKey, string> = {
   writing: `The shorter the piece, the harder it usually is.`,
   screenwriting: `Yes, really. Two features optioned, one pilot in development.`,
   resume: `One page, current to 2026.`,
+  // PRE-LAUNCH: Patrick to confirm rates copy + availability quarter / month.
+  rates: `Day rate depends on scope and duration. Retainer available for ongoing work.`,
+  availability: `Currently booking projects starting Q3 2026. Prefer 2–4 week engagements.`,
 };
 
 /**
@@ -243,6 +248,44 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     heroTag: "PDF · 1 page",
     thumbs: ["Clients", "Roles", "Recognition"],
   },
+  rates: {
+    key: "rates",
+    intro: INTROS.rates,
+    title: "Rates",
+    kicker: "Day rate · Retainer · Project",
+    copy: "",
+    highlights: [
+      "Day rate available — contact for current range",
+      "Retainer pricing for ongoing or multi-sprint work",
+      "Project-based for defined-scope deliverables",
+      "NDA-friendly — standard or custom",
+    ],
+    ctas: [
+      { label: "Email me →", href: "mailto:patrick@pkthewriter.com?subject=Rates", variant: "primary" },
+      { label: "Book 15 min →", href: "https://calendly.com/patrickirkland", variant: "ghost" },
+    ],
+    heroTag: "Rates · 2026",
+    thumbs: ["Day rate", "Retainer", "Project"],
+  },
+  availability: {
+    key: "availability",
+    intro: INTROS.availability,
+    title: "Availability",
+    kicker: "Freelance · Q3 2026",
+    copy: "",
+    highlights: [
+      "Open for new projects starting July 2026",
+      "Prefer 2–4 week engagements",
+      "Can extend for the right project",
+      "Reply within 24 hours",
+    ],
+    ctas: [
+      { label: "Email me →", href: "mailto:patrick@pkthewriter.com?subject=Availability", variant: "primary" },
+      { label: "Book 15 min →", href: "https://calendly.com/patrickirkland", variant: "ghost" },
+    ],
+    heroTag: "Available · 2026",
+    thumbs: ["Start date", "Duration", "Scope"],
+  },
 };
 
 /**
@@ -288,6 +331,16 @@ export const ALTS: Record<FeatureKey, Array<{ key: FeatureKey | "work"; label: s
   resume: [
     { key: "airtable", label: "Airtable", note: "(case study)" },
     { key: "writing", label: "Read something short" },
+    { key: "work", label: "See all work" },
+  ],
+  rates: [
+    { key: "availability", label: "Availability", note: "(when I can start)" },
+    { key: "resume", label: "Resume", note: "(one page)" },
+    { key: "work", label: "See all work" },
+  ],
+  availability: [
+    { key: "rates", label: "Rates", note: "(day rate)" },
+    { key: "resume", label: "Resume", note: "(one page)" },
     { key: "work", label: "See all work" },
   ],
 };

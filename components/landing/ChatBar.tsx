@@ -18,6 +18,17 @@ const CLARIFY_SUGGESTIONS = [
   "/ contact",
 ];
 
+// Always-visible chips below the input. Anchor the high-intent doors so a
+// reluctant visitor has a path without typing.
+const PERSISTENT_CHIPS = [
+  { query: "/ resume", label: "/ resume" },
+  { query: "/ work", label: "/ work" },
+  { query: "/ rates", label: "/ rates" },
+  { query: "/ availability", label: "/ availability" },
+  { query: "/ writing samples", label: "/ writing samples" },
+  { query: "/ surprise me", label: "/ surprise me" },
+] as const;
+
 const THINKING_LINES = [
   "Hmmm…",
   "Let me think…",
@@ -446,6 +457,28 @@ export function ChatBar({
           </button>
         )}
       </div>
+
+      {!inResponse && mode !== "clarify" && (
+        <div className="mt-[16px] flex flex-wrap gap-[8px]">
+          {PERSISTENT_CHIPS.map((chip) => (
+            <button
+              key={chip.query}
+              type="button"
+              onClick={() => handleSuggestion(chip.query)}
+              className="
+                font-[family-name:var(--font-mono)] text-[12px]
+                min-h-[44px] px-[14px] py-[8px] rounded-full
+                border border-[var(--color-paper-line)]
+                text-[var(--color-ink-soft)]
+                hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]
+                transition-colors
+              "
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {mode === "clarify" && (
         <div className="mt-[18px] flex flex-wrap gap-[10px]">
