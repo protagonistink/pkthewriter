@@ -168,14 +168,6 @@ export function EditorialAboutPage({ about, projects }: Props) {
           I write the line, the argument under the line, and the story that lets both survive the room.
         </p>
 
-        {/* Jump links — desktop only */}
-        <a
-          href="#experience"
-          className="mt-[28px] block font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.2em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors max-[820px]:hidden"
-        >
-          Experience ↓
-        </a>
-
         {/* Mobile-only: condensed availability + entry points + truncated awards.
             Replaces the desktop aside (Vital Stats / Hit List) which is hidden
             below 820px. Sits directly under the header so visitors see the
