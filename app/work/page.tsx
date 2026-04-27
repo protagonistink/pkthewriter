@@ -6,6 +6,7 @@ import { Rail } from "@/components/landing/Rail";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
 import { WorkList, type WorkTile } from "@/components/work/WorkList";
+import { SiteFooter } from "@/components/landing/SiteFooter";
 
 export const revalidate = 60;
 
@@ -76,6 +77,7 @@ export default async function WorkIndex() {
             </p>
           )}
         </main>
+        <SiteFooter />
       </div>
       <CaseStudyAsk />
     </div>

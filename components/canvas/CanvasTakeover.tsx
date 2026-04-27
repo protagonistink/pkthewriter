@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
+import { SiteFooter } from "@/components/landing/SiteFooter";
 import { Rail } from "@/components/landing/Rail";
 
 export function CanvasTakeover({
@@ -39,6 +40,7 @@ export function CanvasTakeover({
           }
         />
         <main id="main" className="flex-1 max-w-[820px] w-full mx-auto px-6 py-12">{children}</main>
+        <SiteFooter />
       </div>
       <CaseStudyAsk />
     </motion.div>

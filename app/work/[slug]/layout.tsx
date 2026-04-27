@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
+import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { AllWorkBackLink } from "@/components/canvas/AllWorkBackLink";
 import { Rail } from "@/components/landing/Rail";
@@ -13,6 +14,7 @@ export default function CaseStudyLayout({ children }: { children: ReactNode }) {
           <SiteHeader rightSlot={<AllWorkBackLink />} />
         </div>
         <main id="main" className="flex-1">{children}</main>
+        <SiteFooter />
       </div>
       <CaseStudyAsk />
     </div>

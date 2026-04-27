@@ -5,6 +5,7 @@ import { Rail } from "@/components/landing/Rail";
 import { SiteHeader } from "@/components/landing/SiteHeader";
 import { CaseStudyAsk } from "@/components/canvas/CaseStudyAsk";
 import { EditorialAboutPage } from "@/components/about/EditorialAboutPage";
+import { SiteFooter } from "@/components/landing/SiteFooter";
 
 export const revalidate = 60;
 
@@ -28,6 +29,7 @@ export default async function AboutPage() {
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />
         <EditorialAboutPage about={about} projects={projects} />
+        <SiteFooter />
       </div>
       <CaseStudyAsk />
     </div>
