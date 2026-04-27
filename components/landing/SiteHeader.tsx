@@ -44,6 +44,18 @@ export function SiteHeader({ email: _email, rightSlot }: Props) {
           <div className="flex items-center gap-[10px] pt-[6px]">
             <button
               type="button"
+              onClick={() => setContactOpen(true)}
+              className="
+                font-[family-name:var(--font-mono)] text-[12px] tracking-[0.2em] uppercase
+                px-[14px] py-[8px] rounded-full
+                bg-[var(--color-accent)] text-[var(--color-paper)]
+                hover:opacity-85 transition-opacity
+              "
+            >
+              Let&apos;s Talk
+            </button>
+            <button
+              type="button"
               aria-label="Open navigation"
               onClick={() => document.dispatchEvent(new CustomEvent("toggle-rail"))}
               className="
@@ -57,18 +69,6 @@ export function SiteHeader({ email: _email, rightSlot }: Props) {
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
-            </button>
-            <button
-              type="button"
-              onClick={() => setContactOpen(true)}
-              className="
-                font-[family-name:var(--font-mono)] text-[12px] tracking-[0.2em] uppercase
-                px-[14px] py-[8px] rounded-full
-                bg-[var(--color-accent)] text-[var(--color-paper)]
-                hover:opacity-85 transition-opacity
-              "
-            >
-              Let&apos;s Talk
             </button>
           </div>
         )}

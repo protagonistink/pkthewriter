@@ -249,7 +249,7 @@ export function ContactModal({ open, onClose }: Props) {
                   className="flex items-center gap-[5px] font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
                 >
                   <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
-                  Or email me
+                  Email me
                 </a>
                 <span aria-hidden="true" className="text-[var(--color-paper-line)] select-none">·</span>
                 <a
