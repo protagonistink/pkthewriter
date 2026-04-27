@@ -1,14 +1,54 @@
 "use client";
 
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type RefObject } from "react";
 import Link from "next/link";
+import { ABOUT_FOLLOWUPS, type AboutFollowup } from "@/lib/about-response";
 import type { FeatureCard, FeatureKey } from "@/lib/feature-resolver";
+import { useCaseStudyTransition } from "@/lib/use-case-study-transition";
+
+const ABOUT_ANSWER_LIMIT = 5;
+const CASE_STUDY_KEYS = new Set<FeatureKey>([
+  "airtable",
+  "bp",
+  "techsure",
+  "verizon-up",
+  "chevron",
+  "warnerbros",
+  "att",
+  "mpa",
+]);
 
 type Props = {
   feature: FeatureCard;
+  rawQuery?: string;
+  aboutTurns?: AboutFollowup[];
+  onAboutFollowup?: (followup: AboutFollowup) => void;
   onAltSelect?: (key: FeatureKey) => void;
 };
 
-export function ResponseFeature({ feature, onAltSelect }: Props) {
+export function ResponseFeature({
+  feature,
+  rawQuery,
+  aboutTurns = [],
+  onAboutFollowup,
+  onAltSelect,
+}: Props) {
+  const panelRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const isCaseStudy = CASE_STUDY_KEYS.has(feature.key);
+
+  if (feature.key === "about") {
+    return (
+      <AboutResponse
+        feature={feature}
+        rawQuery={rawQuery}
+        aboutTurns={aboutTurns}
+        onAboutFollowup={onAboutFollowup}
+        onAltSelect={onAltSelect}
+      />
+    );
+  }
+
   return (
     <section className="response-slot mt-[34px]" aria-live="polite">
       <p
@@ -22,6 +62,7 @@ export function ResponseFeature({ feature, onAltSelect }: Props) {
       </p>
 
       <article
+        ref={panelRef}
         className="
           overflow-hidden rounded-[22px]
           border border-[var(--color-paper-line)]
@@ -46,6 +87,7 @@ export function ResponseFeature({ feature, onAltSelect }: Props) {
         <div className="px-[42px] py-[38px] pb-[40px] max-[820px]:px-[26px] max-[820px]:py-[28px] max-[820px]:pb-[32px]">
           <header className="flex flex-wrap items-baseline gap-x-[18px] gap-y-2 mb-[22px]">
             <h2
+              ref={titleRef}
               className="
                 font-[family-name:var(--font-serif)] font-normal
                 text-[44px] leading-[1] tracking-[-0.01em] m-0
@@ -59,37 +101,227 @@ export function ResponseFeature({ feature, onAltSelect }: Props) {
             </span>
           </header>
 
-          <p
-            className="
-              font-[family-name:var(--font-serif)]
-              text-[19px] leading-[1.6] text-[var(--color-ink-mid)]
-              max-w-[62ch] m-0 mb-[28px]
-            "
-            dangerouslySetInnerHTML={{ __html: feature.copy }}
-          />
+          {feature.highlights && feature.highlights.length > 0 ? (
+            <ul
+              className="
+                m-0 mb-[28px] p-0 list-none
+                font-[family-name:var(--font-mono)] text-[14px] leading-[1.65]
+                text-[var(--color-ink-mid)]
+                border-l border-[var(--color-paper-line)]
+                pl-[18px] space-y-[10px]
+              "
+            >
+              {feature.highlights.map((item) => (
+                <li key={item} className="flex gap-[10px]">
+                  <span className="text-[var(--color-accent)] shrink-0" aria-hidden="true">/</span>
+                  <span dangerouslySetInnerHTML={{ __html: item }} />
+                </li>
+              ))}
+            </ul>
+          ) : feature.copy ? (
+            <p
+              className="
+                font-[family-name:var(--font-serif)]
+                text-[19px] leading-[1.6] text-[var(--color-ink-mid)]
+                max-w-[62ch] m-0 mb-[28px]
+              "
+              dangerouslySetInnerHTML={{ __html: feature.copy }}
+            />
+          ) : null}
 
           <div className="flex flex-wrap gap-[12px]">
-            {feature.ctas.map((cta) => (
-              <CtaButton key={cta.label} {...cta} />
-            ))}
+            {feature.ctas
+              .filter((cta) => !isCaseStudy || cta.variant === "primary")
+              .map((cta) =>
+                isCaseStudy && cta.variant === "primary" ? (
+                  <ReadTheStoryButton
+                    key={cta.label}
+                    {...cta}
+                    panelRef={panelRef}
+                    titleRef={titleRef}
+                  />
+                ) : (
+                  <CtaButton key={cta.label} {...cta} />
+                ),
+              )}
+            {isCaseStudy && (
+              <RandomSampleButton feature={feature} onAltSelect={onAltSelect} />
+            )}
           </div>
         </div>
       </article>
 
-      <div className="flex flex-wrap items-center gap-x-[16px] gap-y-[10px] mt-[22px] pt-[20px]">
+      <div className="flex flex-wrap items-center gap-x-[6px] gap-y-[10px] mt-[22px] pt-[20px]">
         <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)]">
-          Or if you meant something else —
+          Or
         </span>
-        {feature.alts.map((alt, i) => (
-          <span key={`${alt.key}-${i}`} className="contents">
-            {i > 0 && <span className="text-[var(--color-ink-faint)]">·</span>}
-            <AltLink alt={alt} onAltSelect={onAltSelect} />
-          </span>
-        ))}
+        <Link
+          href="/work"
+          className="work-inline-link font-[family-name:var(--font-serif)] text-[15px] text-[var(--color-ink-mid)] underline decoration-[var(--color-paper-line)] underline-offset-4 transition-colors"
+        >
+          see all work.
+        </Link>
       </div>
     </section>
   );
 }
+
+function AboutResponse({
+  feature,
+  rawQuery,
+  aboutTurns = [],
+  onAboutFollowup,
+  onAltSelect,
+}: Props) {
+  const initialPrompt = rawQuery?.trim() || "/ about you";
+  const remainingFollowups = ABOUT_FOLLOWUPS.filter(
+    (item) => !aboutTurns.some((turn) => turn.id === item.id)
+  );
+  const shouldHandOff =
+    aboutTurns.length >= ABOUT_ANSWER_LIMIT - 1 ||
+    aboutTurns.some((turn) => turn.id === "full-about");
+  const canAskMore = !shouldHandOff && remainingFollowups.length > 0;
+  const typingTurnId = aboutTurns.at(-1)?.id;
+
+  return (
+    <section className="response-slot mt-[34px]" aria-live="polite">
+      <div className="max-w-[760px]">
+        <p
+          className="
+            font-[family-name:var(--font-mono)] text-[13px] leading-[1.6]
+            text-[var(--color-ink-mid)] mb-[22px]
+          "
+        >
+          <span className="text-[var(--color-accent)] mr-1">→</span>
+          <span dangerouslySetInnerHTML={{ __html: feature.intro }} />
+        </p>
+
+        <div className="border-l border-[var(--color-paper-line)] pl-[22px]">
+          <AboutExchange
+            prompt={initialPrompt}
+            answer={feature.copy}
+            typing={aboutTurns.length === 0}
+          />
+
+          {aboutTurns.map((followup) => (
+            <AboutExchange
+              key={followup.id}
+              prompt={followup.prompt}
+              answer={followup.answer}
+              typing={followup.id === typingTurnId}
+            />
+          ))}
+
+          {canAskMore ? (
+            <div className="mt-[26px]">
+              <div className="flex flex-wrap gap-[10px]" aria-label="Suggested follow-ups">
+                {remainingFollowups.slice(0, 3).map((followup) => (
+                  <button
+                    key={followup.id}
+                    type="button"
+                    onClick={() => onAboutFollowup?.(followup)}
+                    className="
+                      px-[14px] py-[8px] rounded-full
+                      border border-[var(--color-paper-line)]
+                      font-[family-name:var(--font-mono)] text-[13px]
+                      text-[var(--color-ink-mid)]
+                      hover:text-[var(--color-ink)]
+                      hover:border-[var(--color-ink-soft)]
+                      hover:bg-[rgba(27,26,22,0.025)]
+                      focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(192,84,46,0.35)]
+                      transition-colors
+                    "
+                  >
+                    {followup.prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-[28px]">
+              <p className="m-0 mb-[14px] font-[family-name:var(--font-mono)] text-[13px] leading-[1.6] text-[var(--color-ink-soft)]">
+                That is probably enough doorway conversation. The full version has more room.
+              </p>
+              <div className="flex flex-wrap gap-[12px]">
+                {feature.ctas.map((cta) => (
+                  <CtaButton key={cta.label} {...cta} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-[16px] gap-y-[10px] mt-[24px] pt-[20px]">
+          <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)]">
+            Or if you meant something else —
+          </span>
+          {feature.alts.map((alt, i) => (
+            <span key={`${alt.key}-${i}`} className="contents">
+              {i > 0 && <span className="text-[var(--color-ink-faint)]">·</span>}
+              <AltLink alt={alt} onAltSelect={onAltSelect} />
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutExchange({
+  prompt,
+  answer,
+  typing,
+}: {
+  prompt: string;
+  answer: string;
+  typing?: boolean;
+}) {
+  return (
+    <div className="mb-[28px] last:mb-0">
+      <p className="m-0 mb-[10px] font-[family-name:var(--font-mono)] text-[15px] leading-[1.6] text-[var(--color-ink-mid)]">
+        <span className="text-[var(--color-ink-faint)]">/ </span>
+        {prompt.replace(/^\/\s*/, "")}
+      </p>
+      <p className="m-0 max-w-[66ch] font-[family-name:var(--font-serif)] text-[22px] leading-[1.55] text-[var(--color-ink)] max-[820px]:text-[19px]">
+        {typing ? <TypedAnswer text={answer} /> : answer}
+      </p>
+    </div>
+  );
+}
+
+function TypedAnswer({ text }: { text: string }) {
+  const [visibleText, setVisibleText] = useState("");
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const timer = window.setTimeout(() => setVisibleText(text), 0);
+      return () => window.clearTimeout(timer);
+    }
+
+    if (!text) {
+      return;
+    }
+
+    let i = 0;
+    const timer = window.setInterval(() => {
+      i += 2;
+      setVisibleText(text.slice(0, i));
+      if (i >= text.length) window.clearInterval(timer);
+    }, 14);
+
+    return () => window.clearInterval(timer);
+  }, [text]);
+
+  return (
+    <>
+      {visibleText}
+      {visibleText.length < text.length && (
+        <span className="text-[var(--color-ink-faint)]">|</span>
+      )}
+    </>
+  );
+}
+
 
 function FeatureHero({ feature }: { feature: FeatureCard }) {
   if (feature.coverImageUrl) {
@@ -199,10 +431,12 @@ function CtaButton({
     variant === "primary"
       ? "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-black"
       : "bg-transparent border border-[var(--color-paper-line)] text-[var(--color-ink-mid)] hover:border-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:bg-[rgba(27,26,22,0.02)]";
-  const external = href.startsWith("http") || href.startsWith("mailto:");
+  const isResume = href === "/resume" || href.startsWith("/resume?") || href.startsWith("/resume#");
+  const external = href.startsWith("http") || href.startsWith("mailto:") || isResume;
   if (external) {
+    const openInTab = href.startsWith("http") || isResume;
     return (
-      <a href={href} className={`${base} ${style}`} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined}>
+      <a href={href} className={`${base} ${style}`} target={openInTab ? "_blank" : undefined} rel={openInTab ? "noopener noreferrer" : undefined}>
         {label}
       </a>
     );
@@ -211,6 +445,72 @@ function CtaButton({
     <Link href={href} className={`${base} ${style}`}>
       {label}
     </Link>
+  );
+}
+
+function ReadTheStoryButton({
+  label,
+  href,
+  panelRef,
+  titleRef,
+}: {
+  label: string;
+  href: string;
+  variant: "primary" | "ghost";
+  panelRef: RefObject<HTMLElement | null>;
+  titleRef: RefObject<HTMLHeadingElement | null>;
+}) {
+  const { navigate } = useCaseStudyTransition();
+  const base =
+    "inline-flex items-center gap-2 px-[22px] py-[12px] rounded-[10px] font-[family-name:var(--font-mono)] text-[12px] tracking-[0.12em] uppercase transition-colors duration-200";
+  const style = "bg-[var(--color-ink)] text-[var(--color-paper)] hover:bg-black";
+  return (
+    <Link
+      href={href}
+      className={`${base} ${style}`}
+      onClick={(e: ReactMouseEvent<HTMLAnchorElement>) => {
+        navigate(e, href, {
+          titleEl: titleRef.current,
+          anchorEl: panelRef.current,
+        });
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function RandomSampleButton({
+  feature,
+  onAltSelect,
+}: {
+  feature: FeatureCard;
+  onAltSelect?: (key: FeatureKey) => void;
+}) {
+  const options = feature.alts.filter((alt): alt is { key: FeatureKey; label: string; note?: string } =>
+    alt.key !== "work"
+  );
+  if (!onAltSelect || options.length === 0) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        const next = options[Math.floor(Math.random() * options.length)];
+        onAltSelect(next.key);
+      }}
+      className="
+        inline-flex items-center gap-2 px-[22px] py-[12px] rounded-[10px]
+        font-[family-name:var(--font-mono)] text-[12px] tracking-[0.12em] uppercase
+        bg-transparent border border-[var(--color-paper-line)]
+        text-[var(--color-ink-mid)]
+        hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]
+        hover:bg-[rgba(192,84,46,0.04)]
+        transition-colors duration-200
+      "
+    >
+      Nah, Something Else
+    </button>
   );
 }
 

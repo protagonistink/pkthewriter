@@ -16,6 +16,7 @@ export type FeatureKey =
   | "warnerbros"
   | "att"
   | "mpa"
+  | "about"
   | "writing"
   | "screenwriting"
   | "resume";
@@ -39,6 +40,12 @@ export type StaticFeature = {
   title: string;
   kicker: string;
   copy: string; // may contain <em>
+  /**
+   * Optional scan-able bullets. When present, ResponseFeature renders them in
+   * place of `copy` — used by cards (like the resume) that want signal over
+   * microcopy.
+   */
+  highlights?: string[];
   ctas: Array<{ label: string; href: string; variant: "primary" | "ghost" }>;
   heroTag?: string;
   thumbs?: string[];
@@ -53,6 +60,7 @@ export const INTROS: Record<FeatureKey, string> = {
   warnerbros: `Warner Brothers, <em>Steve Jobs</em>. Campaign voice for a biopic that wanted restraint.`,
   att: `Pandemic holidays. A gift-finder that read like a choose-your-own-adventure.`,
   mpa: `<em>"What Comes Next?"</em> — a brand campaign for the Motion Picture Association.`,
+  about: `The useful version: writer, creative director, narrative problem-solver. Usually in that order.`,
   writing: `The shorter the piece, the harder it usually is.`,
   screenwriting: `Yes, really. Two features optioned, one pilot in development.`,
   resume: `One page, current to 2026.`,
@@ -177,6 +185,19 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     heroTag: "Campaign · 2016",
     thumbs: ["Film", "Print", "Digital"],
   },
+  about: {
+    key: "about",
+    intro: INTROS.about,
+    title: "Patrick Kirkland",
+    kicker: "Writer · Creative Director · Protagonist Ink",
+    copy: `I have spent 20-plus years making campaigns, films, launches, decks, speeches, and strategy behave like they are all part of the same story. Apple, HBO, Verizon, founders, arts organizations, mission-driven brands. The useful version: I help people say the thing they mean before the room invents a safer sentence.`,
+    ctas: [
+      { label: "Read the full about →", href: "/about", variant: "primary" },
+      { label: "Email Patrick", href: "mailto:patrick@pkthewriter.com", variant: "ghost" },
+    ],
+    heroTag: "Bio · 2026",
+    thumbs: ["Strategy", "Campaigns", "Scripts"],
+  },
   writing: {
     key: "writing",
     intro: INTROS.writing,
@@ -207,14 +228,20 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     key: "resume",
     intro: INTROS.resume,
     title: "Resume — 2026",
-    kicker: "PDF · annotated",
-    copy: `The short version. Clients, titles, dates, and the three or four sentences that stitch it together.`,
+    kicker: "PDF · 1 page",
+    copy: "",
+    highlights: [
+      "20+ years — agency and brand side",
+      "Apple · HBO · Verizon · AT&amp;T · Airtable · Chevron · BP · Warner Bros.",
+      "Writer · Creative Director · Narrative Strategy",
+      "Cannes Lions · The One Show · Webby · Clio · AFF",
+    ],
     ctas: [
-      { label: "Open the resume →", href: "/resume", variant: "primary" },
+      { label: "Open the PDF →", href: "/resume", variant: "primary" },
       { label: "Email me the PDF", href: "mailto:patrick@pkthewriter.com?subject=Resume%20PDF", variant: "ghost" },
     ],
-    heroTag: "Resume · 2026",
-    thumbs: ["Clients", "Titles", "Dates"],
+    heroTag: "PDF · 1 page",
+    thumbs: ["Clients", "Roles", "Recognition"],
   },
 };
 
@@ -223,7 +250,11 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
  * points to different peers. `work` is always the third escape hatch.
  */
 const brandAlts = (self: FeatureKey): Array<{ key: FeatureKey | "work"; label: string; note?: string }> => {
-  const others = ALL_BRANDS.filter((k) => k !== self).slice(0, 2);
+  const index = ALL_BRANDS.indexOf(self as (typeof ALL_BRANDS)[number]);
+  const n = ALL_BRANDS.length;
+  const others = index < 0
+    ? ALL_BRANDS.filter((k) => k !== self).slice(0, 2)
+    : [ALL_BRANDS[(index + 1) % n], ALL_BRANDS[(index + 2) % n]];
   return [
     ...others.map((k) => ({ key: k, label: STATIC_FEATURES[k].title, note: `(${STATIC_FEATURES[k].kicker.split(" · ")[0].toLowerCase()})` })),
     { key: "work" as const, label: "See all work" },
@@ -239,6 +270,11 @@ export const ALTS: Record<FeatureKey, Array<{ key: FeatureKey | "work"; label: s
   warnerbros: brandAlts("warnerbros"),
   att: brandAlts("att"),
   mpa: brandAlts("mpa"),
+  about: [
+    { key: "resume", label: "Resume", note: "(one page)" },
+    { key: "writing", label: "Read something short" },
+    { key: "work", label: "See all work" },
+  ],
   writing: [
     { key: "airtable", label: "Airtable", note: "(case study)" },
     { key: "screenwriting", label: "Screenwriting", note: "(reel)" },

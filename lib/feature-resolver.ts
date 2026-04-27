@@ -16,6 +16,7 @@ export type FeatureCard = {
   title: string;
   kicker: string;
   copy: string;
+  highlights?: string[];
   ctas: FeatureCta[];
   heroTag?: string;
   thumbs?: string[];
@@ -85,7 +86,8 @@ function projectCard(key: BrandKey, project: SanityFeatureProject | null | undef
 
 export function resolveFeature(key: FeatureKey, map?: FeatureMap): FeatureCard {
   if (isBrandKey(key)) return projectCard(key, map?.[key]);
-  return { ...STATIC_FEATURES[key], alts: ALTS[key] };
+  const base = STATIC_FEATURES[key];
+  return { ...base, highlights: base.highlights, alts: ALTS[key] };
 }
 
 export { type FeatureKey } from "./feature-static";

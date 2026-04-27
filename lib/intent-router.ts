@@ -52,6 +52,11 @@ const RULES: Rule[] = [
   // Screenwriting.
   { pattern: /\b(screenplay|screenplays|script|scripts|screenwriting|screenwriter|screenwriters|pilot|pilots)\b/i, intent: { kind: "feature", key: "screenwriting" } },
 
+  // Category shortcuts surfaced by the prompt UI.
+  { pattern: /\b(b2b|saas|enterprise)\b/i, intent: { kind: "feature", key: "airtable" } },
+  { pattern: /\b(tech|technology|software)\s+(campaign|campaigns|work)?\b/i, intent: { kind: "feature", key: "techsure" } },
+  { pattern: /\b(brand\s+voice|voice|positioning|narrative\s+strategy)\b/i, intent: { kind: "feature", key: "chevron" } },
+
   // Brand keywords. Order matters — more specific first.
   { pattern: /\b(techsure|your\s+tech\s+should\s+work)\b/i, intent: { kind: "feature", key: "techsure" } },
   { pattern: /\b(verizon\s+up|biggest\s+little\s+monsters|verizon)\b/i, intent: { kind: "feature", key: "verizon-up" } },
@@ -68,13 +73,14 @@ const RULES: Rule[] = [
   // Work grid (broader than brand keywords; last).
   { pattern: /(\bwork\b|case\s+stud(y|ies)|\bportfolio\b|\bads\b|\bcampaigns\b|brand\s+work)/i, intent: { kind: "navigate", to: "/work", label: "case studies" } },
 
-  // About.
-  { pattern: /(about\s+(you|patrick|yourself)|who\s+are\s+you|\bbio\b|meet\s+(you|patrick))/i, intent: { kind: "navigate", to: "/about", label: "about" } },
+  // About: start conversationally on the homepage; the UI hands off to
+  // /about after the short answer path is exhausted.
+  { pattern: /(tell\s+me\s+about\s+(you|patrick|yourself)|about\s+(you|patrick|yourself)|who\s+are\s+you|\bbio\b|meet\s+(you|patrick)|\bapple\b)/i, intent: { kind: "feature", key: "about" } },
 ];
 
 const SOLO_NAV: Record<string, Intent> = {
-  about: { kind: "navigate", to: "/about", label: "about" },
-  bio: { kind: "navigate", to: "/about", label: "about" },
+  about: { kind: "feature", key: "about" },
+  bio: { kind: "feature", key: "about" },
   work: { kind: "navigate", to: "/work", label: "case studies" },
   portfolio: { kind: "navigate", to: "/work", label: "case studies" },
 };

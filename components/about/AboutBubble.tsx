@@ -26,17 +26,12 @@ export function AboutBubble({ exchange, typing, instant }: Props) {
 
   return (
     <li className="list-none">
-      <p
-        aria-hidden="true"
-        className="
-          font-[family-name:var(--font-mono)] text-[10px]
-          tracking-[0.28em] uppercase
-          text-[var(--color-ink-soft)]
-          mb-[6px]
-        "
-      >
-        {label}
-      </p>
+      <div aria-hidden="true" className="flex items-center gap-[12px] mb-[10px]">
+        <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.28em] uppercase text-[var(--color-ink-soft)] shrink-0 select-none">
+          {label}
+        </span>
+        <div className="flex-1 h-px bg-[var(--color-paper-line-soft)]" />
+      </div>
       {isVisitor ? (
         <p
           className="
@@ -54,20 +49,56 @@ export function AboutBubble({ exchange, typing, instant }: Props) {
           />
         </p>
       ) : (
-        <p
-          className="
-            font-[family-name:var(--font-serif)] text-[17px] leading-[1.6]
-            text-[var(--color-ink)]
-          "
-        >
-          <RenderedText
-            text={bodyText}
-            typing={typing}
-            instant={instant}
-          />
-        </p>
+        <>
+          <p
+            className="
+              font-[family-name:var(--font-serif)] text-[17px] leading-[1.6]
+              text-[var(--color-ink)]
+            "
+          >
+            <RenderedText
+              text={bodyText}
+              typing={typing}
+              instant={instant}
+            />
+          </p>
+          {exchange.artifact && <AboutArtifact artifact={exchange.artifact} />}
+        </>
       )}
     </li>
+  );
+}
+
+function AboutArtifact({
+  artifact,
+}: {
+  artifact: NonNullable<Extract<Exchange, { role: "patrick" }>["artifact"]>;
+}) {
+  return (
+    <aside
+      className="
+        mt-[18px] max-w-[620px]
+        border border-[var(--color-paper-line-soft)]
+        bg-[var(--color-paper-panel)]
+        px-[18px] py-[14px]
+        font-[family-name:var(--font-mono)]
+        shadow-[0_1px_0_rgba(255,255,255,0.55)]
+      "
+    >
+      <p className="text-[11px] tracking-[0.18em] uppercase text-[var(--color-ink-soft)] mb-[10px]">
+        {artifact.title}
+      </p>
+      <ul className="m-0 p-0 list-none space-y-[8px]">
+        {artifact.items.map((item) => (
+          <li key={item} className="text-[13px] leading-[1.5] text-[var(--color-ink-mid)]">
+            <span className="text-[var(--color-accent)] mr-[8px]" aria-hidden="true">
+              /
+            </span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </aside>
   );
 }
 

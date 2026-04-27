@@ -8,7 +8,7 @@ export function ThemeBoundary() {
 
   useEffect(() => {
     const root = document.documentElement;
-    const isDark = pathname.startsWith("/work");
+    const isDark = pathname.startsWith("/work/");
     const theme = isDark ? "dark" : "light";
     root.dataset.theme = theme;
     return () => {

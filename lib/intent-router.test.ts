@@ -18,8 +18,14 @@ describe("routeIntent — navigation (grid fallback)", () => {
   it("routes 'portfolio' → /work", () => {
     expect(routeIntent("portfolio please")).toMatchObject({ kind: "navigate", to: "/work" });
   });
-  it("routes 'about you' → /about", () => {
-    expect(routeIntent("about you")).toMatchObject({ kind: "navigate", to: "/about" });
+  it("routes 'about you' → feature:about", () => {
+    expect(routeIntent("about you")).toMatchObject({ kind: "feature", key: "about" });
+  });
+  it("routes 'tell me about you' → feature:about", () => {
+    expect(routeIntent("tell me about you")).toMatchObject({ kind: "feature", key: "about" });
+  });
+  it("routes 'who are you' → feature:about", () => {
+    expect(routeIntent("who are you")).toMatchObject({ kind: "feature", key: "about" });
   });
   it("solo 'work' routes to /work", () => {
     expect(routeIntent("work")).toMatchObject({ kind: "navigate", to: "/work" });
@@ -56,6 +62,15 @@ describe("routeIntent — brand feature cards", () => {
   });
   it("routes 'techsure' → feature:techsure", () => {
     expect(routeIntent("techsure")).toMatchObject({ kind: "feature", key: "techsure" });
+  });
+  it("routes 'tech campaigns' → feature:techsure", () => {
+    expect(routeIntent("tech campaigns")).toMatchObject({ kind: "feature", key: "techsure" });
+  });
+  it("routes 'show me b2b' → feature:airtable", () => {
+    expect(routeIntent("show me b2b")).toMatchObject({ kind: "feature", key: "airtable" });
+  });
+  it("routes 'brand voice' → feature:chevron", () => {
+    expect(routeIntent("brand voice")).toMatchObject({ kind: "feature", key: "chevron" });
   });
   it("routes solo 'verizon' → feature:verizon-up (the canonical Verizon)", () => {
     expect(routeIntent("verizon")).toMatchObject({ kind: "feature", key: "verizon-up" });
@@ -128,7 +143,7 @@ describe("routeIntent — PI card", () => {
 
 describe("routeIntent — lead (prose without navigation keywords)", () => {
   it("treats long prose as a lead", () => {
-    expect(routeIntent("we need a brand voice for a fintech launch")).toMatchObject({ kind: "lead" });
+    expect(routeIntent("we need help with a fintech launch next quarter")).toMatchObject({ kind: "lead" });
   });
   it("treats a long question as a lead", () => {
     expect(routeIntent("can you help with a launch next quarter")).toMatchObject({ kind: "lead" });

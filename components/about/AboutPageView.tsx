@@ -31,15 +31,30 @@ export function AboutPageView({ exchanges, links }: Props) {
             );
           }
           return (
-            <p
-              key={i}
-              className="
-                font-[family-name:var(--font-serif)] text-[17px] leading-[1.6]
-                text-[var(--color-ink)] mb-[20px]
-              "
-            >
-              {ex.text}
-            </p>
+            <div key={i} className="mb-[20px]">
+              <p
+                className="
+                  font-[family-name:var(--font-serif)] text-[17px] leading-[1.6]
+                  text-[var(--color-ink)] mb-[12px]
+                "
+              >
+                {ex.text}
+              </p>
+              {ex.artifact && (
+                <div className="border-l border-[var(--color-paper-line)] pl-[14px] font-[family-name:var(--font-mono)]">
+                  <p className="text-[11px] tracking-[0.18em] uppercase text-[var(--color-ink-soft)] mb-[8px]">
+                    {ex.artifact.title}
+                  </p>
+                  <ul className="m-0 p-0 list-none space-y-[6px]">
+                    {ex.artifact.items.map((item) => (
+                      <li key={item} className="text-[13px] leading-[1.45] text-[var(--color-ink-mid)]">
+                        / {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           );
         })}
 
@@ -55,6 +70,8 @@ export function AboutPageView({ exchanges, links }: Props) {
             </a>{" "}
             <a
               href={links.resume}
+              target="_blank"
+              rel="noopener noreferrer"
               className="underline hover:text-[var(--color-ink)] transition-colors"
             >
               resume →

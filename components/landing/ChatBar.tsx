@@ -1,17 +1,21 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { routeIntent } from "@/lib/intent-router";
 import type { FeatureKey } from "@/lib/feature-resolver";
 import { buildRotationPlan, LANDING_PLACEHOLDER } from "@/lib/placeholder-rotation";
+import {
+  promptGhostCompletion,
+  promptSuggestions,
+} from "@/lib/prompt-suggestions";
 
 type Status = "idle" | "sending" | "sent" | "navigating" | "error";
 type Mode = "initial" | "clarify";
 
 const CLARIFY_SUGGESTIONS = [
-  "Show me your best ad",
-  "Do you write screenplays?",
-  "How do we work together?",
+  "/ best ad",
+  "/ screenwriting",
+  "/ contact",
 ];
 
 const THINKING_LINES = [
@@ -27,8 +31,10 @@ type Props = {
   onCard: (id: "pi") => void;
   onFeature: (key: FeatureKey, raw: string) => void;
   onContactCard: (variant: "hi" | "contact") => void;
+  onContextMessage?: (message: string) => boolean;
   /** Parent-controlled "response" state — renders × clear and adjusts helper copy. */
   inResponse: boolean;
+  followupMode?: boolean;
   onReset: () => void;
   /** When true, focus the chat input after mount (e.g. arriving via /?ask=1). */
   autoFocus?: boolean;
@@ -43,7 +49,9 @@ export function ChatBar({
   onCard,
   onFeature,
   onContactCard,
+  onContextMessage,
   inResponse,
+  followupMode,
   onReset,
   autoFocus,
   initialQuery,
@@ -53,8 +61,24 @@ export function ChatBar({
   const [mode, setMode] = useState<Mode>("initial");
   const [reply, setReply] = useState<string | null>(null);
   const [placeholder, setPlaceholder] = useState<string>(LANDING_PLACEHOLDER);
-  const honeypotId = useId();
+  const [placeholderAction, setPlaceholderAction] = useState<string>(LANDING_PLACEHOLDER);
+  const [clarifyQuery, setClarifyQuery] = useState("");
+  const [isTouchLike, setIsTouchLike] = useState(false);
+  const [dismissedGhostFor, setDismissedGhostFor] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const ghost = useMemo(() => {
+    if (isTouchLike || followupMode || mode === "clarify") return null;
+    if (value && value === dismissedGhostFor) return null;
+    return promptGhostCompletion(value);
+  }, [dismissedGhostFor, followupMode, isTouchLike, mode, value]);
+  const ghostSuffix =
+    ghost && ghost.toLowerCase().startsWith(value.trimStart().toLowerCase())
+      ? ghost.slice(value.trimStart().length)
+      : "";
+  const activeSuggestions = useMemo(
+    () => promptSuggestions(mode === "clarify" ? clarifyQuery : value, 3),
+    [clarifyQuery, mode, value]
+  );
 
   // Animated rotating placeholder. Pauses on focus, on input, and on
   // prefers-reduced-motion. Always lands on LANDING_PLACEHOLDER.
@@ -62,6 +86,7 @@ export function ChatBar({
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setPlaceholder(LANDING_PLACEHOLDER);
+      setPlaceholderAction(LANDING_PLACEHOLDER);
       return;
     }
 
@@ -112,15 +137,19 @@ export function ChatBar({
     }
 
     async function run() {
-      // Hold the canonical "/ surprise me" as a clean first impression.
+      // Hold the canonical "/ surprise me" as a clean first impression,
+      // then keep offering doors until the visitor takes one.
       await wait(1400);
-      for (const target of plan) {
+      let i = 0;
+      while (!cancelled) {
+        const target = plan[i % plan.length];
         if (cancelled) return;
+        setPlaceholderAction(target);
         await eraseBack();
         await wait(140);
         await typeOut(target);
-        if (target === LANDING_PLACEHOLDER) return;
         await wait(1600);
+        i += 1;
       }
     }
 
@@ -132,8 +161,34 @@ export function ChatBar({
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const media = window.matchMedia("(hover: none) and (pointer: coarse)");
+    const update = () => setIsTouchLike(media.matches);
+    update();
+    media.addEventListener?.("change", update);
+    return () => media.removeEventListener?.("change", update);
+  }, []);
+
   function stopRotation() {
     setPlaceholder(LANDING_PLACEHOLDER);
+    setPlaceholderAction(LANDING_PLACEHOLDER);
+  }
+
+  function sceneUpdate(update: () => void) {
+    if (typeof document === "undefined") {
+      update();
+      return;
+    }
+    const motionOk = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const doc = document as Document & {
+      startViewTransition?: (callback: () => void) => void;
+    };
+    if (!motionOk || !doc.startViewTransition) {
+      update();
+      return;
+    }
+    doc.startViewTransition(update);
   }
 
   // Global "/" or ⌘K/Ctrl+K → focus input. "Escape" → reset.
@@ -192,6 +247,16 @@ export function ChatBar({
     if (!trimmed || status === "sending" || status === "navigating") return;
 
     const intent = routeIntent(trimmed);
+    const shouldStayInConversation =
+      inResponse && (intent.kind === "lead" || intent.kind === "clarify");
+
+    if (shouldStayInConversation && onContextMessage?.(trimmed)) {
+      setValue("");
+      setMode("initial");
+      setReply(null);
+      setStatus("idle");
+      return;
+    }
 
     switch (intent.kind) {
       case "navigate": {
@@ -208,7 +273,10 @@ export function ChatBar({
         setTimeout(() => {
           setReply(null);
           setStatus("idle");
-          onFeature(intent.key, trimmed);
+          sceneUpdate(() => {
+            setValue("");
+            onFeature(intent.key, trimmed);
+          });
         }, 650);
         return;
       }
@@ -227,6 +295,7 @@ export function ChatBar({
         return;
       }
       case "clarify": {
+        setClarifyQuery(trimmed);
         setMode("clarify");
         setReply(null);
         return;
@@ -249,7 +318,7 @@ export function ChatBar({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    void dispatch(value);
+    void dispatch(value.trim() ? value : placeholderAction);
   }
 
   function handleSuggestion(text: string) {
@@ -257,33 +326,33 @@ export function ChatBar({
     void dispatch(text);
   }
 
+  function acceptGhost() {
+    if (!ghost) return false;
+    setValue(ghost);
+    setDismissedGhostFor("");
+    setMode("initial");
+    return true;
+  }
+
   function reset() {
     setValue("");
     setReply(null);
     setMode("initial");
+    setClarifyQuery("");
+    setDismissedGhostFor("");
     setStatus("idle");
     onReset();
     requestAnimationFrame(() => inputRef.current?.focus());
   }
 
   return (
-    <form onSubmit={handleSubmit} className="w-full" autoComplete="off" style={{ viewTransitionName: "chat-input" }}>
+    <form
+      onSubmit={handleSubmit}
+      className="chat-composer w-full"
+      autoComplete="off"
+      style={{ viewTransitionName: "chat-input" }}
+    >
       <label htmlFor="chat" className="sr-only">Ask me something</label>
-      {/* honeypot */}
-      <input
-        type="text"
-        name="website"
-        id={honeypotId}
-        tabIndex={-1}
-        autoComplete="off"
-        className="absolute left-[-9999px] w-0 h-0 opacity-0"
-        aria-hidden="true"
-      />
-      {/* Implicit-submit target. With a honeypot input in the form, the
-          browser needs a submit button for Enter to dispatch submit. */}
-      <button type="submit" aria-hidden="true" tabIndex={-1} className="sr-only">
-        Send
-      </button>
       <div className="relative mb-[14px]">
         <input
           ref={inputRef}
@@ -293,13 +362,23 @@ export function ChatBar({
           onChange={(e) => {
             stopRotation();
             setValue(e.target.value);
+            setDismissedGhostFor("");
             if (mode === "clarify") setMode("initial");
           }}
-          onFocus={stopRotation}
-          placeholder={placeholder}
+          onKeyDown={(e) => {
+            if ((e.key === "Tab" || e.key === "ArrowRight") && acceptGhost()) {
+              e.preventDefault();
+              return;
+            }
+            if (e.key === "Escape" && ghost) {
+              e.preventDefault();
+              setDismissedGhostFor(value);
+            }
+          }}
+          placeholder={followupMode ? "ask a follow-up" : placeholder}
           aria-label="Ask Patrick a question"
           className="
-            w-full px-[24px] pr-[48px] py-[22px]
+            w-full px-[24px] pr-[104px] py-[22px]
             font-[family-name:var(--font-mono)] text-[16px]
             text-[var(--color-ink)]
             bg-[var(--color-paper-panel)]
@@ -310,8 +389,24 @@ export function ChatBar({
             focus:border-[var(--color-ink-soft)]
             focus:shadow-[0_0_0_2px_rgba(27,26,22,0.12)]
             transition-[border-color,box-shadow,background] duration-200
+            max-[430px]:px-[16px] max-[430px]:pr-[78px] max-[430px]:py-[18px]
           "
         />
+        {ghostSuffix && (
+          <span
+            aria-hidden="true"
+            className="
+              pointer-events-none absolute left-[24px] top-1/2
+              font-[family-name:var(--font-mono)] text-[16px]
+              text-[var(--color-ink-faint)] opacity-55
+              max-[430px]:left-[16px]
+              motion-safe:transition-opacity
+            "
+            style={{ transform: `translate(${value.length}ch, -50%)` }}
+          >
+            {ghostSuffix}
+          </span>
+        )}
         <button
           type="button"
           onClick={reset}
@@ -330,53 +425,44 @@ export function ChatBar({
             <path d="M6 6l12 12M18 6l-12 12" />
           </svg>
         </button>
-        {/* Desktop-only `/` keycap affordance — hidden on touch, and on response. */}
+        {/* Empty input submits the active rotating prompt; typed input submits itself. */}
         {!inResponse && (
-          <span
-            aria-hidden="true"
+          <button
+            type="submit"
+            aria-label={value.trim() ? "Submit prompt" : `Run ${placeholderAction}`}
             className="
-              prompt-keycap
-              hidden md:flex
-              absolute right-[18px] top-1/2 -translate-y-1/2
-              w-[22px] h-[22px] items-center justify-center
+              prompt-keycap prompt-submit
+              flex
+              absolute right-[18px] top-0 bottom-0 my-auto
+              min-w-[64px] h-[34px] px-[12px] items-center justify-center
               rounded-[3px] border border-[var(--color-paper-line)]
-              font-[family-name:var(--font-mono)] text-[12px]
+              font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.14em]
               text-[var(--color-ink-soft)] bg-[var(--color-paper)]
-              pointer-events-none
-              transition-opacity duration-200
+              transition-[box-shadow,border-color,color,background-color] duration-200
+              max-[430px]:right-[10px] max-[430px]:min-w-[58px] max-[430px]:px-[10px] max-[430px]:text-[10px]
             "
           >
-            /
-          </span>
+            Let&apos;s Go
+          </button>
         )}
       </div>
-      <p
-        className="
-          prompt-help
-          font-[family-name:var(--font-mono)] text-[13px]
-          text-[var(--color-ink-soft)] m-0 mt-[8px] mx-[6px]
-          tracking-[0.04em]
-        "
-      >
-        Tell me in your own words. Press enter when you&apos;re done.
-      </p>
 
       {mode === "clarify" && (
         <div className="mt-[18px] flex flex-wrap gap-[10px]">
           <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] tracking-[0.2em] uppercase self-center mr-1">
-            try:
+            closest doors:
           </span>
-          {CLARIFY_SUGGESTIONS.map((s) => (
+          {(activeSuggestions.length ? activeSuggestions.map((s) => s.query) : CLARIFY_SUGGESTIONS).map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => handleSuggestion(s)}
               className="
                 font-[family-name:var(--font-mono)] text-[13px]
-                px-[14px] py-[6px] rounded-full
+                min-h-[44px] px-[14px] py-[8px] rounded-full
                 border border-[var(--color-paper-line)]
                 text-[var(--color-ink-mid)]
-                hover:text-[var(--color-ink)] hover:border-[var(--color-ink-soft)]
+                hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]
                 transition-colors
               "
             >

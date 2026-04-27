@@ -3,6 +3,7 @@ import { Caveat, Newsreader, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeBoundary } from "@/components/ThemeBoundary";
+import { LightSwitchHost } from "@/components/LightSwitchHost";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -29,6 +30,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3003"),
   title: { default: "Patrick Kirkland — writer and creative director", template: "%s — Patrick Kirkland" },
   description: "Writer and creative director. Ask me what you want to see.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Patrick Kirkland — writer and creative director",
     description: "Writer and creative director. Ask me what you want to see.",
@@ -44,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="skip-to-content">Skip to content</a>
         <ThemeBoundary />
         {children}
+        <LightSwitchHost />
         <Analytics />
         <SpeedInsights />
       </body>

@@ -12,7 +12,10 @@ export function AboutEscape({ email }: Props) {
       aria-label="Quick links"
       className="
         fixed bottom-[24px] left-1/2 -translate-x-1/2
-        flex gap-[24px] z-[40]
+        flex items-center gap-[20px] z-[40]
+        bg-[var(--color-paper)] border border-[var(--color-paper-line)]
+        rounded-[3px] px-[16px] py-[10px]
+        shadow-[0_2px_12px_rgba(27,26,22,0.06)]
       "
     >
       <Link
@@ -26,6 +29,7 @@ export function AboutEscape({ email }: Props) {
       >
         see the work →
       </Link>
+      <span aria-hidden="true" className="w-px h-[14px] bg-[var(--color-paper-line)]" />
       <a
         href={`mailto:${email}`}
         className="

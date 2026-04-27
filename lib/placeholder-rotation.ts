@@ -11,12 +11,11 @@ export const LANDING_PLACEHOLDER = "/ surprise me";
 
 export const DEFAULT_POOL = [
   "/ best ad",
-  "/ work",
+  "/ show me b2b",
+  "/ tech campaigns",
+  "/ brand voice",
+  "/ screenwriting",
   "/ resume",
-  "/ contact",
-  "/ about",
-  "/ say hi",
-  "/ what's your favorite",
 ] as const;
 
 export type RotationPlanOptions = {

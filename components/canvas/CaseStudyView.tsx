@@ -2,14 +2,17 @@ import { PortableText } from "@portabletext/react";
 import { urlForImage } from "@/lib/sanity/image";
 import type { Project } from "@/lib/sanity/types";
 import { CaseStudyHandoff } from "./CaseStudyHandoff";
+import { CaseStudyTransitions } from "./CaseStudyTransitions";
 
 export function CaseStudyView({ project: p }: { project: Project }) {
   const kicker = [p.brand, p.year, p.type].filter(Boolean).join(" · ");
   const hero = p.heroImage ?? p.mainImage;
   const moments = p.editorialSections ?? [];
+  const slug = p.slug.current;
 
   return (
     <article className="min-h-screen">
+      <CaseStudyTransitions />
       {/* Hero — full-bleed image with bottom-left title overlay */}
       <section className="relative w-full h-[92vh] min-h-[560px] max-h-[900px] overflow-hidden">
         {hero ? (
@@ -17,6 +20,7 @@ export function CaseStudyView({ project: p }: { project: Project }) {
           <img
             src={urlForImage(hero).width(2400).url()}
             alt={p.title}
+            style={{ viewTransitionName: `work-cover-${slug}` }}
             className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
@@ -37,7 +41,7 @@ export function CaseStudyView({ project: p }: { project: Project }) {
                 {kicker}
               </div>
             )}
-            <h1 className="font-[family-name:var(--font-serif)] font-normal text-[clamp(44px,6vw,86px)] leading-[0.98] tracking-[-0.015em] m-0 max-w-[22ch] text-[var(--color-ink)]">
+            <h1 className="case-study-h1 font-[family-name:var(--font-serif)] font-normal text-[clamp(44px,6vw,86px)] leading-[0.98] tracking-[-0.015em] m-0 max-w-[22ch] text-[var(--color-ink)]">
               {p.title}
             </h1>
             {p.role && (
@@ -126,11 +130,12 @@ export function CaseStudyView({ project: p }: { project: Project }) {
 }
 
 type EditorialSection = NonNullable<Project["editorialSections"]>[number];
+type EditorialImage = NonNullable<EditorialSection["images"]>[number];
 
 function Moment({ section, index }: { section: EditorialSection; index: number }) {
   const counter = `§ ${String(index + 1).padStart(2, "0")}`;
-  const firstImage = section.images?.[0];
-  const rest = section.images?.slice(1) ?? [];
+  const images = section.images ?? [];
+  const pullQuote = extractPullQuote(section.copyBlock);
 
   return (
     <section className="px-[60px] py-[80px] max-[820px]:px-[24px] max-[820px]:py-[56px]">
@@ -143,46 +148,119 @@ function Moment({ section, index }: { section: EditorialSection; index: number }
           </div>
           <div>
             {section.copyBlock && (
-              <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink-mid)] max-w-[62ch] [&_p]:mb-[18px]">
+              <div className="font-[family-name:var(--font-serif)] text-[19px] leading-[1.65] text-[var(--color-ink-mid)] max-w-[66ch] [&_p]:mb-[18px]">
                 <PortableText value={section.copyBlock} />
               </div>
+            )}
+            {pullQuote && (
+              <blockquote className="my-[44px] max-w-[12ch] font-[family-name:var(--font-serif)] text-[clamp(48px,8vw,116px)] leading-[0.9] tracking-[-0.045em] text-[var(--color-ink)]">
+                “{pullQuote}”
+              </blockquote>
             )}
           </div>
         </div>
 
-        {firstImage && (
-          <figure className="mt-[48px] -mx-[60px] max-[820px]:-mx-[24px]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={urlForImage(firstImage.image).width(2000).url()}
-              alt={firstImage.caption ?? ""}
-              className="w-full object-cover"
-            />
-            {firstImage.caption && (
-              <figcaption className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.12em] uppercase text-[var(--color-ink-soft)] mt-[12px] px-[60px] max-[820px]:px-[24px]">
-                {firstImage.caption}
-              </figcaption>
-            )}
-          </figure>
-        )}
-
-        {rest.length > 0 && (
-          <div className="mt-[48px] grid grid-cols-2 gap-[2px] max-[820px]:grid-cols-1">
-            {rest.map((img, i) => (
-              <figure key={`m-img-${i}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={urlForImage(img.image).width(1400).url()}
-                  alt={img.caption ?? ""}
-                  className="w-full object-cover"
-                />
-              </figure>
-            ))}
-          </div>
-        )}
+        <EditorialImages images={images} rhythm={index % 3} />
       </div>
     </section>
   );
+}
+
+function EditorialImages({
+  images,
+  rhythm,
+}: {
+  images: EditorialImage[];
+  rhythm: number;
+}) {
+  if (images.length === 0) return null;
+
+  if (rhythm === 1) {
+    return (
+      <div className="mt-[54px] grid grid-cols-[minmax(0,1.15fr)_minmax(220px,0.85fr)] items-end gap-[18px] max-[820px]:grid-cols-1">
+        {images.slice(0, 3).map((img, i) => (
+          <CaseStudyFigure
+            key={`editorial-img-${i}`}
+            image={img}
+            className={i === 0 ? "max-[820px]:translate-y-0" : "md:-translate-y-[34px]"}
+            width={i === 0 ? 1600 : 1000}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (rhythm === 2) {
+    return (
+      <div className="mt-[54px] grid grid-cols-2 gap-[2px] max-[820px]:grid-cols-1">
+        {images.slice(0, 4).map((img, i) => (
+          <CaseStudyFigure
+            key={`editorial-img-${i}`}
+            image={img}
+            className={i === 0 ? "md:col-span-2" : ""}
+            width={i === 0 ? 1800 : 1100}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  const [first, ...rest] = images;
+  return (
+    <>
+      <CaseStudyFigure
+        image={first}
+        className="mt-[54px] -mx-[60px] max-[820px]:-mx-[24px]"
+        width={2000}
+      />
+      {rest.length > 0 && (
+        <div className="mt-[2px] grid grid-cols-2 gap-[2px] max-[820px]:grid-cols-1">
+          {rest.slice(0, 4).map((img, i) => (
+            <CaseStudyFigure key={`editorial-img-${i}`} image={img} width={1200} />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+function CaseStudyFigure({
+  image,
+  className = "",
+  width,
+}: {
+  image: EditorialImage;
+  className?: string;
+  width: number;
+}) {
+  return (
+    <figure className={className}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={urlForImage(image.image).width(width).url()}
+        alt={image.caption ?? ""}
+        className="w-full object-cover"
+      />
+      {image.caption && (
+        <figcaption className="mt-[12px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.16em] leading-[1.55] text-[var(--color-accent)]">
+          {image.caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function extractPullQuote(blocks?: EditorialSection["copyBlock"]): string | null {
+  const text = blocks
+    ?.flatMap((block) => ("children" in block ? block.children ?? [] : []))
+    .map((child) => ("text" in child ? child.text : ""))
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return null;
+  const sentence = text.split(/(?<=[.!?])\s+/)[0]?.replace(/[.!?]$/, "");
+  if (!sentence || sentence.length < 42 || sentence.length > 140) return null;
+  return sentence;
 }
 
 function ConflictResolutionBlock({

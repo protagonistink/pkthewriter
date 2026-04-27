@@ -8,19 +8,20 @@
         "what's your job",
         "are you a copywriter or a creative director",
         "what's your role",
-        "tell me what you do for a living"
+        "tell me what you do for a living",
+        "what do you actually do"
       ],
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. The honest one-liner version of your role. Lead with verb, end with the *kind* of problem you like. No agency-speak.]"
+          "text": "I write and direct the language around ideas that need to move people: campaigns, positioning, founder stories, launches, film scripts, and the occasional deck that has no business being as good as it is. The job changes shape, but the work is usually the same: find the real argument and make it sound inevitable."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences, lighter register. Same substance as the default, but with the wink you'd use at a bar. Only served when visitor types in caps or with exclamation.]"
+          "text": "I make words do their job. Sometimes that job is a thirty-second spot, sometimes it is a founder narrative, sometimes it is stopping a deck from becoming a beige hostage note."
         }
       ],
-      "followups": ["years-experience", "how-to-work-with-me", "see-the-work"]
+      "followups": ["years-experience", "working-with-me", "see-the-work"]
     },
     {
       "id": "where-im-based",
@@ -35,11 +36,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. City, remote status, any travel/on-site nuance. Keep it brief.]"
+          "text": "I work remote-first and show up in the room when the room is worth the airfare. Most of the work I do travels well: strategy, scripts, language systems, concepting, and the kind of notes that get better when everyone has had time to think."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same facts, lighter delivery. Maybe a one-liner about the city.]"
+          "text": "Remote-first. Available for rooms with a reason. Less available for rooms whose only agenda item is proving the room exists."
         }
       ],
       "followups": ["how-to-work-with-me", "am-i-available", "what-i-do"]
@@ -58,11 +59,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Honest availability status. If open, say what you're looking for. End with email nudge.]"
+          "text": "Yes, selectively. I am taking projects where the problem is real, the stakes are not imaginary, and the people involved want the sharper answer more than the easiest one. If that sounds close, email me at patrick@pkthewriter.com."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same availability info, looser tone. A touch of personality around the availability answer.]"
+          "text": "I have bandwidth for the right work, which is a polite way of saying I am not looking to join a twelve-person thread about whether a comma feels brave. Email me if the problem has teeth."
         }
       ],
       "followups": ["how-to-work-with-me", "rate-question", "email-me"]
@@ -80,11 +81,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Brief walk through how a project typically starts. Concrete, not abstract. Ends with email or contact action.]"
+          "text": "Send the short version first: what you are making, why it matters now, who needs to believe it, and what is already in motion. I will usually ask a few annoying but useful questions, then propose the shape: concept sprint, positioning pass, script work, creative direction, or something more embedded."
         },
         {
           "mood": "formal",
-          "text": "[PLACEHOLDER — Patrick writes: same process, slightly more structured framing. For the person writing a longer, more considered inquiry.]"
+          "text": "A good engagement starts with the problem, not the deliverable. I want to know the decision that has to be made, the audience that has to move, and the constraints that are not negotiable. From there I can recommend scope, timing, and whether I am the right person."
         }
       ],
       "followups": ["rate-question", "am-i-available", "email-me"]
@@ -102,11 +103,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Honest about how rates work without naming a number. Scope-first framing. Points toward email for real conversation.]"
+          "text": "It depends on the shape of the problem, which is the honest answer and also the annoying one. I quote by scope, not by vibes: timeline, usage, number of stakeholders, and how much of the strategic mess I am being asked to own. Email me the brief and I will give you a real number."
         },
         {
           "mood": "formal",
-          "text": "[PLACEHOLDER — Patrick writes: same rate philosophy, more direct. Good for someone writing a longer project brief.]"
+          "text": "I price by project or retainer depending on the assignment. A clean brief, a decision-maker, and a clear review path keep the number sane. If the work is open-ended or politically complicated, I would rather name that early than pretend it is a tidy copy pass."
         }
       ],
       "followups": ["how-to-work-with-me", "am-i-available", "email-me"]
@@ -124,14 +125,14 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Years, the arc of how you got here, what changed. Concrete, not a résumé recitation.]"
+          "text": "More than 20 years. I came up through major brand campaigns, learned how expensive vague thinking can get, and stayed interested in the part of the work where story, strategy, and taste stop pretending to be separate departments."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same timeline, different angle. Maybe the version you'd tell at a dinner party.]"
+          "text": "Long enough to remember when a campaign could be killed by a faxed note. Not that I miss that. I have spent 20-plus years writing, directing, presenting, revising, and occasionally rescuing ideas from the meeting after the meeting."
         }
       ],
-      "followups": ["what-i-do", "brands", "working-with-me"]
+      "followups": ["what-i-do", "brands", "why-writer-and-cd"]
     },
     {
       "id": "brands",
@@ -146,11 +147,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. Name the brands worth naming, note the categories. Don't over-list — pick the ones that signal range or quality. Point to /work.]"
+          "text": "Apple, HBO, Verizon, and a lot of organizations whose names matter more inside their rooms than on a logo slide. The useful signal is range: tech, entertainment, telecom, founders, arts organizations, and mission-driven brands that need the language to carry actual weight."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same brands, but with a line about what you actually remember from each gig.]"
+          "text": "Apple, HBO, Verizon, and several places where I learned that every brand, no matter how famous, eventually becomes four people in a room arguing about a verb."
         }
       ],
       "followups": ["see-the-work", "what-i-do", "years-experience"]
@@ -168,11 +169,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. Brief framing of what they'll find, then a clear pointer to /work. Don't over-sell the portfolio — let it speak.]"
+          "text": "Yes. The selected work is at /work: a few pieces with enough context to understand the assignment, not a museum tour of everything I have ever touched."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: shorter, punchier pointer. Maybe a one-liner that sets expectations with a wink.]"
+          "text": "The work is at /work. I spared you the 74-slide greatest-hits deck, which feels like mercy."
         }
       ],
       "followups": ["brands", "what-i-do", "email-me"]
@@ -190,11 +191,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–5 sentences. Specific, not aspirational. Describe how you actually show up — pace, communication, what you ask for, what you don't. Name one thing you're good at and one thing you're upfront about.]"
+          "text": "I am direct, calm, and more interested in the useful answer than the impressive one. I like clarity early: who decides, what matters, what cannot move, and what everyone is privately worried about. I am good in messy rooms because I can separate taste, strategy, politics, and fear without making a religion out of any of them."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same substance, lighter. The version you'd say after the second drink.]"
+          "text": "I am easy to work with if the work is allowed to be honest. If the real assignment is 'make everyone comfortable without changing anything,' I will discover that fairly quickly and stare at it with you."
         }
       ],
       "followups": ["feedback-style", "process", "how-to-work-with-me"]
@@ -212,11 +213,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. Honest take on feedback. Where you push back, where you defer. What makes a good creative brief versus a bad one. Specific, not virtuous.]"
+          "text": "I take good notes seriously and bad notes diagnostically. If a note makes the work clearer, sharper, or more honest, great. If it is solving anxiety instead of the problem, I will say so and offer a better route. The draft is not precious. The reason for doing it is."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same honest take, slightly wry. Good for the visitor who's asking because they've been burned before.]"
+          "text": "I am not precious about drafts. I am a little precious about logic, which is different and far more irritating at meetings."
         }
       ],
       "followups": ["working-with-me", "process", "writing-beliefs"]
@@ -234,11 +235,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–5 sentences. Concrete verbs. Brief intake → territory exploration → draft approach. Name the moments you push for more time or more context. Avoid 'I start by researching the audience.']"
+          "text": "I start by looking for the buried premise: what has to be true for this work to work. Then I pressure-test the audience, the tension, the promise, and the voice before writing too much furniture. Once the territory is clear, I draft fast, cut harder than is emotionally convenient, and keep the strongest ugly line alive until the cleaner version earns its place."
         },
         {
           "mood": "formal",
-          "text": "[PLACEHOLDER — Patrick writes: structured version. Same process, laid out more explicitly. Good for someone who needs to brief their team on what to expect.]"
+          "text": "The process is diagnosis, territory, draft, pressure test, revision. I want the brief, the audience, the business or cultural pressure, the review path, and any work that has already failed. That usually tells us what the assignment is actually asking for."
         }
       ],
       "followups": ["working-with-me", "feedback-style", "how-to-work-with-me"]
@@ -256,11 +257,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–5 sentences. A real opinion, not a manifesto. Name something you believe that not everyone agrees with. Writing as: thinking, argument, specificity. No 'storytelling is everything.']"
+          "text": "Writing is not decoration. It is thinking under pressure. Good copy makes a choice, creates a little voltage, and leaves out the part the room added because it was nervous. The sentence should sound like it came from somewhere, not like it survived a committee."
         },
         {
           "mood": "formal",
-          "text": "[PLACEHOLDER — Patrick writes: same opinions, more considered. For someone who sent you a long question.]"
+          "text": "I believe specificity is the ethical part of the job. It forces the work to choose an audience, a promise, a point of view, and a consequence. Most weak writing is not too plain. It is too evasive."
         }
       ],
       "followups": ["feedback-style", "process", "why-writer-and-cd"]
@@ -278,11 +279,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. The real answer — how the two roles feed each other. Where one informs the other. What you can do because you hold both that most people can't.]"
+          "text": "The writer in me cares about the sentence. The creative director in me cares about the room the sentence has to survive. Holding both means I can make the work and protect the conditions that let it be good. It is not two jobs so much as one job seen from two distances."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same substance, lighter. Maybe the analogy that actually explains it.]"
+          "text": "The writer makes the thing. The CD keeps the thing from wandering into traffic. Some days they are friends. Some days they leave each other notes in all caps."
         }
       ],
       "followups": ["what-i-do", "writing-beliefs", "working-with-me"]
@@ -300,14 +301,14 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. What you're actually working on — as specific as NDA allows. What's holding your attention. What's next.]"
+          "text": "Usually a brand problem, a screenplay problem, and a note to myself that looks obvious until I ignore it for three days. Lately I have been interested in how founders explain what they are really building, and how much better the story gets once everyone stops auditioning for the LinkedIn version."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same work, different angle — the version that would make a good story at a party.]"
+          "text": "A notebook, too many tabs, a half-useful sentence, and at least one document named something like final_final_actual. The glamorous life."
         }
       ],
-      "followups": ["what-i-do", "brands", "see-the-work"]
+      "followups": ["what-i-do", "what-im-reading", "tell-me-a-secret"]
     },
     {
       "id": "what-im-reading",
@@ -322,11 +323,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 3–4 sentences. Actual titles, what you got from each, one recommendation with a note on who it's for. Not a list — a recommendation with a reason.]"
+          "text": "I tend to read things that make structure visible: screenplays, essays, criticism, old campaign books, novels with clean engines, and the occasional business book that accidentally contains one good paragraph. The recommendation changes with the problem. Ask me with a project in mind and I will give you a better answer."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same books, but include the one embarrassing one and why.]"
+          "text": "Scripts when I want architecture, essays when I want nerve, novels when I want to remember that language can still misbehave beautifully. And yes, sometimes absolute trash, for minerals."
         }
       ],
       "followups": ["writing-beliefs", "whats-on-my-desk", "favorite-ad-i-didnt-make"]
@@ -344,11 +345,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. Yes, real person, here's the tell. Lean into the humor of being asked this on a pre-written conversational page.]"
+          "text": "Real person. Scripted page. Every answer here was written by me, which is either reassuring or a very specific kind of concern."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same answer, more deadpan. End with a line that only a person would write.]"
+          "text": "This page is automated. I am not. The giveaway is that the page has better posture and fewer opinions about lunch."
         }
       ],
       "followups": ["what-i-do", "working-with-me", "tell-me-a-secret"]
@@ -366,7 +367,7 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. What Protagonist Ink is, why you started it, what kind of work comes through it. Keep it short — this isn't the homepage for PI.]"
+          "text": "Protagonist Ink is my narrative strategy consultancy. That is where the founder work, organizational story, and larger strategic engagements usually live. This site is more personal: me as writer, creative director, and senior pair of hands when the assignment needs one."
         }
       ],
       "followups": ["what-i-do", "how-to-work-with-me", "see-the-work"]
@@ -384,7 +385,7 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. The /writing page joke + the real reason. The self-editing posture that explains it. End with 'ask me for a sample.']"
+          "text": "Because writing samples are weird little crime scenes without context. I would rather send the right thing than make you browse six pieces that only prove I own verbs. Ask me for a sample and tell me what kind of problem you are trying to solve."
         }
       ],
       "followups": ["see-the-work", "email-me", "what-i-do"]
@@ -402,11 +403,11 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 2–3 sentences. A real answer — name the work, what it did, why you still think about it. Not the safe 'it's brilliant' — what actually stayed with you.]"
+          "text": "I like ads that make the strategic move feel conversational after the fact. The kind where you can feel the courage was not in the line itself, but in what they refused to explain around it. If I name one, I will immediately think of three better answers after you leave."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: same answer, slightly more confessional. The version that reveals something about your taste.]"
+          "text": "The best ad is usually the one that makes every agency person say 'we could have done that,' which is how you know they absolutely could not have done that."
         }
       ],
       "followups": ["writing-beliefs", "what-im-reading", "tell-me-a-secret"]
@@ -424,14 +425,14 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1–2 sentences. An actual surprise — something specific, not humble-braggy. The version that makes someone remember you.]"
+          "text": "I trust the ugly first version more than the polished second one. The first one usually knows what the work is about. The second one has started worrying about its jacket."
         },
         {
           "mood": "playful",
-          "text": "[PLACEHOLDER — Patrick writes: a different secret. Lighter, maybe weirder. The kind you'd text a friend.]"
+          "text": "I have a soft spot for the line that gets cut because it makes everyone laugh and then nervous. Nervous laughter is usually near the door."
         }
       ],
-      "followups": ["real-person-check", "protagonist-ink", "what-im-reading"]
+      "followups": ["real-person-check", "show-me-the-draft", "what-did-you-cut"]
     },
     {
       "id": "email-me",
@@ -446,7 +447,7 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1 sentence + email link. Direct. The mailto link will be wired by the UI from the links object.]"
+          "text": "Email me at patrick@pkthewriter.com with the problem, the timing, and the part everyone keeps talking around."
         }
       ],
       "followups": ["how-to-work-with-me", "am-i-available", "resume"]
@@ -464,7 +465,7 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1 sentence + resume link. Offer to send it directly too if they prefer a version tailored to their brief.]"
+          "text": "The resume is at /resume. If you want the version that answers a specific brief instead of the one that behaves on paper, email me."
         }
       ],
       "followups": ["email-me", "see-the-work", "am-i-available"]
@@ -482,10 +483,116 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: 1 sentence pointing to /work. Optional: note that what's there is a selection and email can get them more.]"
+          "text": "Start with /work. If you need something closer to your category or problem, email me and I can send the less-public version."
         }
       ],
       "followups": ["see-the-work", "brands", "email-me"]
+    },
+    {
+      "id": "show-me-the-draft",
+      "category": "oddball",
+      "hidden": true,
+      "triggers": [
+        "show me the draft",
+        "show me a draft",
+        "let me see the messy version",
+        "show me the ugly first draft",
+        "draft room"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "effect": "draft-room",
+          "text": "Fine. Small controlled exposure. The draft room is where the useful line and the embarrassing line sit next to each other until one of them confesses.",
+          "artifact": {
+            "title": "discard pile",
+            "items": [
+              "Make the founder sound visionary, but less like he owns a cape.",
+              "This wants to be a manifesto. It has earned a paragraph.",
+              "Good rhythm. Wrong truth.",
+              "The brave version is shorter and probably more annoying."
+            ]
+          }
+        }
+      ],
+      "followups": ["what-did-you-cut", "be-less-polished", "after-hours"]
+    },
+    {
+      "id": "be-less-polished",
+      "category": "oddball",
+      "hidden": true,
+      "triggers": [
+        "be less polished",
+        "give me the less polished version",
+        "stop being polished",
+        "say it messier",
+        "less portfolio voice"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "effect": "draft-room",
+          "text": "The less polished version is this: I am good at finding the thing everyone can feel but no one has named yet. I am less good at pretending the safer version is fine. This is useful until it is inconvenient, and then it is usually more useful.",
+          "artifact": {
+            "title": "margin notes",
+            "items": [
+              "Do not let them buy elegance when they need nerve.",
+              "If the sentence needs a committee to survive, it is already limping.",
+              "The client is not afraid of the line. They are afraid of meaning it."
+            ]
+          }
+        }
+      ],
+      "followups": ["show-me-the-draft", "what-did-you-cut", "after-hours"]
+    },
+    {
+      "id": "what-did-you-cut",
+      "category": "oddball",
+      "hidden": true,
+      "triggers": [
+        "what did you cut",
+        "show me what you cut",
+        "what got deleted",
+        "what line got killed",
+        "killed lines"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "effect": "draft-room",
+          "text": "Mostly the lines that were almost good enough to be dangerous. That is the annoying part: the cut line is rarely bad. It is usually doing the wrong job with confidence.",
+          "artifact": {
+            "title": "lines that lost",
+            "items": [
+              "A brand is just a promise with witnesses.",
+              "Make the thing smaller until it starts a fight.",
+              "The future does not need a tagline. It needs a reason to be believed.",
+              "Nobody wants authenticity. They want the relief of not being sold to."
+            ]
+          }
+        }
+      ],
+      "followups": ["show-me-the-draft", "be-less-polished", "after-hours"]
+    },
+    {
+      "id": "after-hours",
+      "category": "oddball",
+      "hidden": true,
+      "triggers": [
+        "after hours",
+        "switch to after hours",
+        "what happens after hours",
+        "make it weirder",
+        "go weirder"
+      ],
+      "replies": [
+        {
+          "mood": "default",
+          "effect": "after-hours",
+          "text": "After hours, the page gets less interested in credentials and more interested in the drawer full of lines that were too alive to behave. Still hireable. Just with the lights a little lower."
+        }
+      ],
+      "followups": ["what-did-you-cut", "show-me-the-draft", "be-less-polished"]
     },
     {
       "id": "nice-try",
@@ -494,7 +601,7 @@
       "replies": [
         {
           "mood": "default",
-          "text": "[PLACEHOLDER — Patrick writes: one sentence. Catch the prompt-injection attempt with humor, not a scolding. End with a small shrug toward email.]"
+          "text": "Nice try. The tiny scripted page refuses the jailbreak and suggests email like a coward with boundaries."
         }
       ],
       "followups": []

@@ -5,7 +5,14 @@ import { CanvasTakeover } from "@/components/canvas/CanvasTakeover";
 import { ScreenplayGallery } from "@/components/canvas/ScreenplayGallery";
 
 export const revalidate = 60;
-export const metadata = { title: "Screenplays — Patrick" };
+export const metadata = {
+  title: "Screenplays",
+  description:
+    "Feature-length and short screenplays by Patrick Kirkland — loglines, status, and sample pages for select projects.",
+  alternates: {
+    canonical: "/screenwriting",
+  },
+};
 
 export default async function Page() {
   const screenplays = await sanityClient.fetch<Screenplay[]>(screenplaysQuery);

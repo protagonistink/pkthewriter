@@ -12,12 +12,12 @@ describe("nextCaseStudy", () => {
     });
   });
 
-  it("bp → airtable", () => {
+  it("bp → techsure", () => {
     expect(nextCaseStudy("bp")).toEqual({
-      slug: "airtable",
-      brand: STATIC_FEATURES.airtable.brand,
-      title: STATIC_FEATURES.airtable.title,
-      kicker: STATIC_FEATURES.airtable.kicker,
+      slug: "techsure",
+      brand: STATIC_FEATURES.techsure.brand,
+      title: STATIC_FEATURES.techsure.title,
+      kicker: STATIC_FEATURES.techsure.kicker,
     });
   });
 

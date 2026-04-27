@@ -23,7 +23,7 @@ export function HeroIntro({ mode = "full" }: HeroIntroProps) {
           max-[820px]:text-[15px] max-[820px]:mb-[20px]
         "
       >
-        What do you wanna see first?
+        Ask me something. Writing, brands, or why most of it doesn&apos;t work.
       </p>
     </div>
   );

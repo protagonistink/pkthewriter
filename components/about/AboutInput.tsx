@@ -74,7 +74,7 @@ export const AboutInput = forwardRef<AboutInputHandle, Props>(function AboutInpu
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full mt-[32px]"
+      className="w-full"
       autoComplete="off"
     >
       <label htmlFor="about-input" className="sr-only">
@@ -123,7 +123,7 @@ export const AboutInput = forwardRef<AboutInputHandle, Props>(function AboutInpu
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={`/ ${placeholder}`}
           aria-label="Ask Patrick a question"
           className="
             w-full px-[24px] pr-[48px] py-[22px]
@@ -132,6 +132,7 @@ export const AboutInput = forwardRef<AboutInputHandle, Props>(function AboutInpu
             bg-[var(--color-paper-panel)]
             border border-[var(--color-paper-line)]
             rounded-[3px]
+            shadow-[0_1px_0_rgba(255,255,255,0.8),0_2px_8px_rgba(27,26,22,0.06),0_8px_24px_rgba(27,26,22,0.04)]
             outline-none
             placeholder:text-[var(--color-ink-faint)]
             focus:border-[var(--color-ink-soft)]

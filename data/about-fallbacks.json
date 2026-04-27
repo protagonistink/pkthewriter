@@ -1,9 +1,9 @@
 {
   "fallbacks": [
-    { "text": "[PLACEHOLDER — Patrick writes fallback A: 2 sentences. Acknowledge you don't have a pre-written answer for that; invite email. Warm, not apologetic.]" },
-    { "text": "[PLACEHOLDER — Patrick writes fallback B: similar, different angle.]" },
-    { "text": "[PLACEHOLDER — Patrick writes fallback C: shorter, punchier.]" },
-    { "text": "[PLACEHOLDER — Patrick writes fallback D: longer, more curious about what they actually meant.]" },
-    { "text": "[PLACEHOLDER — Patrick writes fallback E: tongue-in-cheek variant.]" }
+    { "text": "I do not have a canned answer for that, which is usually a good sign. Send it to patrick@pkthewriter.com and I will answer like a person." },
+    { "text": "That is outside the little script this page is carrying around in its coat pocket. Email me and I will give you the non-menu version." },
+    { "text": "Interesting question. The page missed it; I probably would not. Try patrick@pkthewriter.com." },
+    { "text": "I could pretend that matched a neat FAQ category, but we are both adults. Send me the actual question and I will answer it." },
+    { "text": "No pre-written answer there. Which, honestly, is how the better conversations usually start. Email me." }
   ]
 }

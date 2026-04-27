@@ -21,6 +21,7 @@ export function AboutChips({ chips, onSelect }: Props) {
             font-[family-name:var(--font-mono)] text-[13px]
             px-[14px] py-[6px] rounded-full
             border border-[var(--color-paper-line)]
+            bg-[var(--color-paper-panel)]
             text-[var(--color-ink-mid)]
             hover:text-[var(--color-ink)] hover:border-[var(--color-ink-soft)]
             transition-colors

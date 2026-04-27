@@ -14,12 +14,20 @@ import { detectInjection } from "@/lib/about-injection";
 import openingData from "@/data/about-opening.json";
 import intentsData from "@/data/about-intents.json";
 import fallbacksData from "@/data/about-fallbacks.json";
-import type { Exchange, Intent, ReadMode, SessionState } from "@/lib/about-types";
+import type {
+  AboutEffect,
+  Exchange,
+  Intent,
+  PatrickTurn,
+  ReadMode,
+  Reply,
+  SessionState,
+} from "@/lib/about-types";
 
 const OPENING: Exchange[] = openingData.exchanges as Exchange[];
 
 const PLACEHOLDERS = intentsData.intents
-  .filter((i) => i.id !== "nice-try")
+  .filter((i) => i.id !== "nice-try" && !i.hidden)
   .map((i) => i.triggers[0])
   .filter(Boolean);
 
@@ -28,14 +36,26 @@ const INTENTS_BY_ID = new Map<string, (typeof intentsData.intents)[number]>(
 );
 
 type ChipItem = { id: string; label: string };
+const AFTER_HOURS_CHIPS = ["what-did-you-cut", "show-me-the-draft", "be-less-polished"];
 
-function computeChips(intent: { followups?: string[] }): ChipItem[] {
-  return (intent.followups ?? [])
+function computeChips(intent: { followups?: string[] }, effect?: AboutEffect): ChipItem[] {
+  const followups = effect === "after-hours" ? AFTER_HOURS_CHIPS : (intent.followups ?? []);
+  return followups
     .map((fid) => {
       const fi = INTENTS_BY_ID.get(fid);
       return fi ? { id: fid, label: fi.triggers[0] ?? fid } : null;
     })
     .filter((c): c is ChipItem => c !== null);
+}
+
+function toPatrickTurn(intentId: string, reply: Reply, intent?: Intent): PatrickTurn {
+  return {
+    role: "patrick",
+    text: reply.text,
+    intentId,
+    effect: reply.effect ?? intent?.effect,
+    artifact: reply.artifact,
+  };
 }
 
 export function AboutClient() {
@@ -52,8 +72,8 @@ export function AboutClient() {
 
   // ── Opening thread ────────────────────────────────────────────────────────
   // Lazy initializers read prefersReduced directly, avoiding setState-in-effect.
-  const [visibleCount, setVisibleCount] = useState(() => prefersReduced ? OPENING.length : 2);
-  const [isPlaying, setIsPlaying] = useState(() => !prefersReduced);
+  const [visibleCount, setVisibleCount] = useState(() => OPENING.length);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [fastForward, setFastForward] = useState(false);
   const instant = !!(fastForward || prefersReduced);
 
@@ -91,6 +111,7 @@ export function AboutClient() {
   const [branchExchanges, setBranchExchanges] = useState<Exchange[]>([]);
   const [branchTypingIndex, setBranchTypingIndex] = useState<number | null>(null);
   const [activeChips, setActiveChips] = useState<ChipItem[]>([]);
+  const [aboutMode, setAboutMode] = useState<AboutEffect | "plain">("plain");
   const [session, setSession] = useState<SessionState>(() =>
     typeof window === "undefined" ? emptySession() : loadSession()
   );
@@ -127,7 +148,7 @@ export function AboutClient() {
         const niceTry = INTENTS_BY_ID.get("nice-try");
         if (!niceTry) return;
         const { reply } = matcher.pickReply(niceTry as Intent, currentSession, query);
-        patrickTurn = { role: "patrick", text: reply.text, intentId: "nice-try" };
+        patrickTurn = toPatrickTurn("nice-try", reply, niceTry as Intent);
       } else {
         const intent = matcher.match(query);
         if (intent) {
@@ -136,8 +157,9 @@ export function AboutClient() {
             currentSession,
             query
           );
-          patrickTurn = { role: "patrick", text: reply.text, intentId: intent.id };
-          pendingChipsRef.current = computeChips(intent);
+          patrickTurn = toPatrickTurn(intent.id, reply, intent as Intent);
+          if (patrickTurn.effect) setAboutMode(patrickTurn.effect);
+          pendingChipsRef.current = computeChips(intent, patrickTurn.effect);
 
           const updated: SessionState = {
             seenIntentIds: new Set([...currentSession.seenIntentIds, intent.id]),
@@ -206,7 +228,7 @@ export function AboutClient() {
   const links = intentsData.links;
 
   return (
-    <>
+    <div data-about-mode={aboutMode}>
       {/* Read / chat toggle — pinned top-right */}
       <button
         type="button"
@@ -238,6 +260,16 @@ export function AboutClient() {
               instant={instant}
             />
             <AboutChips chips={activeChips} onSelect={handleSubmit} />
+            <p
+              aria-hidden="true"
+              className="
+                mt-[28px] mb-[8px]
+                font-[family-name:var(--font-mono)] text-[11px]
+                tracking-[0.2em] uppercase text-[var(--color-ink-faint)]
+              "
+            >
+              / your turn
+            </p>
             <AboutInput
               ref={inputRef}
               placeholders={PLACEHOLDERS}
@@ -250,6 +282,6 @@ export function AboutClient() {
       )}
       {readMode === "chat" && <AboutEscape email={links.email} />}
       <CaseStudyAsk />
-    </>
+    </div>
   );
 }

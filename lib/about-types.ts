@@ -1,7 +1,14 @@
 export type Category = "essentials" | "character" | "oddball" | "escape";
 export type Mood = "default" | "playful" | "formal";
+export type AboutEffect = "after-hours" | "draft-room";
+export type AboutArtifact = { title: string; items: string[] };
 
-export type Reply = { text: string; mood?: Mood };
+export type Reply = {
+  text: string;
+  mood?: Mood;
+  effect?: AboutEffect;
+  artifact?: AboutArtifact;
+};
 
 export type Intent = {
   id: string;
@@ -9,6 +16,8 @@ export type Intent = {
   triggers: string[];
   replies: Reply[];
   followups: string[];
+  hidden?: boolean;
+  effect?: AboutEffect;
 };
 
 export type VisitorTurn = {
@@ -25,6 +34,8 @@ export type PatrickTurn = {
   text: string;
   /** Intent id if this was resolved from the bank (for read-mode grouping). */
   intentId?: string;
+  effect?: AboutEffect;
+  artifact?: AboutArtifact;
 };
 
 export type Exchange = VisitorTurn | PatrickTurn;
