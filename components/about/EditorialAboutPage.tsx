@@ -55,7 +55,7 @@ const EXPERIENCE: Experience[] = [
   {
     company: "Freelance",
     role: "Creative Director / Writer",
-    years: "Selective",
+    years: "Booking Q3 2026",
     detail:
       "Senior campaign thinking, copy, scripts, naming, pitch language, and creative direction for agencies, founders, arts organizations, and mission-driven brands.",
   },

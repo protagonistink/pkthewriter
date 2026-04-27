@@ -504,6 +504,22 @@ export function ChatBar({
             Let&apos;s Go
           </button>
         )}
+        {inResponse && (
+          <button
+            type="submit"
+            aria-label="Ask another question"
+            className="
+              absolute right-[18px] top-0 bottom-0 my-auto h-[34px]
+              flex items-center px-[8px]
+              font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.14em]
+              text-[var(--color-accent)] hover:text-[var(--color-ink)]
+              transition-colors
+              max-[430px]:right-[10px]
+            "
+          >
+            Ask another →
+          </button>
+        )}
       </div>
 
       {!inResponse && mode !== "clarify" && status !== "sending" && status !== "sent" && (
