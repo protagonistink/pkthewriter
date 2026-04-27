@@ -101,7 +101,7 @@ export function WorkList({ tiles }: Props) {
           const slot = SLOTS[i % SLOTS.length];
           const pillText = derivePillText(t);
           return (
-            <li key={t.id} className="m-0 relative max-[820px]:mb-[52px]">
+            <li key={t.id} className="m-0 relative max-[1023px]:mb-[80px]">
               <Link
                 href={`/work/${t.slug}`}
                 data-active={activeId === t.id ? "true" : "false"}
@@ -113,12 +113,12 @@ export function WorkList({ tiles }: Props) {
                 className="
                   work-list__link
                   group relative block no-underline
-                  py-0 max-[820px]:py-0
-                  flex items-baseline max-[820px]:flex-col max-[820px]:items-start
-                  gap-[18px] max-[820px]:gap-0
+                  py-0 max-[1023px]:py-0
+                  flex items-baseline max-[1023px]:flex-col max-[1023px]:items-start
+                  gap-[18px] max-[1023px]:gap-0
                   cursor-pointer
-                  min-[821px]:w-fit
-                  max-[820px]:w-full
+                  min-[1024px]:w-fit
+                  max-[1023px]:w-full
                 "
               >
                 <MobileCover tile={t} />
@@ -130,7 +130,7 @@ export function WorkList({ tiles }: Props) {
                     text-[11px] tracking-[0.22em] uppercase
                     text-[var(--color-ink-soft)]
                     self-center mr-[6px]
-                    max-[820px]:hidden
+                    max-[1023px]:hidden
                     tabular-nums
                   "
                   aria-hidden="true"
@@ -144,13 +144,13 @@ export function WorkList({ tiles }: Props) {
                     font-[family-name:var(--font-serif)]
                     font-[500]
                     text-[clamp(64px,9vw,160px)]
-                    max-[820px]:text-[clamp(40px,8vw,64px)]
-                    max-[430px]:text-[clamp(28px,7vw,40px)]
+                    max-[1023px]:text-[clamp(28px,5.5vw,48px)]
+                    max-[430px]:text-[clamp(22px,6vw,32px)]
                     leading-[0.88]
                     tracking-[-0.02em]
                     [text-wrap:balance]
                     min-w-0 max-w-full [overflow-wrap:break-word]
-                    max-[820px]:mt-[16px]
+                    max-[1023px]:mt-[14px]
                   "
                 >
                   {t.brand}
@@ -158,7 +158,7 @@ export function WorkList({ tiles }: Props) {
               </Link>
 
               {t.type && (
-                <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[4px] mb-0 tracking-[0.06em] max-[820px]:hidden">
+                <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[4px] mb-0 tracking-[0.06em] max-[1023px]:hidden">
                   {t.type}
                 </p>
               )}
@@ -175,7 +175,7 @@ export function WorkList({ tiles }: Props) {
                     text-[var(--color-ink-soft)]
                     whitespace-nowrap
                     absolute top-[18px] right-0
-                    max-[820px]:hidden
+                    max-[1023px]:hidden
                   "
                   aria-hidden="true"
                 >
@@ -244,7 +244,7 @@ function CoverFigure({
 
   return (
     <figure
-      className="work-list__cover absolute m-0 hidden md:block"
+      className="work-list__cover absolute m-0 hidden min-[1024px]:block"
       data-active={isActive ? "true" : "false"}
       data-primer={isPrimer ? "true" : "false"}
       aria-hidden="true"
@@ -272,8 +272,8 @@ function MobileCover({ tile }: { tile: WorkTile }) {
   return (
     <span
       className="
-        hidden max-[820px]:block w-full shrink-0
-        aspect-[4/3] overflow-hidden
+        hidden max-[1023px]:block w-full shrink-0
+        aspect-[16/9] overflow-hidden
         bg-[var(--color-paper-panel,rgba(0,0,0,0.04))]
       "
       aria-hidden="true"
