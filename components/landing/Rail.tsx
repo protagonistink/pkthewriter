@@ -61,7 +61,11 @@ const DRAWER_CONTACT_ITEM: Item = {
 };
 
 export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean }) {
-  const [expanded, setExpanded] = useState(defaultExpanded);
+  const [expanded, setExpanded] = useState(false); // SSR-safe; corrected on mount
+  useEffect(() => {
+    setExpanded(window.matchMedia("(min-width: 769px)").matches);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
 
