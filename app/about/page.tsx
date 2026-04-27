@@ -11,7 +11,7 @@ import { JsonLd, personSchema } from "@/components/seo/JsonLd";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "About Patrick Kirkland | Writer & Creative Director",
+  title: "About",
   description: "Patrick Kirkland is a freelance writer and creative director with 20+ years. TV spots, brand platforms, and editorial for Verizon, AT&T, Warner Bros., Chevron, and more.",
   alternates: {
     canonical: "/about",
