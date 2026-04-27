@@ -129,7 +129,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
   return (
     <main id="main" className="overflow-hidden">
       {/* Hero — typographic display, photo crashes the grid */}
-      <section className="relative min-h-[88vh] overflow-hidden px-[44px] pt-[32px] pb-[140px] max-[820px]:px-[22px] max-[820px]:pb-[64px] max-[820px]:min-h-0">
+      <section className="relative overflow-hidden px-[44px] pt-[64px] pb-[24px] max-[820px]:px-[22px] max-[820px]:pt-[40px] max-[820px]:pb-[48px]">
         <p className="mb-[28px] max-[820px]:mb-[20px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.32em] text-[var(--color-accent)]">
           — About
         </p>
@@ -200,7 +200,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </div>
       </section>
 
-      <section className="border-t border-[var(--color-ink)] bg-[var(--color-paper-panel)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[56px]">
+      <section id="experience" className="bg-[var(--color-paper-panel)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[56px]">
         <div className="mx-auto grid max-w-[1320px] grid-cols-[320px_minmax(0,1fr)] gap-[96px] max-[980px]:grid-cols-1 max-[980px]:gap-[54px]">
           {/* Vital Stats / Hit List — desktop+tablet only. The hero block above
               already exposes the same info (in shorter form) on mobile. */}
