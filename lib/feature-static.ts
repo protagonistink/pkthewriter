@@ -262,7 +262,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     ],
     ctas: [
       { label: "Email me →", href: "mailto:patrick@pkthewriter.com?subject=Rates", variant: "primary" },
-      { label: "Book 15 min →", href: "https://calendly.com/patrickirkland", variant: "ghost" },
+      { label: "Book 15 min →", href: "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl", variant: "ghost" },
     ],
     heroTag: "Rates · 2026",
     thumbs: ["Day rate", "Retainer", "Project"],
@@ -281,7 +281,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     ],
     ctas: [
       { label: "Email me →", href: "mailto:patrick@pkthewriter.com?subject=Availability", variant: "primary" },
-      { label: "Book 15 min →", href: "https://calendly.com/patrickirkland", variant: "ghost" },
+      { label: "Book 15 min →", href: "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl", variant: "ghost" },
     ],
     heroTag: "Available · 2026",
     thumbs: ["Start date", "Duration", "Scope"],

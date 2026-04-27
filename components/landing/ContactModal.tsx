@@ -17,8 +17,7 @@ const PROJECT_TYPES = [
 
 type ProjectType = (typeof PROJECT_TYPES)[number] | "";
 
-// PRE-LAUNCH: Patrick to update Calendly URL.
-const CALENDLY_URL = "https://calendly.com/patrickirkland";
+const CALENDLY_URL = "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl";
 
 type Props = { open: boolean; onClose: () => void };
 
