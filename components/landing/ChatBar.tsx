@@ -76,6 +76,12 @@ export function ChatBar({
   const [clarifyQuery, setClarifyQuery] = useState("");
   const [isTouchLike, setIsTouchLike] = useState(false);
   const [dismissedGhostFor, setDismissedGhostFor] = useState("");
+  // Lead-flow state: after a free-text prompt fires the lead intent we keep
+  // the original message and surface an inline email-capture form so the
+  // visitor isn't dead-ended.
+  const [originalLeadMessage, setOriginalLeadMessage] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadEmailStatus, setLeadEmailStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const inputRef = useRef<HTMLInputElement>(null);
   const ghost = useMemo(() => {
     if (isTouchLike || followupMode || mode === "clarify") return null;
@@ -312,9 +318,10 @@ export function ChatBar({
         return;
       }
       case "lead": {
+        setOriginalLeadMessage(trimmed);
         setStatus("sending");
         setMode("initial");
-        setReply("I wrote that down — you'll hear from me.");
+        setReply(null);
         try {
           await onLead(trimmed);
           setStatus("sent");
@@ -352,8 +359,32 @@ export function ChatBar({
     setClarifyQuery("");
     setDismissedGhostFor("");
     setStatus("idle");
+    setOriginalLeadMessage("");
+    setLeadEmail("");
+    setLeadEmailStatus("idle");
     onReset();
     requestAnimationFrame(() => inputRef.current?.focus());
+  }
+
+  async function submitLeadEmail() {
+    const email = leadEmail.trim();
+    if (!email || leadEmailStatus === "sending") return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+    setLeadEmailStatus("sending");
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: `Reply email: ${email}\nOriginal message: ${originalLeadMessage || "(no prior prompt)"}`,
+          context: "contact",
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setLeadEmailStatus("sent");
+    } catch {
+      setLeadEmailStatus("error");
+    }
   }
 
   return (
@@ -458,7 +489,7 @@ export function ChatBar({
         )}
       </div>
 
-      {!inResponse && mode !== "clarify" && (
+      {!inResponse && mode !== "clarify" && status !== "sending" && status !== "sent" && (
         <div className="mt-[16px] flex flex-wrap gap-[8px]">
           {PERSISTENT_CHIPS.map((chip) => (
             <button
@@ -505,11 +536,79 @@ export function ChatBar({
         </div>
       )}
 
-      {reply && !inResponse && (
+      {/* Lead success — inline email capture so the visitor isn't dead-ended.
+          Posts to /api/lead with context "contact" once the user supplies an
+          address. Falls back to the resume so reluctant senders still leave
+          with something. */}
+      {status === "sent" && !inResponse && mode !== "clarify" && (
+        <div className="mt-[18px]">
+          <p className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-mid)] mb-[12px]">
+            <span className="text-[var(--color-accent)] mr-1">→</span>
+            {leadEmailStatus === "sent"
+              ? "I wrote that down. Expect a reply within 24 hours."
+              : "I wrote that down. Where should I reply?"}
+          </p>
+          {leadEmailStatus !== "sent" && (
+            <div className="flex gap-[8px] items-center mb-[12px] max-[430px]:flex-wrap">
+              <input
+                type="email"
+                required
+                placeholder="your email"
+                value={leadEmail}
+                onChange={(e) => setLeadEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void submitLeadEmail();
+                  }
+                }}
+                aria-label="Your email"
+                className="
+                  font-[family-name:var(--font-mono)] text-[13px]
+                  border border-[var(--color-paper-line)] bg-[var(--color-paper-panel)]
+                  px-[12px] py-[9px] rounded-[6px] flex-1 min-w-0
+                  outline-none focus:border-[var(--color-ink-soft)]
+                  placeholder:text-[var(--color-ink-faint)]
+                  text-[var(--color-ink)]
+                "
+              />
+              <button
+                type="button"
+                onClick={() => void submitLeadEmail()}
+                disabled={leadEmailStatus === "sending" || !leadEmail.trim()}
+                className="
+                  font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.14em]
+                  border border-[var(--color-paper-line)] px-[14px] py-[9px] rounded-[6px]
+                  text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:border-[var(--color-ink-soft)]
+                  transition-colors disabled:opacity-50 whitespace-nowrap
+                "
+              >
+                {leadEmailStatus === "sending" ? "…" : "Send →"}
+              </button>
+            </div>
+          )}
+          {leadEmailStatus === "error" && (
+            <p className="font-[family-name:var(--font-mono)] text-[12px] text-red-700 mb-[10px]">
+              Something broke on my end. Try again, or email patrick@pkthewriter.com directly.
+            </p>
+          )}
+          <a
+            href="/resume"
+            className="
+              font-[family-name:var(--font-mono)] text-[12px]
+              text-[var(--color-ink-soft)] hover:text-[var(--color-accent)]
+              transition-colors
+            "
+          >
+            Or grab my resume now →
+          </a>
+        </div>
+      )}
+
+      {reply && !inResponse && status !== "sent" && (
         <div className="mt-[18px] font-[family-name:var(--font-mono)] text-[13px] text-[var(--color-ink-mid)]">
           <span className="text-[var(--color-accent)] mr-1">→</span>
           {reply}
-          {status === "sent" && <span className="ml-2 text-[var(--color-accent)]">•</span>}
         </div>
       )}
     </form>
