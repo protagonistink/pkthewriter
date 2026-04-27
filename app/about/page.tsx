@@ -29,7 +29,7 @@ export default async function AboutPage() {
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />
         <EditorialAboutPage about={about} projects={projects} />
-        <SiteFooter />
+        <SiteFooter dark />
       </div>
       <CaseStudyAsk />
     </div>
