@@ -294,23 +294,6 @@ export function EditorialAboutPage({ about, projects }: Props) {
       <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[56px] max-[820px]:pb-[64px]">
         <div className="mx-auto max-w-[1320px]">
           <Archive projects={featuredProjects} />
-          {/* Big italic accolades — desktop+tablet only. The mobile hero block
-              already shows a truncated, non-italic version. */}
-          <div className="mt-[110px] max-[820px]:hidden">
-            <p className="mb-[34px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.28em] text-[var(--color-dark-ink-mid)]">
-              &gt; evidence, not a shrine
-            </p>
-            <div className="flex flex-col gap-[10px]">
-              {ACCOLADES.map((award) => (
-                <p
-                  key={award}
-                  className="m-0 font-[family-name:var(--font-serif)] text-[clamp(38px,7vw,96px)] italic leading-[0.94] tracking-[-0.045em] text-[var(--color-dark-ink)]"
-                >
-                  {award}
-                </p>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 

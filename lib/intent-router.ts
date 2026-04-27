@@ -74,6 +74,31 @@ const RULES: Rule[] = [
   { pattern: /\b(rates?|day\s+rate|pricing|how\s+much|what\s+do\s+you\s+charge|cost)\b/i, intent: { kind: "feature", key: "rates" } },
   { pattern: /\b(available|availability|booking|can\s+you\s+start|when\s+can\s+you|are\s+you\s+free|taking\s+on\s+work|freelance\s+work)\b/i, intent: { kind: "feature", key: "availability" } },
 
+  // PDF → resume.
+  { pattern: /\bpdf\b/i, intent: { kind: "feature", key: "resume" } },
+
+  // LinkedIn → contact card.
+  { pattern: /\blinkedin\b/i, intent: { kind: "contact-card", variant: "contact" } },
+
+  // Credibility questions → about.
+  { pattern: /\b(any\s+good|are\s+you\s+good|legit|credential)/i, intent: { kind: "feature", key: "about" } },
+
+  // Service capability questions → about.
+  { pattern: /\bnaming\b/i, intent: { kind: "feature", key: "about" } },
+  { pattern: /\bghost.?writ/i, intent: { kind: "feature", key: "about" } },
+  { pattern: /\b(led\s+a?\s*pitch|have\s+you\s+led|pitching)\b/i, intent: { kind: "feature", key: "about" } },
+
+  // Logistics questions → rates.
+  { pattern: /\bdecks?\b/i, intent: { kind: "feature", key: "rates" } },
+  { pattern: /\bndas?\b/i, intent: { kind: "feature", key: "rates" } },
+  { pattern: /\bturnaround\b/i, intent: { kind: "feature", key: "rates" } },
+
+  // Remote → availability (must come before work-grid rule which matches \bwork\b).
+  { pattern: /\bremote\b/i, intent: { kind: "feature", key: "availability" } },
+
+  // DTC → work grid.
+  { pattern: /\b(dtc|direct.to.consumer)\b/i, intent: { kind: "navigate", to: "/work", label: "case studies" } },
+
   // Work grid (broader than brand keywords; last).
   { pattern: /(\bwork\b|case\s+stud(y|ies)|\bportfolio\b|\bads\b|\bcampaigns\b|brand\s+work)/i, intent: { kind: "navigate", to: "/work", label: "case studies" } },
 
@@ -89,6 +114,9 @@ const SOLO_NAV: Record<string, Intent> = {
   portfolio: { kind: "navigate", to: "/work", label: "case studies" },
   rates: { kind: "feature", key: "rates" },
   availability: { kind: "feature", key: "availability" },
+  freelance: { kind: "feature", key: "availability" },
+  linkedin: { kind: "contact-card", variant: "contact" },
+  hi: { kind: "clarify" },
 };
 
 export function routeIntent(input: string, rand: RandFn = Math.random): Intent {
