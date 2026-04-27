@@ -169,20 +169,12 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </p>
 
         {/* Jump links — desktop only */}
-        <nav aria-label="Jump to section" className="mt-[28px] flex flex-wrap gap-[20px] max-[820px]:hidden">
-          {[
-            { href: "#experience", label: "Experience" },
-            { href: "#say-hello", label: "Say Hello" },
-          ].map(({ href, label }) => (
-            <a
-              key={href}
-              href={href}
-              className="font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.2em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
-            >
-              {label} ↓
-            </a>
-          ))}
-        </nav>
+        <a
+          href="#experience"
+          className="mt-[28px] block font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.2em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors max-[820px]:hidden"
+        >
+          Experience ↓
+        </a>
 
         {/* Mobile-only: condensed availability + entry points + truncated awards.
             Replaces the desktop aside (Vital Stats / Hit List) which is hidden
@@ -345,18 +337,6 @@ export function EditorialAboutPage({ about, projects }: Props) {
       <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[56px] max-[820px]:pb-[64px]">
         <div className="mx-auto max-w-[1320px]">
           <Archive projects={featuredProjects} />
-        </div>
-      </section>
-
-      <section id="say-hello" className="border-t border-[var(--color-paper-line)] bg-[var(--color-paper)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[72px]">
-        <div className="mx-auto max-w-[1320px]">
-          <h2 className="font-[family-name:var(--font-serif)] text-[clamp(48px,8vw,120px)] font-normal leading-[0.88] tracking-[-0.04em] mb-[48px]">
-            Say hello.
-          </h2>
-          <div className="flex flex-wrap gap-[12px]">
-            <AboutButton href={`mailto:${email}`}>Hire Patrick</AboutButton>
-            <AboutButton href="https://www.linkedin.com/in/patrickkirkland/" newTab>LinkedIn</AboutButton>
-          </div>
         </div>
       </section>
 
