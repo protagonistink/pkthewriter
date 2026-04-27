@@ -154,6 +154,12 @@ export function WorkList({ tiles }: Props) {
                 </span>
               </Link>
 
+              {t.type && (
+                <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[4px] mb-0 tracking-[0.06em] max-[820px]:hidden">
+                  {t.type}
+                </p>
+              )}
+
               {pillText && (
                 <span
                   className="
