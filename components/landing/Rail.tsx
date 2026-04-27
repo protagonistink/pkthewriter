@@ -18,7 +18,7 @@ const ITEMS: Item[] = [
     label: "Home",
     match: (p) => p === "/",
     icon: (
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
     ),
   },
   {
@@ -26,7 +26,7 @@ const ITEMS: Item[] = [
     label: "Work",
     match: (p) => p.startsWith("/work"),
     icon: (
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
     ),
   },
   {
@@ -34,7 +34,7 @@ const ITEMS: Item[] = [
     label: "Writing",
     match: (p) => p.startsWith("/writing"),
     icon: (
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
     ),
   },
   {
@@ -42,7 +42,7 @@ const ITEMS: Item[] = [
     label: "About",
     match: (p) => p.startsWith("/about"),
     icon: (
-      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
     ),
   },
 ];
@@ -56,7 +56,7 @@ const DRAWER_CONTACT_ITEM: Item = {
   match: () => false,
   external: true,
   icon: (
-    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+    <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
   ),
 };
 
@@ -94,6 +94,12 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
     setMobileOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    const handler = () => setExpanded(true);
+    document.addEventListener("toggle-rail", handler);
+    return () => document.removeEventListener("toggle-rail", handler);
+  }, []);
+
   return (
     <>
       {/* Mobile hamburger trigger — fixed, visible under 769px */}
@@ -130,7 +136,8 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
         aria-label="Site navigation"
         data-expanded={expanded}
         className="
-          relative flex flex-col self-stretch
+          sticky top-0 h-screen overflow-y-auto
+          flex flex-col
           bg-[var(--color-paper)]
           border-r border-[var(--color-paper-line)]
           pt-[22px]
@@ -146,16 +153,16 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
             title={expanded ? "Collapse" : "Expand"}
             aria-expanded={expanded}
             onClick={() => setExpanded((v) => !v)}
-            className="w-[30px] h-[30px] grid place-items-center text-[var(--color-accent)] hover:opacity-70 transition-opacity"
+            className="w-[30px] h-[30px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
           >
             <svg
               aria-hidden="true"
-              width="18"
-              height="18"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               className={`transition-transform duration-[260ms] ease ${expanded ? "rotate-180" : ""}`}
@@ -193,7 +200,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                 <span className="shrink-0 w-[20px] flex justify-center">{item.icon}</span>
                 <span
                   className={`
-                    font-[family-name:var(--font-serif)] text-[15px]
+                    font-[family-name:var(--font-serif)] text-[17px]
                     transition-[opacity,transform] duration-[420ms] [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] delay-[40ms]
                     ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[8px] pointer-events-none"}
                   `}

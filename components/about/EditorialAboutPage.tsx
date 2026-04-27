@@ -164,7 +164,16 @@ export function EditorialAboutPage({ about, projects }: Props) {
             Available for freelance
           </p>
           <div className="flex flex-wrap gap-[10px] mb-[26px]">
-            <AboutButton href={resumeUrl} newTab>Get the PDF</AboutButton>
+            <AboutButton href={resumeUrl} newTab>Download Resume</AboutButton>
+            <a
+              href="https://www.linkedin.com/in/patrickkirkland/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-[8px] border border-[var(--color-ink)] px-[22px] py-[14px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
+            >
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn
+            </a>
             <AboutButton href={`mailto:${email}`}>Say hello</AboutButton>
           </div>
           <p className="mb-[10px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.24em] text-[var(--color-ink-mid)]">
@@ -204,7 +213,16 @@ export function EditorialAboutPage({ about, projects }: Props) {
                 </ul>
               </div>
               <div className="flex flex-col items-start gap-[12px] pt-[10px]">
-                <AboutButton href={resumeUrl} newTab>Get the PDF</AboutButton>
+                <AboutButton href={resumeUrl} newTab>Download Resume</AboutButton>
+                <a
+                  href="https://www.linkedin.com/in/patrickkirkland/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-[8px] border border-[var(--color-ink)] px-[22px] py-[14px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] transition-colors hover:bg-[var(--color-ink)] hover:text-[var(--color-paper)]"
+                >
+                  <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  LinkedIn
+                </a>
                 <AboutButton href={`mailto:${email}`}>Say hello</AboutButton>
               </div>
             </div>
@@ -217,14 +235,16 @@ export function EditorialAboutPage({ about, projects }: Props) {
                 aria-label={section.label}
                 className={index > 0 ? "border-t border-[var(--color-paper-line)] pt-[64px]" : ""}
               >
-                <div className="mb-[24px] flex items-baseline gap-[14px] border-b border-[var(--color-paper-line)] pb-[12px]">
-                  <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.04em] text-[var(--color-ink-mid)]">
-                    {String(index + 1).padStart(2, "0")}.
-                  </span>
-                  <p className={`m-0 min-w-0 font-[family-name:var(--font-mono)] text-[13px] uppercase leading-[1.25] tracking-[0.05em] ${index === 0 ? "text-[var(--color-accent)]" : "text-[var(--color-ink)]"}`}>
-                    {section.label}
-                  </p>
-                </div>
+                {index === 0 && (
+                  <div className="mb-[24px] flex items-baseline gap-[14px] border-b border-[var(--color-paper-line)] pb-[12px]">
+                    <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.04em] text-[var(--color-ink-mid)]">
+                      {String(index + 1).padStart(2, "0")}.
+                    </span>
+                    <p className="m-0 min-w-0 font-[family-name:var(--font-mono)] text-[13px] uppercase leading-[1.25] tracking-[0.05em] text-[var(--color-accent)]">
+                      {section.label}
+                    </p>
+                  </div>
+                )}
                 <p className={`m-0 max-w-[920px] font-[family-name:var(--font-serif)] text-[clamp(31px,4vw,58px)] leading-[1.12] tracking-[-0.032em] text-[var(--color-ink)] ${index > 0 ? "pb-[64px]" : "pb-[64px]"}`}>
                   {section.copy}
                 </p>

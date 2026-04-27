@@ -37,6 +37,7 @@ export default async function WorkIndex() {
     title: p.title,
     year: p.year,
     type: p.type,
+    role: p.role,
     imageUrl: p.mainImage ? urlForImage(p.mainImage).width(900).url() : undefined,
   }));
 
@@ -49,7 +50,7 @@ export default async function WorkIndex() {
       <Rail />
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />
-        <main id="main" className="flex-1 mx-auto w-full max-w-[1280px] px-[48px] pt-[36px] pb-[160px] max-[820px]:px-[20px] max-[820px]:pt-[24px] max-[820px]:pb-[140px] overflow-x-hidden">
+        <main id="main" className="flex-1 mx-auto w-full max-w-[1280px] px-[48px] pt-[36px] pb-[160px] max-[820px]:px-[20px] max-[820px]:pt-[24px] max-[820px]:pb-[140px]">
           <h1 className="sr-only">Selected work</h1>
           <p
             className="

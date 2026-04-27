@@ -12,6 +12,7 @@ export type WorkTile = {
   title: string;
   year?: string;
   type?: string;
+  role?: string;
   imageUrl?: string;
 };
 
@@ -155,9 +156,9 @@ export function WorkList({ tiles }: Props) {
                   >
                     {t.brand}
                   </span>
-                  {t.type && (
-                    <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[6px] tracking-[0.06em] max-[1023px]:hidden">
-                      {t.type}
+                  {(t.type || t.role) && (
+                    <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)] mt-[6px] tracking-[0.06em]">
+                      {[t.type, t.role].filter(Boolean).join(" · ")}
                     </span>
                   )}
                 </span>
@@ -273,6 +274,8 @@ function MobileCover({ tile }: { tile: WorkTile }) {
     <span
       className="
         hidden max-[1023px]:block w-full shrink-0
+        max-[1023px]:-mx-[48px] max-[820px]:-mx-[20px]
+        max-[1023px]:w-[calc(100%+96px)] max-[820px]:w-[calc(100%+40px)]
         aspect-[16/9] overflow-hidden
         bg-[var(--color-paper-panel,rgba(0,0,0,0.04))]
       "
