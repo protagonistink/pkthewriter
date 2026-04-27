@@ -56,7 +56,7 @@ export function SiteHeader({ email: _email, rightSlot }: Props) {
             </button>
             <button
               type="button"
-              aria-label="Open navigation"
+              aria-label="Toggle navigation"
               onClick={() => document.dispatchEvent(new CustomEvent("toggle-rail"))}
               className="
                 w-[38px] h-[38px] grid place-items-center

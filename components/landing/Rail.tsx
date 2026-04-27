@@ -87,7 +87,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
   }, [pathname]);
 
   useEffect(() => {
-    const handler = () => setExpanded(true);
+    const handler = () => setExpanded((v) => !v);
     document.addEventListener("toggle-rail", handler);
     return () => document.removeEventListener("toggle-rail", handler);
   }, []);
