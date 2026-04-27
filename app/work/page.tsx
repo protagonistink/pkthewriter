@@ -18,7 +18,7 @@ export const metadata = {
     canonical: "/work",
   },
   openGraph: {
-    title: "Selected work — Patrick Kirkland",
+    title: "Selected work | Patrick Kirkland",
     description:
       "Case studies from Patrick Kirkland — TV, digital, and editorial work for Verizon, AT&T, Chevron, BP, Warner Bros, and more.",
     type: "website" as const,
@@ -43,6 +43,7 @@ export default async function WorkIndex() {
   }));
 
   const preloadUrls = tiles
+    .slice(0, 3)
     .map((t) => t.imageUrl)
     .filter((u): u is string => Boolean(u));
 

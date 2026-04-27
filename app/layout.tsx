@@ -27,15 +27,15 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3003"),
-  title: { default: "Patrick Kirkland — writer and creative director", template: "%s — Patrick Kirkland" },
-  description: "Writer and creative director. Ask me what you want to see.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://pkthewriter.com"),
+  title: { default: "Patrick Kirkland | writer and creative director", template: "%s | Patrick Kirkland" },
+  description: "Patrick Kirkland | freelance writer and creative director. 20+ years. Verizon, AT&T, Chevron, Warner Bros., Airtable.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Patrick Kirkland — writer and creative director",
-    description: "Writer and creative director. Ask me what you want to see.",
+    title: "Patrick Kirkland | writer and creative director",
+    description: "Patrick Kirkland | freelance writer and creative director. 20+ years. Verizon, AT&T, Chevron, Warner Bros., Airtable.",
     type: "website",
     images: [{ url: "/about-patrick.jpg", width: 1200, height: 630, alt: "Patrick Kirkland" }],
   },
