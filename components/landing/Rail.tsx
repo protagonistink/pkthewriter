@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const FALLBACK_EMAIL = "patrick@pkthewriter.com";
-
 type Item = {
   href: string;
   label: string;
@@ -49,22 +47,12 @@ const ITEMS: Item[] = [
   },
 ];
 
-const CONTACT_ITEM: Item = {
-  href: `mailto:${FALLBACK_EMAIL}`,
-  label: "Contact",
-  match: () => false,
-  external: true,
-  icon: (
-    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
-  ),
-};
-
 export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
 
-  const items = [...ITEMS, CONTACT_ITEM];
+  const items = ITEMS;
 
   useEffect(() => {
     const handler = () => {
@@ -167,7 +155,6 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
         <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[10px]">
           {items.map((item) => {
             const current = item.match(pathname);
-            const isContact = item.label === "Contact";
             const className = `
               group relative flex items-center gap-[14px] px-[10px] py-[10px]
               rounded-[8px] whitespace-nowrap overflow-hidden
@@ -195,7 +182,6 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                     font-[family-name:var(--font-serif)] text-[15px]
                     transition-[opacity,transform,letter-spacing] duration-[260ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] delay-[60ms]
                     ${expanded ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-[6px] pointer-events-none"}
-                    ${isContact && expanded ? "group-hover:tracking-[0.06em]" : ""}
                   `}
                 >
                   {item.label}

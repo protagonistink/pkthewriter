@@ -452,6 +452,17 @@ body {
   45%  { transform: translateX(2px); }
   100% { transform: translateX(0); }
 }
+@keyframes prompt-placeholder-fade {
+  from { opacity: 0; }
+  to   { opacity: 0.6; }
+}
+.prompt-placeholder-fade {
+  animation: prompt-placeholder-fade 520ms ease-out both;
+  opacity: 0.6;
+}
+@media (prefers-reduced-motion: reduce) {
+  .prompt-placeholder-fade { animation: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .prompt-submit:hover::before,
   .prompt-submit:focus-visible::before,

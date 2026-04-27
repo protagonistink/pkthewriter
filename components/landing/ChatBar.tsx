@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { routeIntent } from "@/lib/intent-router";
 import type { FeatureKey } from "@/lib/feature-resolver";
-import { buildRotationPlan, LANDING_PLACEHOLDER } from "@/lib/placeholder-rotation";
 import {
   promptGhostCompletion,
   promptSuggestions,
@@ -15,19 +15,21 @@ type Mode = "initial" | "clarify";
 const CLARIFY_SUGGESTIONS = [
   "/ best ad",
   "/ screenwriting",
-  "/ contact",
+  "/ work with me",
 ];
 
-// Always-visible chips below the input. Anchor the high-intent doors so a
-// reluctant visitor has a path without typing.
-const PERSISTENT_CHIPS = [
-  { query: "/ resume", label: "/ resume" },
-  { query: "/ work", label: "/ work" },
-  { query: "/ rates", label: "/ rates" },
-  { query: "/ availability", label: "/ availability" },
-  { query: "/ writing samples", label: "/ writing samples" },
-  { query: "/ surprise me", label: "/ surprise me" },
+// Slow, confident rotation. Pauses while the visitor is typing. The pool
+// surfaces the same high-intent doors the chip row used to expose.
+const ROTATING_PLACEHOLDERS = [
+  "/ resume",
+  "/ work",
+  "/ rates",
+  "/ availability",
+  "/ writing samples",
+  "/ brand voice",
+  "/ surprise me",
 ] as const;
+const PLACEHOLDER_INTERVAL_MS = 3500;
 
 const THINKING_LINES = [
   "Hmmm…",
@@ -71,11 +73,11 @@ export function ChatBar({
   const [status, setStatus] = useState<Status>("idle");
   const [mode, setMode] = useState<Mode>("initial");
   const [reply, setReply] = useState<string | null>(null);
-  const [placeholder, setPlaceholder] = useState<string>(LANDING_PLACEHOLDER);
-  const [placeholderAction, setPlaceholderAction] = useState<string>(LANDING_PLACEHOLDER);
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [clarifyQuery, setClarifyQuery] = useState("");
   const [isTouchLike, setIsTouchLike] = useState(false);
   const [dismissedGhostFor, setDismissedGhostFor] = useState("");
+  const placeholder = ROTATING_PLACEHOLDERS[placeholderIdx];
   // Lead-flow state: after a free-text prompt fires the lead intent we keep
   // the original message and surface an inline email-capture form so the
   // visitor isn't dead-ended.
@@ -97,86 +99,21 @@ export function ChatBar({
     [clarifyQuery, mode, value]
   );
 
-  // Animated rotating placeholder. Pauses on focus, on input, and on
-  // prefers-reduced-motion. Always lands on LANDING_PLACEHOLDER.
+  // Slow placeholder rotation. Pauses while the visitor is typing or in
+  // clarify/response, and on prefers-reduced-motion. The actual fade is
+  // CSS-driven via the .prompt-placeholder-fade keyframe; this only steps
+  // the index.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setPlaceholder(LANDING_PLACEHOLDER);
-      setPlaceholderAction(LANDING_PLACEHOLDER);
-      return;
-    }
-
-    const plan = buildRotationPlan();
-    let cancelled = false;
-    const timers: ReturnType<typeof setTimeout>[] = [];
-
-    function wait(ms: number) {
-      return new Promise<void>((resolve) => {
-        const t = setTimeout(resolve, ms);
-        timers.push(t);
-      });
-    }
-
-    function typeOut(target: string) {
-      return new Promise<void>((resolve) => {
-        let i = 0;
-        function step() {
-          if (cancelled) return resolve();
-          i += 1;
-          setPlaceholder(target.slice(0, i));
-          if (i >= target.length) return resolve();
-          const t = setTimeout(step, 38);
-          timers.push(t);
-        }
-        step();
-      });
-    }
-
-    function eraseBack() {
-      return new Promise<void>((resolve) => {
-        function step() {
-          if (cancelled) return resolve();
-          setPlaceholder((prev) => {
-            const next = prev.slice(0, -1);
-            if (next.length === 0) {
-              const t = setTimeout(resolve, 0);
-              timers.push(t);
-              return next;
-            }
-            const t = setTimeout(step, 22);
-            timers.push(t);
-            return next;
-          });
-        }
-        step();
-      });
-    }
-
-    async function run() {
-      // Hold the canonical "/ surprise me" as a clean first impression,
-      // then keep offering doors until the visitor takes one.
-      await wait(1400);
-      let i = 0;
-      while (!cancelled) {
-        const target = plan[i % plan.length];
-        if (cancelled) return;
-        setPlaceholderAction(target);
-        await eraseBack();
-        await wait(140);
-        await typeOut(target);
-        await wait(1600);
-        i += 1;
-      }
-    }
-
-    void run();
-
-    return () => {
-      cancelled = true;
-      for (const t of timers) clearTimeout(t);
-    };
-  }, []);
+    if (value.length > 0) return;
+    if (mode === "clarify") return;
+    if (status === "sending" || status === "sent") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = window.setInterval(() => {
+      setPlaceholderIdx((i) => (i + 1) % ROTATING_PLACEHOLDERS.length);
+    }, PLACEHOLDER_INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, [value, mode, status]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -186,11 +123,6 @@ export function ChatBar({
     media.addEventListener?.("change", update);
     return () => media.removeEventListener?.("change", update);
   }, []);
-
-  function stopRotation() {
-    setPlaceholder(LANDING_PLACEHOLDER);
-    setPlaceholderAction(LANDING_PLACEHOLDER);
-  }
 
   function sceneUpdate(update: () => void) {
     if (typeof document === "undefined") {
@@ -336,7 +268,7 @@ export function ChatBar({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    void dispatch(value.trim() ? value : placeholderAction);
+    void dispatch(value.trim() ? value : placeholder);
   }
 
   function handleSuggestion(text: string) {
@@ -402,7 +334,6 @@ export function ChatBar({
           type="text"
           value={value}
           onChange={(e) => {
-            stopRotation();
             setValue(e.target.value);
             setDismissedGhostFor("");
             if (mode === "clarify") setMode("initial");
@@ -417,7 +348,11 @@ export function ChatBar({
               setDismissedGhostFor(value);
             }
           }}
-          placeholder={followupMode ? "ask a follow-up" : placeholder}
+          // Native placeholder is empty when we're rotating — the fading
+          // overlay span below renders the visible value so it can crossfade
+          // between rotations. Followup mode falls back to a plain native
+          // string since rotation pauses there.
+          placeholder={followupMode ? "ask a follow-up" : ""}
           aria-label="Ask Patrick a question"
           className="
             w-full px-[24px] pr-[104px] py-[22px]
@@ -434,6 +369,20 @@ export function ChatBar({
             max-[430px]:px-[16px] max-[430px]:pr-[78px] max-[430px]:py-[18px]
           "
         />
+        {value === "" && !followupMode && mode !== "clarify" && status === "idle" && (
+          <span
+            key={placeholderIdx}
+            aria-hidden="true"
+            className="
+              prompt-placeholder-fade
+              pointer-events-none absolute left-[24px] top-1/2 -translate-y-1/2
+              font-[family-name:var(--font-mono)] text-[16px] text-[var(--color-ink-faint)]
+              max-[430px]:left-[16px]
+            "
+          >
+            {placeholder}
+          </span>
+        )}
         {ghostSuffix && (
           <span
             aria-hidden="true"
@@ -471,7 +420,7 @@ export function ChatBar({
         {!inResponse && (
           <button
             type="submit"
-            aria-label={value.trim() ? "Submit prompt" : `Run ${placeholderAction}`}
+            aria-label={value.trim() ? "Submit prompt" : `Run ${placeholder}`}
             className="
               prompt-keycap prompt-submit
               flex
@@ -490,24 +439,19 @@ export function ChatBar({
       </div>
 
       {!inResponse && mode !== "clarify" && status !== "sending" && status !== "sent" && (
-        <div className="mt-[16px] flex flex-wrap gap-[8px]">
-          {PERSISTENT_CHIPS.map((chip) => (
-            <button
-              key={chip.query}
-              type="button"
-              onClick={() => handleSuggestion(chip.query)}
-              className="
-                font-[family-name:var(--font-mono)] text-[12px]
-                min-h-[44px] px-[14px] py-[8px] rounded-full
-                border border-[var(--color-paper-line)]
-                text-[var(--color-ink-soft)]
-                hover:text-[var(--color-accent)] hover:border-[var(--color-accent)]
-                transition-colors
-              "
-            >
-              {chip.label}
-            </button>
-          ))}
+        <div className="mt-[10px]">
+          <Link
+            href="/work"
+            className="
+              inline-flex items-center gap-[6px]
+              font-[family-name:var(--font-mono)] text-[12px] tracking-[0.08em]
+              text-[var(--color-ink-soft)] hover:text-[var(--color-accent)]
+              transition-colors
+            "
+          >
+            just show me the work
+            <span aria-hidden="true">→</span>
+          </Link>
         </div>
       )}
 

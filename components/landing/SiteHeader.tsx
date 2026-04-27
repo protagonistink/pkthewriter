@@ -4,17 +4,14 @@ import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { ContactModal } from "./ContactModal";
 
-const FALLBACK_EMAIL = "patrick@pkthewriter.com";
-
 type Props = {
   email?: string;
   /** Override the right-hand link. Case-study and takeover surfaces pass a
-   *  lateral nav link (e.g. "← All work") instead of the Contact mailto. */
+   *  lateral nav link (e.g. "← All work") instead of the Work With Me CTA. */
   rightSlot?: ReactNode;
 };
 
-export function SiteHeader({ email, rightSlot }: Props) {
-  const mailto = `mailto:${email ?? FALLBACK_EMAIL}`;
+export function SiteHeader({ email: _email, rightSlot }: Props) {
   const [contactOpen, setContactOpen] = useState(false);
 
   // Any CTA on the site can open the modal by dispatching this event.
@@ -54,20 +51,8 @@ export function SiteHeader({ email, rightSlot }: Props) {
                 hover:opacity-85 transition-opacity
               "
             >
-              Hire Patrick
+              Work With Me
             </button>
-            <a
-              href={mailto}
-              className="
-                inline-block
-                font-[family-name:var(--font-mono)] text-[12px] tracking-[0.2em] uppercase
-                text-[var(--color-ink-mid)] hover:text-[var(--color-ink)] hover:tracking-[0.24em]
-                transition-[color,letter-spacing] duration-[320ms] [transition-timing-function:cubic-bezier(0.16,1,0.3,1)]
-                max-[430px]:hidden
-              "
-            >
-              Contact
-            </a>
           </div>
         )}
       </header>
