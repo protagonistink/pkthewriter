@@ -323,7 +323,7 @@ function Archive({
       <p className="mb-[42px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.28em] text-[var(--color-dark-ink-mid)]">
         &gt; client_archive
       </p>
-      <div className="grid grid-cols-2 gap-x-[28px] gap-y-[34px] md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-[28px] gap-y-[34px] max-[480px]:grid-cols-1 max-[480px]:gap-y-[22px] md:grid-cols-4">
         {labels.map(({ client, project }) => {
           const content = (
             <>
