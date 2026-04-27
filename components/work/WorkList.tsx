@@ -143,9 +143,11 @@ export function WorkList({ tiles }: Props) {
                     font-[500]
                     text-[clamp(64px,9vw,160px)]
                     max-[820px]:text-[clamp(40px,8vw,64px)]
+                    max-[430px]:text-[clamp(28px,7vw,40px)]
                     leading-[0.88]
                     tracking-[-0.02em]
                     [text-wrap:balance]
+                    min-w-0 max-w-full [overflow-wrap:break-word]
                   "
                 >
                   {t.brand}

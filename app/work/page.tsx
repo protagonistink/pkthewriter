@@ -49,7 +49,7 @@ export default async function WorkIndex() {
       <Rail />
       <div className="flex flex-col min-w-0">
         <SiteHeader email={about?.email} />
-        <main id="main" className="flex-1 mx-auto w-full max-w-[1280px] px-[48px] pt-[36px] pb-[160px] max-[820px]:px-[20px] max-[820px]:pt-[24px] max-[820px]:pb-[140px]">
+        <main id="main" className="flex-1 mx-auto w-full max-w-[1280px] px-[48px] pt-[36px] pb-[160px] max-[820px]:px-[20px] max-[820px]:pt-[24px] max-[820px]:pb-[140px] overflow-x-hidden">
           <h1 className="sr-only">Selected work</h1>
           <p
             className="
