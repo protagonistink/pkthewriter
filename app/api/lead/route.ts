@@ -24,6 +24,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: 400 });
   }
 
+  if (!parsed.context || parsed.context === "free-text") {
+    console.log("[prompt]", JSON.stringify({ msg: parsed.message.slice(0, 200), ts: new Date().toISOString() }));
+  }
+
   try {
     const { to, from } = leadConfig();
     const ua = req.headers.get("user-agent") ?? "unknown";

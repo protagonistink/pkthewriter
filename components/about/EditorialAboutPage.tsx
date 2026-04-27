@@ -96,6 +96,19 @@ const ACCOLADES = [
   "New York Times · RACies Silver",
 ];
 
+const TESTIMONIALS = [
+  {
+    quote: "[Testimonial quote — replace before launch.]",
+    name: "[Name]",
+    role: "[Role, Company]",
+  },
+  {
+    quote: "[Second testimonial — replace before launch.]",
+    name: "[Name]",
+    role: "[Role, Company]",
+  },
+];
+
 export function EditorialAboutPage({ about, projects }: Props) {
   const email = about?.email ?? FALLBACK_EMAIL;
   const resumeUrl = about?.resumePdf?.asset?.url ?? "/resume";
@@ -154,6 +167,22 @@ export function EditorialAboutPage({ about, projects }: Props) {
         <p className="mt-[48px] max-w-[560px] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,38px)] leading-[1.15] tracking-[-0.022em] text-[var(--color-ink)] max-[820px]:mt-[28px]">
           I write the line, the argument under the line, and the story that lets both survive the room.
         </p>
+
+        {/* Jump links — desktop only */}
+        <nav aria-label="Jump to section" className="mt-[28px] flex flex-wrap gap-[20px] max-[820px]:hidden">
+          {[
+            { href: "#experience", label: "Experience" },
+            { href: "#say-hello", label: "Say Hello" },
+          ].map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              className="font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.2em] text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
+            >
+              {label} ↓
+            </a>
+          ))}
+        </nav>
 
         {/* Mobile-only: condensed availability + entry points + truncated awards.
             Replaces the desktop aside (Vital Stats / Hit List) which is hidden
@@ -267,7 +296,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </div>
       </section>
 
-      <section className="border-t border-[var(--color-ink)] bg-[var(--color-paper)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[72px]">
+      <section id="experience" className="border-t border-[var(--color-ink)] bg-[var(--color-paper)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[72px]">
         <div className="mx-auto grid max-w-[1320px] grid-cols-[320px_minmax(0,1fr)] gap-[96px] max-[980px]:grid-cols-1 max-[980px]:gap-[40px]">
           <div>
             <p className="mb-[20px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.28em] text-[var(--color-ink-mid)]">
@@ -291,9 +320,43 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </div>
       </section>
 
+      {TESTIMONIALS.some((t) => !t.quote.startsWith("[")) && (
+        <section className="border-t border-[var(--color-paper-line)] bg-[var(--color-paper)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[72px]">
+          <div className="mx-auto max-w-[1320px]">
+            <p className="mb-[48px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.28em] text-[var(--color-ink-mid)]">
+              &gt; what_people_say
+            </p>
+            <div className="grid gap-[56px] max-w-[860px]">
+              {TESTIMONIALS.filter((t) => !t.quote.startsWith("[")).map((t) => (
+                <blockquote key={t.name}>
+                  <p className="font-[family-name:var(--font-serif)] text-[clamp(24px,3.2vw,40px)] leading-[1.22] tracking-[-0.02em] text-[var(--color-ink)]">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <footer className="mt-[20px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.22em] text-[var(--color-ink-soft)]">
+                    — {t.name}, {t.role}
+                  </footer>
+                </blockquote>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[56px] max-[820px]:pb-[64px]">
         <div className="mx-auto max-w-[1320px]">
           <Archive projects={featuredProjects} />
+        </div>
+      </section>
+
+      <section id="say-hello" className="border-t border-[var(--color-paper-line)] bg-[var(--color-paper)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[72px]">
+        <div className="mx-auto max-w-[1320px]">
+          <h2 className="font-[family-name:var(--font-serif)] text-[clamp(48px,8vw,120px)] font-normal leading-[0.88] tracking-[-0.04em] mb-[48px]">
+            Say hello.
+          </h2>
+          <div className="flex flex-wrap gap-[12px]">
+            <AboutButton href={`mailto:${email}`}>Hire Patrick</AboutButton>
+            <AboutButton href="https://www.linkedin.com/in/patrickkirkland/" newTab>LinkedIn</AboutButton>
+          </div>
         </div>
       </section>
 

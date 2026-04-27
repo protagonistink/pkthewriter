@@ -10,7 +10,9 @@ export function ScreenplayGallery({ screenplays }: { screenplays: Screenplay[] }
       </div>
       <h1 className="text-3xl sm:text-4xl font-medium mt-2 mb-2">Screenplays.</h1>
       <p className="text-[var(--color-ink-soft)] mb-10 max-w-prose">
-        Sample pages are downloadable. Full scripts on request.
+        {screenplays.some((s) => s.samplePdf?.asset?.url)
+          ? "Sample pages downloadable below. Full scripts on request."
+          : "Full scripts and samples available on request."}
       </p>
       <ul className="space-y-12">
         {screenplays.map((s) => {
