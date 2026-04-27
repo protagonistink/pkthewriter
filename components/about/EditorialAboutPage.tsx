@@ -117,8 +117,8 @@ export function EditorialAboutPage({ about, projects }: Props) {
     <main id="main" className="overflow-hidden">
       {/* Hero — typographic display, photo crashes the grid */}
       <section className="relative min-h-[88vh] overflow-hidden px-[44px] pt-[32px] pb-[140px] max-[820px]:px-[22px] max-[820px]:pb-[64px] max-[820px]:min-h-0">
-        <p className="mb-[20px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.34em] text-[var(--color-accent)]">
-          About / Patrick Kirkland
+        <p className="mb-[28px] max-[820px]:mb-[20px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.32em] text-[var(--color-accent)]">
+          — About
         </p>
 
         {/* Type + photo layer */}

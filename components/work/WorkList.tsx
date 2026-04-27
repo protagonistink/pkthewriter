@@ -101,7 +101,7 @@ export function WorkList({ tiles }: Props) {
           const slot = SLOTS[i % SLOTS.length];
           const pillText = derivePillText(t);
           return (
-            <li key={t.id} className="m-0 relative">
+            <li key={t.id} className="m-0 relative max-[820px]:mb-[52px]">
               <Link
                 href={`/work/${t.slug}`}
                 data-active={activeId === t.id ? "true" : "false"}
@@ -113,13 +113,15 @@ export function WorkList({ tiles }: Props) {
                 className="
                   work-list__link
                   group relative block no-underline
-                  py-0 max-[820px]:py-[10px]
-                  flex items-baseline max-[820px]:items-center gap-[18px] max-[820px]:gap-[14px]
+                  py-0 max-[820px]:py-0
+                  flex items-baseline max-[820px]:flex-col max-[820px]:items-start
+                  gap-[18px] max-[820px]:gap-0
                   cursor-pointer
                   min-[821px]:w-fit
+                  max-[820px]:w-full
                 "
               >
-                <MobileThumb tile={t} />
+                <MobileCover tile={t} />
 
                 <span
                   className="
@@ -148,6 +150,7 @@ export function WorkList({ tiles }: Props) {
                     tracking-[-0.02em]
                     [text-wrap:balance]
                     min-w-0 max-w-full [overflow-wrap:break-word]
+                    max-[820px]:mt-[16px]
                   "
                 >
                   {t.brand}
@@ -264,13 +267,13 @@ function CoverFigure({
   );
 }
 
-function MobileThumb({ tile }: { tile: WorkTile }) {
+function MobileCover({ tile }: { tile: WorkTile }) {
   if (!tile.imageUrl) return null;
   return (
     <span
       className="
-        hidden max-[820px]:inline-block shrink-0
-        w-[64px] aspect-[4/3] overflow-hidden rounded-[6px]
+        hidden max-[820px]:block w-full shrink-0
+        aspect-[4/3] overflow-hidden
         bg-[var(--color-paper-panel,rgba(0,0,0,0.04))]
       "
       aria-hidden="true"
@@ -278,8 +281,8 @@ function MobileThumb({ tile }: { tile: WorkTile }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={tile.imageUrl}
-        alt={`${tile.brand} — ${tile.title} cover`}
-        loading="lazy"
+        alt=""
+        loading="eager"
         decoding="async"
         className="block w-full h-full object-cover"
       />

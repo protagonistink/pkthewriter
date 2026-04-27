@@ -11,12 +11,6 @@ type Props = {
 
 const MOBILE_MAX = 820;
 
-/**
- * Experience card with a mobile-only collapse behavior.
- * Desktop (> 820px): role, tenure, detail are always visible — same layout as
- * the original always-on grid. Mobile (<= 820px): collapsed by default; the
- * company name acts as a tap target that toggles the body open.
- */
 export function ExperienceCard({ company, role, years, detail }: Props) {
   const [isMobile, setIsMobile] = useState(false);
   const [open, setOpen] = useState(true);
@@ -29,7 +23,6 @@ export function ExperienceCard({ company, role, years, detail }: Props) {
     const onResize = () => {
       const next = window.innerWidth <= MOBILE_MAX;
       setIsMobile(next);
-      // Don't fight the user — only flip auto-open on a viewport crossing.
       setOpen((prev) => (next === mobile ? prev : !next));
     };
     window.addEventListener("resize", onResize);
@@ -38,41 +31,63 @@ export function ExperienceCard({ company, role, years, detail }: Props) {
 
   const headingClasses =
     "font-[family-name:var(--font-serif)] text-[clamp(46px,7.2vw,108px)] font-normal leading-[0.92] tracking-[-0.045em] text-[var(--color-ink)]";
-  const body = (
-    <div className="mt-[28px] grid grid-cols-[200px_minmax(0,1fr)] gap-[36px] max-[820px]:mt-[18px] max-[820px]:grid-cols-1 max-[820px]:gap-[16px]">
-      <dl className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] leading-[1.4]">
-        <dt className="text-[var(--color-accent)]">Role</dt>
-        <dd className="mt-[4px] mb-[14px] text-[var(--color-ink)]">{role}</dd>
-        <dt className="text-[var(--color-accent)]">Tenure</dt>
-        <dd className="mt-[4px] text-[var(--color-ink)]">{years}</dd>
-      </dl>
-      <p className="m-0 max-w-[58ch] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,30px)] leading-[1.32] tracking-[-0.018em] text-[var(--color-ink)]">
-        {detail}
-      </p>
-    </div>
-  );
+
+  if (isMobile) {
+    return (
+      <article className="border-b border-[var(--color-ink)] py-[26px]">
+        <div className="flex items-center justify-between gap-[14px]">
+          <h3 className={headingClasses}>{company}</h3>
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-label={open ? "Collapse details" : "Expand details"}
+            onClick={() => setOpen((v) => !v)}
+            className="shrink-0 w-[36px] h-[36px] grid place-items-center text-[var(--color-ink-soft)]"
+          >
+            <span
+              aria-hidden="true"
+              className={`block font-[family-name:var(--font-mono)] text-[28px] leading-none transition-transform duration-200 ${open ? "rotate-45" : ""}`}
+            >
+              +
+            </span>
+          </button>
+        </div>
+
+        {/* Role always visible */}
+        <p className="mt-[8px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] text-[var(--color-ink-soft)]">
+          {role}
+        </p>
+
+        {/* Collapsible: tenure + detail only */}
+        {open && (
+          <div className="mt-[18px] flex flex-col gap-[14px]">
+            <dl className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] leading-[1.4]">
+              <dt className="text-[var(--color-accent)]">Tenure</dt>
+              <dd className="mt-[4px] text-[var(--color-ink)]">{years}</dd>
+            </dl>
+            <p className="m-0 font-[family-name:var(--font-serif)] text-[clamp(20px,5vw,28px)] leading-[1.32] tracking-[-0.018em] text-[var(--color-ink)]">
+              {detail}
+            </p>
+          </div>
+        )}
+      </article>
+    );
+  }
 
   return (
-    <article className="border-b border-[var(--color-ink)] py-[44px] max-[820px]:py-[26px]">
-      {isMobile ? (
-        <button
-          type="button"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="w-full text-left flex items-center justify-between gap-[14px]"
-        >
-          <h3 className={headingClasses}>{company}</h3>
-          <span
-            aria-hidden="true"
-            className={`shrink-0 font-[family-name:var(--font-mono)] text-[28px] text-[var(--color-ink-soft)] transition-transform duration-200 ${open ? "rotate-45" : ""}`}
-          >
-            +
-          </span>
-        </button>
-      ) : (
-        <h3 className={headingClasses}>{company}</h3>
-      )}
-      {open && body}
+    <article className="border-b border-[var(--color-ink)] py-[44px]">
+      <h3 className={headingClasses}>{company}</h3>
+      <div className="mt-[28px] grid grid-cols-[200px_minmax(0,1fr)] gap-[36px]">
+        <dl className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] leading-[1.4]">
+          <dt className="text-[var(--color-accent)]">Role</dt>
+          <dd className="mt-[4px] mb-[14px] text-[var(--color-ink)]">{role}</dd>
+          <dt className="text-[var(--color-accent)]">Tenure</dt>
+          <dd className="mt-[4px] text-[var(--color-ink)]">{years}</dd>
+        </dl>
+        <p className="m-0 max-w-[58ch] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,30px)] leading-[1.32] tracking-[-0.018em] text-[var(--color-ink)]">
+          {detail}
+        </p>
+      </div>
     </article>
   );
 }
