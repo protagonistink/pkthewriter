@@ -224,32 +224,30 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
             aria-modal="true"
             aria-label="Site navigation"
             className="
-              fixed inset-y-0 left-0 z-50 w-[260px] max-w-[80vw]
-              bg-[var(--color-paper)] border-r border-[var(--color-paper-line)]
+              fixed inset-0 z-50
+              bg-[var(--color-paper)]
               flex flex-col pt-[14px]
               min-[769px]:hidden
             "
           >
-            <div className="px-[14px] pb-[18px] flex justify-end">
+            <div className="px-[14px] pb-[24px] flex justify-end">
               <button
                 type="button"
                 aria-label="Close navigation"
                 onClick={() => setMobileOpen(false)}
                 className="w-[44px] h-[44px] grid place-items-center text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] transition-colors"
               >
-                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
                   <path d="M6 6l12 12M18 6l-12 12" />
                 </svg>
               </button>
             </div>
-            <nav aria-label="Primary" className="flex flex-col gap-[2px] px-[14px]">
+            <nav aria-label="Primary" className="flex flex-col px-[28px] gap-[8px]">
               {items.map((item) => {
                 const current = item.match(pathname);
                 const className = `
-                  group relative flex items-center gap-[14px] px-[12px] py-[12px]
-                  rounded-[8px] whitespace-nowrap
+                  group relative flex items-baseline gap-[18px] py-[10px]
                   text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]
-                  hover:bg-[rgba(27,26,22,0.05)]
                   transition-colors
                   ${current ? "!text-[var(--color-ink)]" : ""}
                 `;
@@ -258,11 +256,10 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                     {current && (
                       <span
                         aria-hidden="true"
-                        className="absolute -left-[14px] top-1/2 -translate-y-1/2 w-[3px] h-[18px] rounded-[2px] bg-[var(--color-accent)]"
+                        className="absolute left-[-18px] top-1/2 -translate-y-1/2 w-[4px] h-[28px] rounded-[2px] bg-[var(--color-accent)]"
                       />
                     )}
-                    <span className="shrink-0 w-[20px] flex justify-center">{item.icon}</span>
-                    <span className="font-[family-name:var(--font-serif)] text-[16px]">
+                    <span className="font-[family-name:var(--font-serif)] text-[clamp(40px,11vw,56px)] leading-[1.05] tracking-[-0.02em]">
                       {item.label}
                     </span>
                   </>

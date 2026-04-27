@@ -4,6 +4,8 @@ import { PortableText } from "@portabletext/react";
 import type { AboutPage, Project } from "@/lib/sanity/types";
 import { urlForImage } from "@/lib/sanity/image";
 import { ClientCaseStudyLink } from "@/components/canvas/ClientCaseStudyLink";
+import { ExperienceCard } from "@/components/about/ExperienceCard";
+import { AboutHelperPrompt } from "@/components/about/AboutHelperPrompt";
 
 const FALLBACK_EMAIL = "patrick@pkthewriter.com";
 
@@ -152,11 +154,35 @@ export function EditorialAboutPage({ about, projects }: Props) {
         <p className="mt-[48px] max-w-[560px] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,38px)] leading-[1.15] tracking-[-0.022em] text-[var(--color-ink)] max-[820px]:mt-[28px]">
           I write the line, the argument under the line, and the story that lets both survive the room.
         </p>
+
+        {/* Mobile-only: condensed availability + entry points + truncated awards.
+            Replaces the desktop aside (Vital Stats / Hit List) which is hidden
+            below 820px. Sits directly under the header so visitors see the
+            short version + the two primary actions before the long-form bio. */}
+        <div className="hidden max-[820px]:block mt-[32px] pt-[26px] border-t border-[var(--color-paper-line)]">
+          <p className="mb-[20px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.24em] text-[var(--color-accent)]">
+            Available for freelance
+          </p>
+          <div className="flex flex-wrap gap-[10px] mb-[26px]">
+            <AboutButton href={resumeUrl} newTab>Get the PDF</AboutButton>
+            <AboutButton href={`mailto:${email}`}>Say hello</AboutButton>
+          </div>
+          <p className="mb-[10px] font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.24em] text-[var(--color-ink-mid)]">
+            Recognition
+          </p>
+          <ul className="m-0 p-0 list-none flex flex-col gap-[6px] font-[family-name:var(--font-serif)] text-[16px] leading-[1.35] text-[var(--color-ink)]">
+            {ACCOLADES.slice(0, 4).map((award) => (
+              <li key={award}>{award}</li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <section className="border-t border-[var(--color-ink)] bg-[var(--color-paper-panel)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[72px]">
+      <section className="border-t border-[var(--color-ink)] bg-[var(--color-paper-panel)] px-[44px] py-[112px] max-[820px]:px-[22px] max-[820px]:py-[56px]">
         <div className="mx-auto grid max-w-[1320px] grid-cols-[320px_minmax(0,1fr)] gap-[96px] max-[980px]:grid-cols-1 max-[980px]:gap-[54px]">
-          <aside className="relative">
+          {/* Vital Stats / Hit List — desktop+tablet only. The hero block above
+              already exposes the same info (in shorter form) on mobile. */}
+          <aside className="relative max-[820px]:hidden">
             <div className="sticky top-[34px]">
               <div className="mb-[34px] h-[2px] w-[44px] bg-[var(--color-ink)]" />
               <FactBlock label="[ VITAL STATS ]">
@@ -221,38 +247,28 @@ export function EditorialAboutPage({ about, projects }: Props) {
           </div>
           <div className="border-t border-[var(--color-ink)]">
             {EXPERIENCE.map((item) => (
-              <article
+              <ExperienceCard
                 key={`${item.company}-${item.role}`}
-                className="border-b border-[var(--color-ink)] py-[44px] max-[820px]:py-[34px]"
-              >
-                <h3 className="font-[family-name:var(--font-serif)] text-[clamp(46px,7.2vw,108px)] font-normal leading-[0.92] tracking-[-0.045em] text-[var(--color-ink)]">
-                  {item.company}
-                </h3>
-                <div className="mt-[28px] grid grid-cols-[200px_minmax(0,1fr)] gap-[36px] max-[820px]:mt-[18px] max-[820px]:grid-cols-1 max-[820px]:gap-[16px]">
-                  <dl className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.22em] leading-[1.4]">
-                    <dt className="text-[var(--color-accent)]">Role</dt>
-                    <dd className="mt-[4px] mb-[14px] text-[var(--color-ink)]">{item.role}</dd>
-                    <dt className="text-[var(--color-accent)]">Tenure</dt>
-                    <dd className="mt-[4px] text-[var(--color-ink)]">{item.years}</dd>
-                  </dl>
-                  <p className="m-0 max-w-[58ch] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,30px)] leading-[1.32] tracking-[-0.018em] text-[var(--color-ink)]">
-                    {item.detail}
-                  </p>
-                </div>
-              </article>
+                company={item.company}
+                role={item.role}
+                years={item.years}
+                detail={item.detail}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[72px] max-[820px]:pb-[140px]">
+      <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[56px] max-[820px]:pb-[64px]">
         <div className="mx-auto max-w-[1320px]">
           <Archive projects={featuredProjects} />
-          <div className="mt-[110px]">
+          {/* Big italic accolades — desktop+tablet only. The mobile hero block
+              already shows a truncated, non-italic version. */}
+          <div className="mt-[110px] max-[820px]:hidden">
             <p className="mb-[34px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.28em] text-[var(--color-dark-ink-mid)]">
               &gt; evidence, not a shrine
             </p>
-            <div className="flex flex-col gap-[10px] max-[820px]:gap-[6px]">
+            <div className="flex flex-col gap-[10px]">
               {ACCOLADES.map((award) => (
                 <p
                   key={award}
@@ -266,6 +282,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </div>
       </section>
 
+      <AboutHelperPrompt />
     </main>
   );
 }
@@ -323,11 +340,11 @@ function Archive({
       <p className="mb-[42px] font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.28em] text-[var(--color-dark-ink-mid)]">
         &gt; client_archive
       </p>
-      <div className="grid grid-cols-2 gap-x-[28px] gap-y-[34px] max-[480px]:grid-cols-1 max-[480px]:gap-y-[22px] md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-x-[18px] gap-y-[18px] md:gap-x-[28px] md:gap-y-[34px] md:grid-cols-4">
         {labels.map(({ client, project }) => {
           const content = (
             <>
-              <span data-about-client-label className="font-[family-name:var(--font-mono)] text-[clamp(16px,2vw,24px)] uppercase tracking-[0.22em] text-[var(--color-dark-ink-soft)] transition-colors duration-150 group-hover:text-[#fff6e6]">
+              <span data-about-client-label className="font-[family-name:var(--font-mono)] text-[clamp(11px,1.4vw,24px)] max-[820px]:tracking-[0.16em] uppercase tracking-[0.22em] text-[var(--color-dark-ink-soft)] transition-colors duration-150 group-hover:text-[#fff6e6]">
                 {client}
               </span>
               {project?.imageUrl && (
