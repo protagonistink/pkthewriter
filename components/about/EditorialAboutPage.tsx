@@ -245,7 +245,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </div>
       </section>
 
-      <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[72px]">
+      <section className="border-t border-[var(--color-ink)] bg-[var(--color-dark-panel)] px-[44px] py-[112px] text-[var(--color-dark-ink)] max-[820px]:px-[22px] max-[820px]:py-[72px] max-[820px]:pb-[140px]">
         <div className="mx-auto max-w-[1320px]">
           <Archive projects={featuredProjects} />
           <div className="mt-[110px]">
