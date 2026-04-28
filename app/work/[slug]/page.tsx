@@ -7,6 +7,7 @@ import type { Project } from "@/lib/sanity/types";
 import { CaseStudyView } from "@/components/canvas/CaseStudyView";
 
 export const revalidate = 60;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const projects = await sanityClient

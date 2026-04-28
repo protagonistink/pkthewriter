@@ -111,10 +111,9 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       ) : null}
 
-      {/* Portable Text fallback — conflict/resolution if no editorial sections.
-          Older docs sometimes stored `conflict` as a plain string rather than
-          Portable Text blocks; handle both or PortableText silently drops it. */}
-      {moments.length === 0 && (p.conflict || p.resolution) && (
+      {/* Conflict / Resolution — always render when content exists, regardless of
+          whether editorial sections are also present. */}
+      {(p.conflict || p.resolution) && (
         <section className="px-[60px] py-[80px] max-[820px]:px-[24px] max-[820px]:py-[56px]">
           <div className="max-w-[740px] mx-auto space-y-[48px]">
             {p.conflict && (
@@ -127,8 +126,95 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       )}
 
+      {/* Video artifacts — TV spots, brand films, trailers */}
+      {p.videoLinks && p.videoLinks.length > 0 && (
+        <VideoArtifacts videos={p.videoLinks} />
+      )}
+
       <CaseStudyHandoff currentSlug={p.slug.current} />
     </article>
+  );
+}
+
+function toEmbedUrl(url: string, platform?: string): string | null {
+  try {
+    const u = new URL(url);
+    if (platform === "vimeo" || u.hostname.includes("vimeo.com")) {
+      const id = u.pathname.replace(/^\//, "").split("/")[0];
+      return id ? `https://player.vimeo.com/video/${id}` : null;
+    }
+    if (platform === "youtube" || u.hostname.includes("youtube.com") || u.hostname.includes("youtu.be")) {
+      const id = u.hostname.includes("youtu.be")
+        ? u.pathname.replace(/^\//, "")
+        : u.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+type VideoLink = NonNullable<Project["videoLinks"]>[number];
+
+function VideoArtifacts({ videos }: { videos: VideoLink[] }) {
+  return (
+    <section
+      id="artifacts"
+      className="px-[60px] py-[80px] max-[820px]:px-[24px] max-[820px]:py-[56px]"
+    >
+      <div className="max-w-[1200px] mx-auto">
+        <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.22em] uppercase text-[var(--color-accent)] mb-[48px]">
+          Artifacts
+        </div>
+        <div className="space-y-[72px]">
+          {videos.map((v, i) => {
+            const embedUrl = toEmbedUrl(v.url, v.platform);
+            return (
+              <div key={i}>
+                {embedUrl ? (
+                  <div className="relative w-full aspect-video bg-[var(--color-paper-panel)] mb-[20px]">
+                    <iframe
+                      src={embedUrl}
+                      title={v.title}
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                      className="absolute inset-0 w-full h-full"
+                    />
+                  </div>
+                ) : (
+                  <a
+                    href={v.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative w-full aspect-video bg-[var(--color-paper-panel)] mb-[20px] hover:opacity-80 transition-opacity"
+                  >
+                    <span className="absolute inset-0 flex items-center justify-center font-[family-name:var(--font-mono)] text-[12px] tracking-[0.16em] uppercase text-[var(--color-ink-soft)]">
+                      Watch →
+                    </span>
+                  </a>
+                )}
+                <div className="flex items-baseline gap-[16px]">
+                  <p className="font-[family-name:var(--font-serif)] text-[17px] leading-[1.35] text-[var(--color-ink)] m-0">
+                    {v.title}
+                  </p>
+                  {v.duration && (
+                    <span className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.16em] uppercase text-[var(--color-ink-soft)] shrink-0">
+                      {v.duration}
+                    </span>
+                  )}
+                </div>
+                {v.description && (
+                  <p className="font-[family-name:var(--font-serif)] text-[15px] leading-[1.55] text-[var(--color-ink-mid)] mt-[8px] max-w-[60ch]">
+                    {v.description}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }
 
