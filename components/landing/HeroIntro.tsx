@@ -23,9 +23,8 @@ export function HeroIntro({ mode = "full" }: HeroIntroProps) {
           max-[820px]:text-[15px] max-[820px]:mb-[20px]
         "
       >
-        Ask me something. Writing, brands, storytelling. Anything except a python fix or the recipe for a flan.{" "}
-        <br />
-        I&apos;m not that kind of prompt bar.
+        <span className="block">Ask me something. Writing, brands, storytelling. Anything except a python fix or a flan recipe.</span>
+        <span className="block">I&apos;m not that kind of prompt bar.</span>
       </p>
 
     </div>
