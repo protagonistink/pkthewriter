@@ -285,7 +285,7 @@ body {
   margin-bottom: 18px;
 }
 [data-state] .hero-sub {
-  max-height: 40px;
+  max-height: 120px;
   opacity: 1;
   transition: max-height 380ms ease, opacity 300ms ease, margin 380ms ease;
   overflow: hidden;
@@ -308,7 +308,7 @@ body {
   margin-bottom: 18px;
 }
 [data-hero-mode] .hero-sub {
-  max-height: 40px;
+  max-height: 120px;
   opacity: 1;
   overflow: hidden;
   transition: max-height 380ms ease, opacity 300ms ease, margin 380ms ease;
