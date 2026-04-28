@@ -169,10 +169,6 @@ body {
   transform: var(--base-transform) translateY(18px);
   transition: opacity 420ms var(--ease-resist), transform 520ms var(--ease-resist);
 }
-.work-list__cover[data-primer="true"] {
-  opacity: 0.38;
-  transform: var(--base-transform);
-}
 .work-list__cover[data-active="true"] {
   opacity: 1;
   transform: var(--base-transform) scale(1.25);

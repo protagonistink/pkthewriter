@@ -41,7 +41,6 @@ export function WorkList({ tiles }: Props) {
   const router = useRouter();
   const { navigate: transitionNavigate } = useCaseStudyTransition();
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -81,12 +80,7 @@ export function WorkList({ tiles }: Props) {
     return () => window.removeEventListener("beforeunload", writeScroll);
   }, []);
 
-  const markInteracted = () => {
-    if (!hasInteracted) setHasInteracted(true);
-  };
-
   const navigate = (e: ReactMouseEvent, slug: string, id: string) => {
-    markInteracted();
     setActiveId(id);
     const anchorEl = e.currentTarget as HTMLElement;
     const titleEl = anchorEl.querySelector<HTMLElement>(".work-list__title");
@@ -108,9 +102,9 @@ export function WorkList({ tiles }: Props) {
                 href={`/work/${t.slug}`}
                 data-active={activeId === t.id ? "true" : "false"}
                 onClick={(e) => { track("work_card_click", { slug: t.slug }); navigate(e, t.slug, t.id); }}
-                onMouseEnter={() => { markInteracted(); setActiveId(t.id); }}
+                onMouseEnter={() => setActiveId(t.id)}
                 onMouseLeave={() => setActiveId((cur) => (cur === t.id ? null : cur))}
-                onFocus={() => { markInteracted(); setActiveId(t.id); }}
+                onFocus={() => setActiveId(t.id)}
                 onBlur={() => setActiveId((cur) => (cur === t.id ? null : cur))}
                 className="
                   work-list__link
@@ -190,7 +184,6 @@ export function WorkList({ tiles }: Props) {
                 slot={slot}
                 index={i}
                 isActive={activeId === t.id}
-                isPrimer={i === 0 && !hasInteracted && activeId === null}
               />
             </li>
           );
@@ -222,13 +215,11 @@ function CoverFigure({
   slot,
   index,
   isActive,
-  isPrimer,
 }: {
   tile: WorkTile;
   slot: Slot;
   index: number;
   isActive: boolean;
-  isPrimer: boolean;
 }) {
   const frameRef = useRef<HTMLDivElement>(null);
 
@@ -251,7 +242,6 @@ function CoverFigure({
     <figure
       className="work-list__cover absolute m-0 hidden min-[1024px]:block"
       data-active={isActive ? "true" : "false"}
-      data-primer={isPrimer ? "true" : "false"}
       aria-hidden="true"
       style={style}
     >
