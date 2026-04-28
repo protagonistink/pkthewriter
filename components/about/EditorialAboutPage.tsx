@@ -60,18 +60,18 @@ const EXPERIENCE: Experience[] = [
       "Senior campaign thinking, copy, scripts, naming, pitch language, and creative direction for agencies, founders, arts organizations, and mission-driven brands.",
   },
   {
-    company: "Apple",
-    role: "Writer",
-    years: "Past",
+    company: "Ogilvy NY",
+    role: "Senior Copywriter",
+    years: "2010",
     detail:
-      "Product and brand language at one of the few places where taste is a working department, not a courtesy.",
+      "Fortune 500 campaigns. BP's Olympic Team.",
   },
   {
-    company: "HBO / Verizon / AT&T",
+    company: "TWC / Verizon / AT&T",
     role: "Campaigns",
-    years: "Past",
+    years: "2020",
     detail:
-      "Broadcast, digital, launch, activation, and brand work across entertainment, telecom, technology, and culture.",
+      "Broadcast, digital, and brand work across telecom, entertainment, and tech.",
   },
 ];
 
