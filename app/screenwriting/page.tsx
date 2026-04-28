@@ -15,7 +15,7 @@ export const metadata = {
 };
 
 export default async function Page() {
-  const screenplays = await sanityClient.fetch<Screenplay[]>(screenplaysQuery);
+  const screenplays = await sanityClient.fetch<Screenplay[]>(screenplaysQuery).catch(() => [] as Screenplay[]);
   return (
     <CanvasTakeover>
       <ScreenplayGallery screenplays={screenplays} />

@@ -15,7 +15,7 @@ export const metadata = {
 
 export default async function WritingIndex() {
   const [clips, about] = await Promise.all([
-    sanityClient.fetch<WritingClip[]>(writingClipsQuery),
+    sanityClient.fetch<WritingClip[]>(writingClipsQuery).catch(() => [] as WritingClip[]),
     sanityClient.fetch<AboutPage | null>(aboutPageQuery).catch(() => null),
   ]);
   const email = about?.email ?? "patrick@pkthewriter.com";

@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://pkthewriter.com";
   const projects = await sanityClient.fetch<Array<{ slug: { current: string }; _updatedAt: string }>>(
     `*[_type == "project" && defined(slug.current)]{ "slug": slug, _updatedAt }`
-  );
+  ).catch(() => []);
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: `${base}/`, changeFrequency: "weekly" as const, priority: 1.0 },
     { url: `${base}/work`, changeFrequency: "monthly" as const, priority: 0.9 },
