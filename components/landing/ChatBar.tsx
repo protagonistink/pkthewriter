@@ -528,7 +528,7 @@ export function ChatBar({
             href="/work"
             className="
               inline-flex items-center gap-[6px]
-              font-[family-name:var(--font-mono)] text-[12px] tracking-[0.08em]
+              font-[family-name:var(--font-mono)] text-[13px] tracking-[0.08em]
               text-[var(--color-ink-soft)] hover:text-[var(--color-accent)]
               transition-colors
             "
