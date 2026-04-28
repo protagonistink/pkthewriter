@@ -164,7 +164,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
         </div>
 
         {/* Subtitle — left-anchored, clears the right-side photo */}
-        <p className="mt-[48px] max-w-[560px] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,38px)] leading-[1.15] tracking-[-0.022em] text-[var(--color-ink)] max-[820px]:mt-[28px]">
+        <p className="mt-[48px] max-w-[560px] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,38px)] leading-[1.4] tracking-[-0.022em] text-[var(--color-ink)] max-[820px]:mt-[28px]">
           I write the line and the argument under the line, then make sure both leave the room intact.
         </p>
 
@@ -258,7 +258,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
                     </p>
                   </div>
                 )}
-                <p className={`m-0 max-w-[920px] font-[family-name:var(--font-serif)] text-[clamp(31px,4vw,58px)] leading-[1.12] tracking-[-0.032em] text-[var(--color-ink)] ${index > 0 ? "pb-[64px]" : "pb-[64px]"}`}>
+                <p className={`m-0 pb-[64px] font-[family-name:var(--font-serif)] text-[var(--color-ink)] ${index === 0 ? "max-w-[640px] text-[clamp(28px,3vw,40px)] leading-[1.28] tracking-[-0.028em]" : "max-w-[640px] text-[clamp(18px,1.6vw,21px)] leading-[1.52] tracking-[-0.012em]"}`}>
                   {section.copy}
                 </p>
               </section>

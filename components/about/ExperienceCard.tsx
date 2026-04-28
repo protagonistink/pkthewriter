@@ -34,7 +34,7 @@ export function ExperienceCard({ company, role, years, detail }: Props) {
   }, []);
 
   const headingClasses =
-    "font-[family-name:var(--font-serif)] text-[clamp(46px,7.2vw,108px)] font-normal leading-[0.92] tracking-[-0.045em] text-[var(--color-ink)]";
+    "font-[family-name:var(--font-serif)] text-[clamp(32px,3.8vw,52px)] font-normal leading-[0.92] tracking-[-0.045em] text-[var(--color-ink)]";
 
   if (isMobile) {
     return (
@@ -69,7 +69,7 @@ export function ExperienceCard({ company, role, years, detail }: Props) {
               <dt className="text-[var(--color-accent)]">Tenure</dt>
               <dd className="mt-[4px] text-[var(--color-ink)]">{years}</dd>
             </dl>
-            <p className="m-0 font-[family-name:var(--font-serif)] text-[clamp(20px,5vw,28px)] leading-[1.32] tracking-[-0.018em] text-[var(--color-ink)]">
+            <p className="m-0 font-[family-name:var(--font-serif)] text-[clamp(17px,4vw,22px)] leading-[1.48] tracking-[-0.018em] text-[var(--color-ink)]">
               {detail}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function ExperienceCard({ company, role, years, detail }: Props) {
           <dt className="text-[var(--color-accent)]">Tenure</dt>
           <dd className="mt-[4px] text-[var(--color-ink)]">{years}</dd>
         </dl>
-        <p className="m-0 max-w-[58ch] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,30px)] leading-[1.32] tracking-[-0.018em] text-[var(--color-ink)]">
+        <p className="m-0 max-w-[52ch] font-[family-name:var(--font-serif)] text-[clamp(17px,1.5vw,21px)] leading-[1.48] tracking-[-0.018em] text-[var(--color-ink)]">
           {detail}
         </p>
       </div>
