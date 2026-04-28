@@ -192,7 +192,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     intro: INTROS.about,
     title: "Patrick Kirkland",
     kicker: "Writer · Creative Director · Protagonist Ink",
-    copy: `I've spent 20 years writing campaigns, films, launches, decks, speeches, and strategy like they're all versions of my favorite stories. Apple, HBO, Verizon, founders, arts organizations, mission-driven brands. My favorite part of this career is helping people say what they mean and mean what they say.`,
+    copy: `I've spent 20 years writing campaigns, films, launches, decks, speeches, and strategy like they're all versions of my favorite stories. Ogilvy, Verizon, Chevron, founders, arts organizations, mission-driven brands. My favorite part of this career is helping people say what they mean and mean what they say.`,
     ctas: [
       { label: "More about me →", href: "/about", variant: "primary" },
       { label: "Email me", href: "mailto:patrick@pkthewriter.com", variant: "ghost" },
@@ -234,7 +234,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     copy: "",
     highlights: [
       "20+ years — agency and brand side",
-      "Apple · HBO · Verizon · AT&amp;T · Airtable · Chevron · BP · Warner Bros.",
+      "Ogilvy · Verizon · AT&amp;T · Airtable · Chevron · BP · Warner Bros.",
       "Writer · Creative Director · Narrative Strategy",
       "ADDYs · Austin Film Festival · CES · iBooks #1 · RACies Silver",
     ],
