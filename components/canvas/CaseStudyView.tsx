@@ -4,7 +4,6 @@ import { urlForImage } from "@/lib/sanity/image";
 import type { Project } from "@/lib/sanity/types";
 import { CaseStudyHandoff } from "./CaseStudyHandoff";
 import { CaseStudyTransitions } from "./CaseStudyTransitions";
-import { CaseStudyCTA } from "./CaseStudyCTA";
 
 export function CaseStudyView({ project: p }: { project: Project }) {
   const kicker = [p.brand, p.year, p.type].filter(Boolean).join(" · ");
@@ -128,7 +127,6 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       )}
 
-      <CaseStudyCTA />
       <CaseStudyHandoff currentSlug={p.slug.current} />
     </article>
   );

@@ -161,7 +161,7 @@ export function CaseStudyAsk() {
 
             <form onSubmit={submit} autoComplete="off" className="px-[22px] pb-[22px]">
               <p className="font-[family-name:var(--font-serif)] italic text-[22px] leading-[1.2] tracking-[-0.005em] text-[var(--color-ink)] mb-[16px]">
-                What do you want to see next?
+                Want to see something else? Or do you want to get started?
               </p>
               <input
                 ref={inputRef}
