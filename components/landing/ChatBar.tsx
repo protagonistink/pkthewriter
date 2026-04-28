@@ -533,7 +533,7 @@ export function ChatBar({
               transition-colors
             "
           >
-            Or skip the chat — see the work ↓
+            Or skip the chat and see the work <span aria-hidden="true">→</span>
           </Link>
         </div>
       )}
