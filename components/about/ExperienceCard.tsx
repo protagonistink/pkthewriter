@@ -11,19 +11,23 @@ type Props = {
 
 const MOBILE_MAX = 820;
 
+const getIsMobile = () =>
+  typeof window !== "undefined" && window.innerWidth <= MOBILE_MAX;
+
 export function ExperienceCard({ company, role, years, detail }: Props) {
-  const [isMobile, setIsMobile] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [state, setState] = useState(() => {
+    const isMobile = getIsMobile();
+    return { isMobile, open: !isMobile };
+  });
+  const { isMobile, open } = state;
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mobile = window.innerWidth <= MOBILE_MAX;
-    setIsMobile(mobile);
-    setOpen(!mobile);
     const onResize = () => {
-      const next = window.innerWidth <= MOBILE_MAX;
-      setIsMobile(next);
-      setOpen((prev) => (next === mobile ? prev : !next));
+      const next = getIsMobile();
+      setState((prev) => ({
+        isMobile: next,
+        open: next === prev.isMobile ? prev.open : !next,
+      }));
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
@@ -41,7 +45,7 @@ export function ExperienceCard({ company, role, years, detail }: Props) {
             type="button"
             aria-expanded={open}
             aria-label={open ? "Collapse details" : "Expand details"}
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setState((prev) => ({ ...prev, open: !prev.open }))}
             className="shrink-0 w-[36px] h-[36px] grid place-items-center text-[var(--color-ink-soft)]"
           >
             <span

@@ -115,7 +115,7 @@ export function ContactModal({ open, onClose }: Props) {
       >
         <div className="flex items-center justify-between px-[28px] pt-[24px] pb-[6px]">
           <h2 className="font-[family-name:var(--font-serif)] text-[22px] tracking-[-0.01em]">
-            Let&apos;s work together.
+            Tell me about the project.
           </h2>
           <button
             type="button"

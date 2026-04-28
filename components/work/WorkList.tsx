@@ -123,7 +123,7 @@ export function WorkList({ tiles }: Props) {
                   max-[1023px]:w-full
                 "
               >
-                <MobileCover tile={t} />
+                <MobileCover tile={t} index={i} />
 
                 <span
                   className="
@@ -188,6 +188,7 @@ export function WorkList({ tiles }: Props) {
               <CoverFigure
                 tile={t}
                 slot={slot}
+                index={i}
                 isActive={activeId === t.id}
                 isPrimer={i === 0 && !hasInteracted && activeId === null}
               />
@@ -219,11 +220,13 @@ export function WorkList({ tiles }: Props) {
 function CoverFigure({
   tile,
   slot,
+  index,
   isActive,
   isPrimer,
 }: {
   tile: WorkTile;
   slot: Slot;
+  index: number;
   isActive: boolean;
   isPrimer: boolean;
 }) {
@@ -260,7 +263,7 @@ function CoverFigure({
         <img
           src={tile.imageUrl}
           alt={`${tile.brand} — ${tile.title} cover`}
-          loading="eager"
+          loading={index < 3 ? "eager" : "lazy"}
           decoding="async"
           className="block w-full h-full object-cover pointer-events-none select-none shadow-[0_18px_40px_-18px_rgba(20,14,6,0.18)]"
         />
@@ -269,7 +272,7 @@ function CoverFigure({
   );
 }
 
-function MobileCover({ tile }: { tile: WorkTile }) {
+function MobileCover({ tile, index }: { tile: WorkTile; index: number }) {
   if (!tile.imageUrl) return null;
   return (
     <span
@@ -286,7 +289,7 @@ function MobileCover({ tile }: { tile: WorkTile }) {
       <img
         src={tile.imageUrl}
         alt=""
-        loading="eager"
+        loading={index < 3 ? "eager" : "lazy"}
         decoding="async"
         className="block w-full h-full object-cover"
       />

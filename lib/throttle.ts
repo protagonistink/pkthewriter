@@ -1,14 +1,35 @@
-const bucket = new Map<string, number>();
+type Bucket = {
+  count: number;
+  firstSeen: number;
+  lastSeen: number;
+};
 
-export function allow(ip: string, minIntervalMs = 5000): boolean {
+const bucket = new Map<string, Bucket>();
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 6;
+const MIN_INTERVAL_MS = 5_000;
+
+export function allow(ip: string): boolean {
   const now = Date.now();
-  const last = bucket.get(ip) ?? 0;
-  if (now - last < minIntervalMs) return false;
-  bucket.set(ip, now);
+  const current = bucket.get(ip);
+  if (!current || now - current.firstSeen > WINDOW_MS) {
+    bucket.set(ip, { count: 1, firstSeen: now, lastSeen: now });
+    return true;
+  }
+
+  if (now - current.lastSeen < MIN_INTERVAL_MS || current.count >= MAX_PER_WINDOW) {
+    current.lastSeen = now;
+    return false;
+  }
+
+  current.count += 1;
+  current.lastSeen = now;
+
   if (bucket.size > 1000) {
-    for (const [k, v] of bucket) {
-      if (now - v > 60_000) bucket.delete(k);
+    for (const [k, v] of bucket.entries()) {
+      if (now - v.lastSeen > WINDOW_MS) bucket.delete(k);
     }
   }
+
   return true;
 }

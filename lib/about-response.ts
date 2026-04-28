@@ -9,7 +9,7 @@ export const ABOUT_FOLLOWUPS: AboutFollowup[] = [
     id: "actual-work",
     prompt: "what do you actually do?",
     answer:
-      "I write the line, the argument under the line, and the deck that gets the line out of a conference room alive. Some days that means campaign concepts and copy. Some days it means positioning, founder narrative, naming, launch language, or pulling a messy brief apart until the real problem admits it exists.",
+      "I write the line, the argument under the line, and the deck that gets the line approved. Some days that means campaign concepts and copy. Some days it means positioning, founder narrative, naming, launch language, or pulling a messy brief apart until the real problem admits it exists.",
   },
   {
     id: "working-style",
@@ -21,13 +21,13 @@ export const ABOUT_FOLLOWUPS: AboutFollowup[] = [
     id: "why-both",
     prompt: "copywriter or creative director?",
     answer:
-      "Both, because the sentence and the room around the sentence are usually the same problem. The writer in me cares whether the language is alive. The creative director in me cares whether it can survive the politics, timing, taste, and fear around it.",
+      "Both, because the sentence and the room around the sentence are often the same problem. The writer in me cares whether the language is alive. The creative director in me cares whether it can survive the politics, timing, taste, and fear around it.",
   },
   {
     id: "availability",
     prompt: "are you taking projects?",
     answer:
-      "Yes, selectively. I am best for founders, arts organizations, mission-driven brands, and agencies that need senior thinking without turning the assignment into a procurement ritual. Email works better than a form.",
+      "Yes, selectively. I work best with founders, arts organizations, mission-driven brands, and agencies that need senior thinking without a long procurement process. Email works better than a form.",
   },
 ];
 
@@ -60,6 +60,6 @@ export function resolveAboutFollowup(
     id: "full-about",
     prompt,
     answer:
-      "That is probably a real answer, not a doorway answer. The full about page has more room; this little exchange should know when to stop pretending it is a person.",
+      "That deserves a real answer, not a doorway one. The full about page has more room.",
   };
 }

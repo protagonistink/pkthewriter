@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import { urlForImage } from "@/lib/sanity/image";
 import type { Project } from "@/lib/sanity/types";
@@ -17,12 +18,14 @@ export function CaseStudyView({ project: p }: { project: Project }) {
       {/* Hero — full-bleed image with bottom-left title overlay */}
       <section className="relative w-full h-[92vh] min-h-[560px] max-h-[900px] overflow-hidden">
         {hero ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
+          <Image
             src={urlForImage(hero).width(2400).url()}
             alt={p.title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
             style={{ viewTransitionName: `work-cover-${slug}` }}
-            className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
           <div className="absolute inset-0 bg-[var(--color-paper-panel)]" />

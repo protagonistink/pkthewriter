@@ -241,7 +241,7 @@ function AboutResponse({
           ) : (
             <div className="mt-[28px]">
               <p className="m-0 mb-[14px] font-[family-name:var(--font-mono)] text-[13px] leading-[1.6] text-[var(--color-ink-soft)]">
-                That is probably enough doorway conversation. The full version has more room.
+                That is enough doorway conversation. The full version has more room.
               </p>
               <div className="flex flex-wrap gap-[12px]">
                 {feature.ctas.map((cta) => (
@@ -254,7 +254,7 @@ function AboutResponse({
 
         <div className="flex flex-wrap items-center gap-x-[16px] gap-y-[10px] mt-[24px] pt-[20px]">
           <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)]">
-            Or if you meant something else —
+            Or if you meant something else:
           </span>
           {feature.alts.map((alt, i) => (
             <span key={`${alt.key}-${i}`} className="contents">

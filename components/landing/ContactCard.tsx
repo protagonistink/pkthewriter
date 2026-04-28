@@ -13,8 +13,8 @@ type Props = {
 const COPY: Record<Variant, { eyebrow: string; title: string; body: string }> = {
   hi: {
     eyebrow: "→ Hey back.",
-    title: "What should I tell you about?",
-    body: "Drop a line — a project, a question, an intro you want me to make. I read everything.",
+    title: "Tell me what you're working on.",
+    body: "Drop a line: a project, a question, an intro you want me to make. I read everything.",
   },
   contact: {
     eyebrow: "→ Sure.",
@@ -106,7 +106,7 @@ export function ContactCard({ variant, onLead, onFallback }: Props) {
               </div>
               {status === "error" && (
                 <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-accent)]">
-                  That didn&apos;t send — try email instead.
+                  That didn&apos;t send. Try email instead.
                 </p>
               )}
             </form>
@@ -125,7 +125,7 @@ export function ContactCard({ variant, onLead, onFallback }: Props) {
           onClick={onFallback}
           className="font-[family-name:var(--font-serif)] text-[15px] text-[var(--color-ink-mid)] hover:text-[var(--color-ink)] underline decoration-[var(--color-paper-line)] underline-offset-4"
         >
-          Or did you want to talk about something else?
+          Or something else entirely?
         </button>
       </div>
     </section>

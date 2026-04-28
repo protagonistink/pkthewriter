@@ -11,7 +11,7 @@ type Props = {
   rightSlot?: ReactNode;
 };
 
-export function SiteHeader({ email: _email, rightSlot }: Props) {
+export function SiteHeader({ rightSlot }: Props) {
   const [contactOpen, setContactOpen] = useState(false);
 
   // Any CTA on the site can open the modal by dispatching this event.

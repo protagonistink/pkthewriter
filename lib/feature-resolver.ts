@@ -1,6 +1,6 @@
 /**
- * Feature resolver — merges a Sanity-backed card map with the static
- * intros in feature-static.ts. Pure, synchronous.
+ * Feature resolver — merges Sanity-backed media/slugs with the static
+ * card copy in feature-static.ts. Pure, synchronous.
  */
 
 import { ALTS, INTROS, STATIC_FEATURES, type FeatureKey } from "./feature-static";
@@ -60,6 +60,7 @@ function isBrandKey(k: FeatureKey): k is BrandKey {
 function projectCard(key: BrandKey, project: SanityFeatureProject | null | undefined): FeatureCard {
   const base = STATIC_FEATURES[key];
   if (!project) return { ...base, alts: ALTS[key] };
+  const projectHref = `/work/${project.slug}`;
   const kickerParts = [project.brand, project.year, project.type].filter(Boolean);
   const coverImageUrl = project.coverImage ? urlForImage(project.coverImage).width(1600).url() : undefined;
   const thumbImageUrls = (project.thumbImages ?? [])
@@ -69,14 +70,14 @@ function projectCard(key: BrandKey, project: SanityFeatureProject | null | undef
   return {
     key,
     intro: INTROS[key],
-    title: project.title,
-    kicker: kickerParts.join(" · ") || base.kicker,
-    copy: project.excerpt ?? base.copy,
+    title: base.title,
+    kicker: base.kicker || kickerParts.join(" · "),
+    copy: base.copy,
     coverImageUrl,
-    ctas: [
-      { label: "Read the story →", href: `/work/${project.slug}`, variant: "primary" },
-      { label: "View the artifacts", href: `/work/${project.slug}#artifacts`, variant: "ghost" },
-    ],
+    ctas: base.ctas.map((cta) => ({
+      ...cta,
+      href: cta.href.replace(/^\/work\/[^#]+/, projectHref),
+    })),
     heroTag: base.heroTag,
     thumbs: base.thumbs,
     thumbImageUrls: thumbImageUrls.length ? thumbImageUrls : undefined,

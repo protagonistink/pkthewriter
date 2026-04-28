@@ -25,22 +25,22 @@ const BIO_SECTIONS = [
   {
     label: "INT. AGENCY / BRAND - DAY",
     copy:
-      "I have spent more than 20 years working both agency and brand side, building campaigns, launch language, scripts, manifestos, decks, and voices for names people recognize and organizations that would rather be understood than decorated.",
+      "I have spent more than 20 years working both agency and brand side, building campaigns, launch language, scripts, manifestos, decks, and voices for clients people recognize and organizations that want to be understood, not just seen.",
   },
   {
     label: "EXT. WRITER'S ROOM - NIGHT",
     copy:
-      "Screenwriting sharpened the part of the job advertising usually tries to rename: character, want, obstacle, consequence. A product has a protagonist. A founder has a premise. A campaign has to survive the moment someone stops being polite and asks why it matters.",
+      "Screenwriting sharpened the part of the job advertising usually tries to rename: character, want, obstacle, consequence. A product has a protagonist. A founder has a premise. A campaign only works if someone in the room is still asking why it matters.",
   },
   {
     label: "INT. STRATEGY MEETING - LATE AFTERNOON",
     copy:
-      "The work I like most starts messy. Too many claims, too many audiences, too much borrowed language. I help find the argument underneath it, then write the version that can leave the room without a translator.",
+      "The work I like most starts messy. Too many claims, too many audiences, too much borrowed language. I find the argument underneath it, then write the version the client can actually use outside the building.",
   },
   {
     label: "EXT. PROTAGONIST INK - CONTINUOUS",
     copy:
-      "I also run Protagonist Ink, a narrative strategy consultancy for founders, arts organizations, and mission-driven brands. Same instinct, different room: find the human stakes, then make the language carry them.",
+      "I also run Protagonist Ink, a narrative strategy consultancy for founders, arts organizations, and mission-driven brands. Same work, different room: find the human stakes, then write toward them.",
   },
 ];
 
@@ -50,7 +50,7 @@ const EXPERIENCE: Experience[] = [
     role: "Founder / Narrative Strategy",
     years: "Now",
     detail:
-      "Narrative strategy, positioning, founder story, voice, and launch language for people and organizations with more substance than shape.",
+      "Narrative strategy, positioning, founder story, voice, and launch language for people and organizations who know what they do but not yet how to say it.",
   },
   {
     company: "Freelance",
@@ -64,7 +64,7 @@ const EXPERIENCE: Experience[] = [
     role: "Writer",
     years: "Past",
     detail:
-      "Product and brand language inside one of the few places where taste is not an ornamental department.",
+      "Product and brand language at one of the few places where taste is a working department, not a courtesy.",
   },
   {
     company: "HBO / Verizon / AT&T",
@@ -165,7 +165,7 @@ export function EditorialAboutPage({ about, projects }: Props) {
 
         {/* Subtitle — left-anchored, clears the right-side photo */}
         <p className="mt-[48px] max-w-[560px] font-[family-name:var(--font-serif)] text-[clamp(22px,2.4vw,38px)] leading-[1.15] tracking-[-0.022em] text-[var(--color-ink)] max-[820px]:mt-[28px]">
-          I write the line, the argument under the line, and the story that lets both survive the room.
+          I write the line and the argument under the line, then make sure both leave the room intact.
         </p>
 
         {/* Mobile-only: condensed availability + entry points + truncated awards.

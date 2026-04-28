@@ -5,9 +5,9 @@ import { CanvasTakeover } from "@/components/canvas/CanvasTakeover";
 
 export const revalidate = 60;
 export const metadata = {
-  title: "Writing",
+  title: "Writing & Clips",
   description:
-    "Selected clips and bylines from Patrick Kirkland — a thinly stocked shelf of essays, columns, and interviews.",
+    "Selected bylines and clips by Patrick Kirkland — essays, columns, and interviews.",
   alternates: {
     canonical: "/writing",
   },
@@ -22,12 +22,13 @@ export default async function WritingIndex() {
 
   return (
     <CanvasTakeover>
+      <h1 className="sr-only">Writing &amp; Clips — Patrick Kirkland</h1>
       <div className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.32em] uppercase text-[var(--color-accent)] mb-[14px]">
         — Writing
       </div>
-      <h1 className="font-[family-name:var(--font-serif)] font-normal text-[clamp(48px,7vw,96px)] leading-[0.96] tracking-[-0.02em] mb-[56px]">
+      <p className="font-[family-name:var(--font-serif)] font-normal text-[clamp(48px,7vw,96px)] leading-[0.96] tracking-[-0.02em] mb-[56px]">
         A shelf, thinly stocked.
-      </h1>
+      </p>
       <ul className="divide-y divide-[var(--color-paper-line)]">
         {clips.map((clip) => {
           const meta = [
@@ -72,7 +73,7 @@ export default async function WritingIndex() {
 
       <section className="mt-[72px] pt-[40px] border-t border-[var(--color-paper-line)]">
         <p className="font-[family-name:var(--font-serif)] text-[clamp(22px,2.6vw,30px)] leading-[1.3] tracking-[-0.01em] text-[var(--color-ink)] m-0 max-w-[54ch]">
-          Want a specific sample — a column, a manifesto, an essay I haven&apos;t published? Ask and I&apos;ll send the right one.
+          I have columns, manifestos, and unpublished essays. Tell me what you need and I&apos;ll send the right one.
         </p>
         <a
           href={`mailto:${email}?subject=Writing%20sample%20request`}

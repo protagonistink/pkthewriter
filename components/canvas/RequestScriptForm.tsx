@@ -39,7 +39,7 @@ export function RequestScriptForm({ title }: { title: string }) {
   }
 
   if (status === "sent") {
-    return <span className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-ink-soft)]">thanks — you&apos;ll hear from me.</span>;
+    return <span className="font-[family-name:var(--font-mono)] text-sm text-[var(--color-ink-soft)]">Thanks. You&apos;ll hear from me.</span>;
   }
 
   return (

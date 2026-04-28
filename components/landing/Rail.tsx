@@ -53,7 +53,7 @@ const DRAWER_CONTACT_ITEM: Item = {
 };
 
 export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean }) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
 
@@ -81,10 +81,6 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
       document.body.style.overflow = prevOverflow;
     };
   }, [mobileOpen]);
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
 
   useEffect(() => {
     const handler = () => setExpanded((v) => !v);
@@ -305,6 +301,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
                     key={item.label}
                     href={item.href}
                     aria-current={current ? "page" : undefined}
+                    onClick={() => setMobileOpen(false)}
                     className={className}
                   >
                     {content}

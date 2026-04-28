@@ -1,8 +1,6 @@
 type HeroIntroProps = { mode?: "full" | "receded" };
 
 export function HeroIntro({ mode = "full" }: HeroIntroProps) {
-  const receded = mode === "receded";
-
   return (
     <div data-hero-mode={mode}>
       <h1

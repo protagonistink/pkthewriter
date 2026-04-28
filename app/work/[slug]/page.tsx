@@ -8,6 +8,15 @@ import { CaseStudyView } from "@/components/canvas/CaseStudyView";
 
 export const revalidate = 60;
 
+export async function generateStaticParams() {
+  const projects = await sanityClient
+    .fetch<Array<{ slug: { current: string } }>>(
+      `*[_type == "project" && defined(slug.current)]{ "slug": slug }`
+    )
+    .catch(() => []);
+  return projects.map((p) => ({ slug: p.slug.current }));
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = await sanityClient

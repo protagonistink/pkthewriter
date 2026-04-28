@@ -2,9 +2,9 @@
  * Hardcoded feature content (interpretation intros + fallback cards).
  *
  * The intros are Patrick's voice — they stay in code so they don't drift.
- * Brand cards come from Sanity via `featureCardsQuery` (lib/sanity/queries)
- * and are merged onto the matching static intro by the resolver.
- * `screenwriting` and `resume` remain fully static — no Sanity doc yet.
+ * Brand cards use this copy. Sanity supplies project media + slugs through
+ * `featureCardsQuery` (lib/sanity/queries), then the resolver merges them in.
+ * Non-brand cards remain fully static — no Sanity docs yet.
  */
 
 export type FeatureKey =
@@ -36,12 +36,12 @@ export const ALL_BRANDS = [
 
 export type StaticFeature = {
   key: FeatureKey;
-  intro: string; // may contain <em>
+  intro: string; // may contain simple inline HTML
   /** Client / brand — displayed in the case-study handoff. */
   brand?: string;
   title: string;
   kicker: string;
-  copy: string; // may contain <em>
+  copy: string; // may contain simple inline HTML
   /**
    * Optional scan-able bullets. When present, ResponseFeature renders them in
    * place of `copy` — used by cards (like the resume) that want signal over
@@ -54,28 +54,25 @@ export type StaticFeature = {
 };
 
 export const INTROS: Record<FeatureKey, string> = {
-  airtable: `Four :15 spots, one national launch. My best work isn't usually a single ad — but when it is, it's four.`,
-  bp: `Team USA. Brand-led storytelling the year Rio opened the doors.`,
-  techsure: `Verizon's pitch for the part of service no one sees.`,
-  "verizon-up": `Live activation. Forty-foot monsters. Biggest Little Monsters.`,
-  chevron: `Rebranding a giant. Strategy-first, identity downstream.`,
-  warnerbros: `Warner Brothers, <em>Steve Jobs</em>. Campaign voice for a biopic that wanted restraint.`,
-  att: `Pandemic holidays. A gift-finder that read like a choose-your-own-adventure.`,
-  mpa: `<em>"What Comes Next?"</em> — a brand campaign for the Motion Picture Association.`,
-  about: `The useful version: writer, creative director, narrative problem-solver. Usually in that order.`,
-  writing: `The shorter the piece, the harder it usually is.`,
-  screenwriting: `Yes, really. Two features optioned, one pilot in development.`,
-  resume: `One page, current to 2026.`,
-  // PRE-LAUNCH: Patrick to confirm rates copy + availability quarter / month.
+  airtable: `Four :15 spots, one national launch. Is it my best work? Cutting tech specs into one line? Solving the puzzle was a lot of fun.`,
+  bp: `360 campaign. 18 spots for Team USA. Brand-led storytelling from the heart of the country.`,
+  techsure: `Verizon's spot I wrote for the part of tech no one wants to think about: when it's broken.`,
+  "verizon-up": `One night. Lady Gaga, Live at Citi Field. Live social production done on the fly.`,
+  chevron: `Rebranding a 150-year old industry giant. Audience first, strategy-second, science above all.`,
+  warnerbros: `I love doing trailer work. Especially for a Sorkin flick. Especially about a tech genius.`,
+  att: `Remember choose-your-own-adventure stories? I made one with Lily.`,
+  mpa: `360 brand campaign for the Motion Picture Association (the group that hands out movie ratings).`,
+  about: `Writer, creative director, narrative builder. And Dad. Usually in that order.`,
+  writing: `Blogs, Substacks, articles, short stories, and a best-seller. Want to read one?`,
+  screenwriting: `Started my career in Hollywood writer's rooms and development offices. And still going strong.`,
+  resume: `Sure, grab it <a href="/resume">here</a> or check out my <a href="https://www.linkedin.com/in/patrickkirkland/">LinkedIn</a>. I keep it updated.`,
   rates: `Day rate depends on scope and duration. Retainer available for ongoing work.`,
-  availability: `Currently booking projects starting Q3 2026. Prefer 2–4 week engagements.`,
+  availability: `Currently booking projects covering Q2 &amp; Q3, 2026. Want to talk about a longer engagement? <a href="mailto:patrick@pkthewriter.com?subject=Availability">Reach out.</a>`,
 };
 
 /**
- * Static fallbacks for the three non-Sanity keys + minimal scaffolds for the
- * brand keys so the resolver has heroTag / thumbs defaults when Sanity omits
- * them. Brand copy is supplied by Sanity's `excerpt` (context) field; if that
- * is missing the card uses `copy` here.
+ * Static copy for chat response cards. Brand media and slugs may be supplied
+ * by Sanity, but the displayed words live here.
  */
 export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   airtable: {
@@ -84,9 +81,9 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     brand: "Airtable",
     title: "This is How",
     kicker: "Brand Campaign · 2024",
-    copy: `Four :15 spots for Airtable's first national campaign. Product-first stories, written around how work actually flows when the system works.`,
+    copy: `Four :15 spots for Airtable's first national campaign. We wrote use case-first stories, written around what's possible when you have the right app to build your product.`,
     ctas: [
-      { label: "Read the story →", href: "/work/airtable", variant: "primary" },
+      { label: "Read all about it →", href: "/work/airtable", variant: "primary" },
       { label: "See the spots", href: "/work/airtable#artifacts", variant: "ghost" },
     ],
     heroTag: "Spot · :15",
@@ -98,7 +95,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     brand: "BP",
     title: "Team USA",
     kicker: "360 Brand Campaign · 2016",
-    copy: `A 360 campaign built around the athletes BP was sponsoring for Rio. Sport as anthology, brand as patron.`,
+    copy: `We cheered on Team USA from the BP seats with this 360 campaign built around the athletes, their trainers, and the chance to become legends.`,
     ctas: [
       { label: "Read the story →", href: "/work/bp", variant: "primary" },
       { label: "See the artifacts", href: "/work/bp#artifacts", variant: "ghost" },
@@ -111,10 +108,10 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     intro: INTROS.techsure,
     brand: "Verizon",
     title: "Your Tech Should Work",
-    kicker: "TV Campaign · 2020",
-    copy: `Verizon Techsure — a warranty pitched as quiet competence instead of a fear sell.`,
+    kicker: "TV Campaign · 2021",
+    copy: `Modern life revolves around tech. It should work, but when it doesn't, Verizon's got you covered.`,
     ctas: [
-      { label: "Read the story →", href: "/work/techsure", variant: "primary" },
+      { label: "See the spot →", href: "/work/techsure", variant: "primary" },
       { label: "See the spots", href: "/work/techsure#artifacts", variant: "ghost" },
     ],
     heroTag: "Spot · :30",
@@ -140,9 +137,9 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     brand: "Chevron",
     title: "Rebranding a Giant",
     kicker: "Brand Strategy & Identity · 2024",
-    copy: `A top-to-bottom reframe: brand strategy, identity system, and .com. Turning a century-old energy company into something a thirty-year-old could work for.`,
+    copy: `Like an old set of Legos, this was a top-to-bottom reframe to bring a century-old energy company to modern day vibes.`,
     ctas: [
-      { label: "Read the story →", href: "/work/chevron", variant: "primary" },
+      { label: "See how we did it →", href: "/work/chevron", variant: "primary" },
       { label: "See the artifacts", href: "/work/chevron#artifacts", variant: "ghost" },
     ],
     heroTag: "Strategy · 2024",
@@ -154,7 +151,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     brand: "Warner Bros.",
     title: "Steve Jobs",
     kicker: "Campaign · 2015",
-    copy: `Campaign voice for Danny Boyle's <em>Steve Jobs</em>. An awards-season push that trusted the audience to sit with the ambiguity.`,
+    copy: `Campaign trailers for Aaron Sorkin's <em>Steve Jobs</em>. A nonlinear biography, a homage to a Genius, and awards-season push.`,
     ctas: [
       { label: "Read the story →", href: "/work/warnerbros", variant: "primary" },
       { label: "See the artifacts", href: "/work/warnerbros#artifacts", variant: "ghost" },
@@ -168,7 +165,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     brand: "AT&T",
     title: "Lily's Gift Decider",
     kicker: "Digital Activation · 2021",
-    copy: `A holiday gift-finder built around AT&T's spokesperson Lily. Forty-plus scripts, every path leading to a gift that fit.`,
+    copy: `Remember choose-your-own-adventure books? I designed and wrote my own version with this holiday gift-finder built around AT&T's spokesperson Lily.`,
     ctas: [
       { label: "Read the story →", href: "/work/att", variant: "primary" },
       { label: "See the artifacts", href: "/work/att#artifacts", variant: "ghost" },
@@ -182,7 +179,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     brand: "MPA",
     title: "What Comes Next?",
     kicker: "Brand Campaign · 2016",
-    copy: `A brand campaign for the Motion Picture Association — an industry body arguing for the future of cinema without sounding like one.`,
+    copy: `A 360-brand campaign for the Motion Picture Association that made the case for cinema's future from the grade-giving org's first public campaign.`,
     ctas: [
       { label: "Read the story →", href: "/work/mpa", variant: "primary" },
       { label: "See the artifacts", href: "/work/mpa#artifacts", variant: "ghost" },
@@ -195,10 +192,10 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     intro: INTROS.about,
     title: "Patrick Kirkland",
     kicker: "Writer · Creative Director · Protagonist Ink",
-    copy: `I have spent 20-plus years making campaigns, films, launches, decks, speeches, and strategy behave like they are all part of the same story. Apple, HBO, Verizon, founders, arts organizations, mission-driven brands. The useful version: I help people say the thing they mean before the room invents a safer sentence.`,
+    copy: `I've spent 20 years writing campaigns, films, launches, decks, speeches, and strategy like they're all versions of my favorite stories. Apple, HBO, Verizon, founders, arts organizations, mission-driven brands. My favorite part of this career is helping people say what they mean and mean what they say.`,
     ctas: [
-      { label: "Read the full about →", href: "/about", variant: "primary" },
-      { label: "Email Patrick", href: "mailto:patrick@pkthewriter.com", variant: "ghost" },
+      { label: "More about me →", href: "/about", variant: "primary" },
+      { label: "Email me", href: "mailto:patrick@pkthewriter.com", variant: "ghost" },
     ],
     heroTag: "Bio · 2026",
     thumbs: ["Strategy", "Campaigns", "Scripts"],
@@ -206,11 +203,11 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   writing: {
     key: "writing",
     intro: INTROS.writing,
-    title: "How to be replaced by a machine",
-    kicker: "Essay · Adweek · 2024 · 8 min",
-    copy: `Eight hundred words about what happens when the tools get good enough to do the boring half of this job — and what the honest half of the work looks like after. It's the most shared thing I've written. <em>Fair warning:</em> it will annoy some of your colleagues.`,
+    title: "Writing",
+    kicker: "Blogs · Substacks · Articles · Short Stories",
+    copy: `The writing is coming, I'm just crossing my t's and dotting my lower-case j's.`,
     ctas: [
-      { label: "Read the essay →", href: "/writing", variant: "primary" },
+      { label: "Email me >", href: "mailto:patrick@pkthewriter.com?subject=Writing", variant: "primary" },
       { label: "See all writing", href: "/writing", variant: "ghost" },
     ],
     heroTag: "Adweek · 2024",
@@ -221,10 +218,10 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     intro: INTROS.screenwriting,
     title: "Screenwriting",
     kicker: "Features · pilots · shorts",
-    copy: `I treat ad work and screenwriting as the same job done under different word counts. Everything I learned about <em>structure</em> came from the pilot I couldn't sell; everything I learned about <em>economy</em> came from a thirty-second spot. Say the word and I'll send a pilot PDF.`,
+    copy: `Send me an email, I'll send you some loglines. If you're interested in reading more, I'll send you a script.`,
     ctas: [
-      { label: "See the reel →", href: "/screenwriting", variant: "primary" },
-      { label: "Request a pilot PDF", href: "mailto:patrick@pkthewriter.com?subject=Pilot%20PDF", variant: "ghost" },
+      { label: "Email me >", href: "mailto:patrick@pkthewriter.com?subject=Screenwriting", variant: "primary" },
+      { label: "See the reel →", href: "/screenwriting", variant: "ghost" },
     ],
     heroTag: "Pilot · 2025",
     thumbs: ["Features", "Pilots", "Shorts"],
@@ -232,7 +229,7 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   resume: {
     key: "resume",
     intro: INTROS.resume,
-    title: "Resume — 2026",
+    title: "Resume - 2026",
     kicker: "PDF · 1 page",
     copy: "",
     highlights: [
@@ -242,8 +239,8 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
       "ADDYs · Austin Film Festival · CES · iBooks #1 · RACies Silver",
     ],
     ctas: [
-      { label: "Open the PDF →", href: "/resume", variant: "primary" },
-      { label: "Email me the PDF", href: "mailto:patrick@pkthewriter.com?subject=Resume%20PDF", variant: "ghost" },
+      { label: "Download the PDF →", href: "/resume", variant: "primary" },
+      { label: "Say hi on LinkedIn >", href: "https://www.linkedin.com/in/patrickkirkland/", variant: "ghost" },
     ],
     heroTag: "PDF · 1 page",
     thumbs: ["Clients", "Roles", "Recognition"],
@@ -255,14 +252,14 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     kicker: "Day rate · Retainer · Project",
     copy: "",
     highlights: [
-      "Day rate available — contact for current range",
+      "Day rate available - contact for current range",
       "Retainer pricing for ongoing or multi-sprint work",
       "Project-based for defined-scope deliverables",
-      "NDA-friendly — standard or custom",
+      "NDA-friendly - standard or custom",
     ],
     ctas: [
       { label: "Email me →", href: "mailto:patrick@pkthewriter.com?subject=Rates", variant: "primary" },
-      { label: "Book 15 min →", href: "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl", variant: "ghost" },
+      { label: "Book 15 min chat→", href: "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl", variant: "ghost" },
     ],
     heroTag: "Rates · 2026",
     thumbs: ["Day rate", "Retainer", "Project"],
@@ -274,14 +271,13 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
     kicker: "Freelance · Q3 2026",
     copy: "",
     highlights: [
-      "Open for new projects starting July 2026",
-      "Prefer 2–4 week engagements",
+      "Open for new projects starting May 2026",
       "Can extend for the right project",
-      "Reply within 24 hours",
+      "I'll get back to you within 24 hours",
     ],
     ctas: [
       { label: "Email me →", href: "mailto:patrick@pkthewriter.com?subject=Availability", variant: "primary" },
-      { label: "Book 15 min →", href: "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T1Pl", variant: "ghost" },
+      { label: "Say hi on LinkedIn >", href: "https://www.linkedin.com/in/patrickkirkland/", variant: "ghost" },
     ],
     heroTag: "Available · 2026",
     thumbs: ["Start date", "Duration", "Scope"],
