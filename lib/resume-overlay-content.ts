@@ -15,17 +15,17 @@ export type ResumeWordmarkKey = (typeof RESUME_WORDMARK_KEYS)[number];
 
 type ResumeRow = {
   label: string;
-  light: string;
-  dark: string;
+  light: string | string[];
+  dark: string | string[];
   closer?: string;
 };
 
 export const RESUME_OVERLAY_CONTENT = {
-  eyebrow: "System Profile",
+  eyebrow: "Writer Settings",
   headerMeta: "Abridged CV · Recruiter-Safe",
   summary: {
-    light: "20+ years building campaigns, launches, decks, scripts, and the language around them.",
-    dark: "20+ years building campaigns, launches, decks, scripts, and the language around them.",
+    light: ["Writer", "Creative Director", "Brand Storyteller"],
+    dark: ["Writer", "Creative Director", "Brand Storyteller"],
   },
   toneLabels: {
     light: "Light Mode",
@@ -37,35 +37,40 @@ export const RESUME_OVERLAY_CONTENT = {
   },
   rows: [
     {
-      label: "Uptime",
-      light: "Ogilvy → Time Warner Cable → Verizon → Integer → Elephant SF → independent.",
-      dark: "Ogilvy. Time Warner Cable. Verizon. Integer. Elephant SF. Independent.",
+      label: "Experience",
+      light: ["20+ years", "Agency-side and brand-side"],
+      dark: ["20+ years", "Agency-side and brand-side"],
     },
     {
-      label: "Core Executables",
-      light: "Campaign platforms. Launch copy. Narrative strategy. Scripts. Decks. Founder and brand messaging.",
-      dark: "Campaign platforms. Launch copy. Narrative strategy. Scripts. Decks. Founder and brand messaging.",
+      label: "Roles",
+      light: ["Campaign platforms", "Launch copy", "Narrative strategy", "Scripts", "Decks"],
+      dark: ["Campaign platforms", "Launch copy", "Narrative strategy", "Scripts", "Decks"],
     },
     {
-      label: "Diagnostics",
-      light: "ADDYs · Austin Film · CES · #1 iBooks nonfiction · NYT × RACies Silver",
-      dark: "ADDYs · Austin Film · CES · #1 iBooks nonfiction · NYT × RACies Silver",
+      label: "Recognition",
+      light: ["ADDYs", "Austin Film", "CES", "#1 iBooks nonfiction", "NYT × RACies Silver"],
+      dark: ["ADDYs", "Austin Film", "CES", "#1 iBooks nonfiction", "NYT × RACies Silver"],
+    },
+    {
+      label: "Billing",
+      light: "Yes please.",
+      dark: "Worth it.",
+    },
+    {
+      label: "Notifications",
+      light: "Connect on LinkedIn",
+      dark: "Find me on LinkedIn",
     },
   ] satisfies ResumeRow[],
   ctas: {
     primary: {
-      light: "Get the one-page PDF →",
-      dark: "Get the one-page PDF →",
-      href: "/resume",
+      light: "Learn more →",
+      dark: "Want to know? →",
+      href: "/about",
     },
     secondary: {
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/in/patrickkirkland/",
-    },
-    tertiary: {
-      light: "Read the longer version →",
-      dark: "Read the longer version →",
-      href: "/about",
+      label: "Download PDF",
+      href: "/resume",
     },
   },
   audio: {

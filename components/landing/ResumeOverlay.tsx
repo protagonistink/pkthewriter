@@ -63,10 +63,12 @@ export function ResumeOverlay({ onClose }: Props) {
   }, [isDark, reducedMotion]);
 
   const content = useMemo(() => RESUME_OVERLAY_CONTENT, []);
+  const summaryLines = isDark ? content.summary.dark : content.summary.light;
+  const toLines = (value: string | string[]) => (Array.isArray(value) ? value : [value]);
 
   return (
     <div
-      className={`fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 transition-colors duration-700 ${isDark ? "bg-black/40" : "bg-[#F5F2EB]/40"}`}
+      className={`fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 transition-colors duration-700 ${isDark ? "bg-black/40" : "bg-[rgba(231,237,243,0.38)]"}`}
       onClick={() => onClose?.()}
     >
       <article
@@ -75,18 +77,60 @@ export function ResumeOverlay({ onClose }: Props) {
         style={{
           position: "relative",
           zIndex: 90,
-          background: isDark ? "rgba(15, 14, 12, 0.78)" : "rgba(245, 242, 235, 0.78)",
-          backdropFilter: "blur(14px) saturate(140%)",
-          WebkitBackdropFilter: "blur(14px) saturate(140%)",
+          background: isDark
+            ? "rgba(15, 14, 12, 0.78)"
+            : "linear-gradient(180deg, rgba(255,255,255,0.68) 0%, rgba(243,247,251,0.58) 100%)",
+          backdropFilter: isDark
+            ? "blur(14px) saturate(140%)"
+            : "blur(30px) saturate(180%) brightness(1.06)",
+          WebkitBackdropFilter: isDark
+            ? "blur(14px) saturate(140%)"
+            : "blur(30px) saturate(180%) brightness(1.06)",
           boxShadow: isDark
             ? "0 32px 64px -24px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06)"
-            : "0 32px 64px -24px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.32)",
+            : [
+                "0 56px 120px -40px rgba(32, 46, 66, 0.24)",
+                "0 20px 44px -22px rgba(27, 26, 22, 0.12)",
+                "inset 0 0 0 1px rgba(255,255,255,0.84)",
+                "inset 0 1px 0 rgba(255,255,255,0.98)",
+                "inset 0 -18px 40px -32px rgba(171, 190, 209, 0.34)",
+              ].join(", "),
           color: "var(--color-ink)",
           filter: voltageDrop ? "brightness(0.6)" : "brightness(1)",
         }}
       >
+        {!isDark ? (
+          <>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.16) 22%, rgba(255,255,255,0) 44%)",
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-[2px] top-[2px] h-[88px] rounded-t-[18px]"
+              style={{
+                background:
+                  "radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.82) 0%, rgba(228,239,249,0.3) 48%, rgba(255,255,255,0) 100%)",
+                opacity: 0.9,
+              }}
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-[10px] rounded-[14px]"
+              style={{
+                border: "1px solid rgba(255,255,255,0.34)",
+                opacity: 0.9,
+              }}
+            />
+          </>
+        ) : null}
+
         <div
-          className="flex items-center justify-between gap-[18px] border-b px-[24px] py-[20px] md:px-[28px] md:py-[22px]"
+          className="relative flex items-center justify-between gap-[18px] border-b px-[24px] py-[20px] md:px-[28px] md:py-[22px]"
           style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
         >
           <div className="flex flex-col gap-[4px]">
@@ -159,12 +203,19 @@ export function ResumeOverlay({ onClose }: Props) {
         </div>
 
         <div
-          className="border-b px-[24px] py-[20px] md:px-[28px] md:py-[24px]"
+          className="relative border-b px-[24px] py-[20px] md:px-[28px] md:py-[24px]"
           style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
         >
-          <p className="m-0 max-w-[34ch] text-[28px] leading-[1.1] tracking-[-0.02em] md:text-[34px]">
-            {isDark ? content.summary.dark : content.summary.light}
-          </p>
+          <div className="flex flex-col gap-[2px]">
+            {summaryLines.map((line) => (
+              <p
+                key={line}
+                className="m-0 max-w-[34ch] text-[28px] leading-[1.06] tracking-[-0.02em] md:text-[34px]"
+              >
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
 
         <div className="px-[24px] py-[18px] md:px-[28px] md:py-[20px]">
@@ -177,8 +228,10 @@ export function ResumeOverlay({ onClose }: Props) {
               <span className="font-[family-name:var(--font-serif)] text-[11px] uppercase tracking-[0.18em] text-[var(--color-accent)] opacity-60">
                 {row.label}
               </span>
-              <div className="text-[18px] leading-[1.55] text-[var(--color-ink)] md:text-[17px]">
-                <span>{isDark ? row.dark : row.light}</span>
+              <div className="flex flex-col gap-[2px] text-[18px] leading-[1.4] text-[var(--color-ink)] md:text-[17px]">
+                {toLines(isDark ? row.dark : row.light).map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
               </div>
             </div>
           ))}
@@ -203,38 +256,22 @@ export function ResumeOverlay({ onClose }: Props) {
           <div className="flex flex-wrap items-center gap-x-[18px] gap-y-[14px]">
             <Link
               href={content.ctas.primary.href}
+              className="text-[15px] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-70"
+              style={{
+                textDecorationColor: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)",
+              }}
+            >
+              {isDark ? content.ctas.primary.dark : content.ctas.primary.light}
+            </Link>
+            <Link
+              href={content.ctas.secondary.href}
               className="inline-flex items-center justify-center rounded-[3px] px-[22px] py-[12px] text-[15px] font-medium transition-opacity hover:opacity-85"
               style={{
                 background: isDark ? "#f4f4f5" : "#18181b",
                 color: isDark ? "#18181b" : "#f4f4f5",
               }}
             >
-              {isDark ? content.ctas.primary.dark : content.ctas.primary.light}
-            </Link>
-            <a
-              href={content.ctas.secondary.href}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[15px] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-70"
-              style={{ textDecorationColor: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}
-            >
               {content.ctas.secondary.label}
-            </a>
-          </div>
-
-          <div
-            className="mt-[22px] border-t pt-[18px]"
-            style={{ borderColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)" }}
-          >
-            <Link
-              href={content.ctas.tertiary.href}
-              className={`text-[14px] transition-opacity hover:opacity-100 ${isDark ? "italic" : ""}`}
-              style={{
-                color: isDark ? "rgba(255,91,31,0.9)" : "var(--color-ink)",
-                opacity: isDark ? 0.95 : 0.62,
-              }}
-            >
-              {isDark ? content.ctas.tertiary.dark : content.ctas.tertiary.light}
             </Link>
           </div>
 
