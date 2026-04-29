@@ -13,28 +13,17 @@ export const RESUME_WORDMARK_KEYS = [
 
 export type ResumeWordmarkKey = (typeof RESUME_WORDMARK_KEYS)[number];
 
+export const LINKEDIN_URL = "https://www.linkedin.com/in/patrickkirkland/";
+
 type ResumeRow = {
   label: string;
+  /** Label override in dark mode (optional) */
+  darkLabel?: string;
   light: string | string[];
   dark: string | string[];
-  closer?: string;
 };
 
 export const RESUME_OVERLAY_CONTENT = {
-  eyebrow: "Writer Settings",
-  headerMeta: "Abridged CV · Recruiter-Safe",
-  summary: {
-    light: ["Writer", "Creative Director", "Brand Storyteller"],
-    dark: ["Writer", "Creative Director", "Brand Storyteller"],
-  },
-  toneLabels: {
-    light: "Light Mode",
-    dark: "Dark Mode",
-  },
-  gridCaption: {
-    light: "Selected clients.",
-    dark: "Selected clients.",
-  },
   rows: [
     {
       label: "Experience",
@@ -52,22 +41,12 @@ export const RESUME_OVERLAY_CONTENT = {
       dark: ["ADDYs", "Austin Film", "CES", "#1 iBooks nonfiction", "NYT × RACies Silver"],
     },
     {
-      label: "Billing",
-      light: "Yes please.",
-      dark: "Worth it.",
-    },
-    {
-      label: "Notifications",
+      label: "Connection",
       light: "Connect on LinkedIn",
-      dark: "Find me on LinkedIn",
+      dark: "LinkedIn",
     },
   ] satisfies ResumeRow[],
   ctas: {
-    primary: {
-      light: "Learn more →",
-      dark: "Want to know? →",
-      href: "/about",
-    },
     secondary: {
       label: "Download PDF",
       href: "/resume",

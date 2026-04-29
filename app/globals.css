@@ -631,3 +631,59 @@ body {
   88% { box-shadow: 0 12px 32px rgba(0,0,0,0.35), 0 0 0 4px rgba(255,255,255,0.18), 0 0 16px rgba(255,255,255,0.08); }
   94% { box-shadow: 0 12px 32px rgba(0,0,0,0.35); }
 }
+
+/* CommandModal — glass panel, aura, corner brackets */
+@keyframes cmd-modal-enter {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+@keyframes cmd-aura-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cmd-aura-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes cmd-aura-pulse {
+  0%, 100% { transform: scale(1);    opacity: 0.40; }
+  50%       { transform: scale(1.06); opacity: 0.50; }
+}
+@keyframes cmd-bracket-h {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes cmd-bracket-v {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Black Mirror moment — chromatic split + jitter, resolves clean */
+@keyframes cmd-glitch {
+  0%, 100% {
+    transform: translate(0, 0) skewX(0);
+    text-shadow: none;
+    filter: none;
+    opacity: 1;
+  }
+  6%  { transform: translate(-5px, 2px) skewX(-3deg);  text-shadow: 5px 0 rgba(255, 30, 30, 1), -5px 0 rgba(40, 230, 250, 0.95); filter: blur(0.6px); opacity: 0.95; }
+  14% { transform: translate(7px, -2px) skewX(2deg);   text-shadow: -7px 0 rgba(255, 30, 30, 1), 7px 0 rgba(40, 230, 250, 0.95); }
+  22% { transform: translate(-3px, 4px) skewX(0);      text-shadow: 4px 2px rgba(255, 30, 30, 0.95), -4px -2px rgba(40, 230, 250, 0.9); filter: blur(1px); }
+  30% { transform: translate(0, 0) skewX(-1deg);       text-shadow: 1px 0 rgba(255, 30, 30, 0.7), -1px 0 rgba(40, 230, 250, 0.65); opacity: 0.5; }
+  38% { transform: translate(0, 0) skewX(0);           text-shadow: none; opacity: 1; }
+  50% { transform: translate(6px, -1px) skewX(4deg);   text-shadow: -6px 0 rgba(255, 30, 30, 1), 6px 0 rgba(40, 230, 250, 0.95); filter: blur(0.8px); }
+  62% { transform: translate(-4px, 3px) skewX(-2deg);  text-shadow: 4px 0 rgba(255, 30, 30, 0.9), -4px 0 rgba(40, 230, 250, 0.85); }
+  74% { transform: translate(2px, 0) skewX(1deg);      text-shadow: -2px 0 rgba(255, 30, 30, 0.75), 2px 0 rgba(40, 230, 250, 0.7); }
+  86% { transform: translate(0, 1px) skewX(0);         text-shadow: 1px 0 rgba(255, 30, 30, 0.5), -1px 0 rgba(40, 230, 250, 0.45); }
+}
+.cmd-glitch-active {
+  animation: cmd-glitch 720ms steps(13, end);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-modal-wrapper   { animation: none !important; opacity: 1 !important; }
+  .cmd-aura            { animation: none !important; opacity: 1 !important; }
+  .cmd-bracket-h       { animation: none !important; transform: scaleX(1) !important; }
+  .cmd-bracket-v       { animation: none !important; transform: scaleY(1) !important; }
+  .cmd-glitch-active   { animation: none !important; }
+}
