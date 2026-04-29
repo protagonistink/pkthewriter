@@ -95,7 +95,7 @@ export function ResponseFeature({
         "
         style={{
           background:
-            "linear-gradient(180deg, var(--color-paper-panel) 0%, #fcf8ee 100%)",
+            "linear-gradient(180deg, var(--color-paper-panel) 0%, var(--color-paper) 100%)",
         }}
       >
         <div
@@ -200,6 +200,7 @@ const WRITING_TILES: Array<{
   title: string;
   reveal: string;
   meta: string;
+  coverImage: string;
 }> = [
   {
     category: "Essay",
@@ -207,6 +208,7 @@ const WRITING_TILES: Array<{
     reveal:
       "Most brands treat Gen Z like a science project. That's why they're getting ghosted.",
     meta: "Adweek · 2024",
+    coverImage: "https://picsum.photos/seed/writing-essay/800/500",
   },
   {
     category: "Column",
@@ -214,6 +216,7 @@ const WRITING_TILES: Array<{
     reveal:
       "The brief was perfect. The campaign was fine. Let's talk about what happened in between.",
     meta: "Substack · 2023",
+    coverImage: "https://picsum.photos/seed/writing-column/800/500",
   },
   {
     category: "Short Story",
@@ -221,6 +224,7 @@ const WRITING_TILES: Array<{
     reveal:
       "She opened the deck, read slide one, and knew the agency had never used their own product.",
     meta: "Fiction · 2022",
+    coverImage: "https://picsum.photos/seed/writing-story/800/500",
   },
 ];
 
@@ -260,7 +264,7 @@ function WritingResponse({
         "
         style={{
           background:
-            "linear-gradient(180deg, var(--color-paper-panel) 0%, #fcf8ee 100%)",
+            "linear-gradient(180deg, var(--color-paper-panel) 0%, var(--color-paper) 100%)",
         }}
       >
         {/* Dark editorial tile grid */}
@@ -285,61 +289,68 @@ function WritingResponse({
             <Link
               key={tile.category}
               href="/writing"
-              className="
-                group
-                flex flex-col justify-between
-                min-h-[160px] max-[820px]:min-h-[80px]
-                p-[24px]
-                transition-opacity
-              "
+              className="group flex flex-col transition-opacity"
               style={{ background: "rgba(27,26,22,0.94)" }}
             >
-              <div>
+              {/* Cover image — full-bleed, no padding */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={tile.coverImage}
+                alt=""
+                className="w-full aspect-[16/10] object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+              />
+
+              {/* Text content */}
+              <div className="flex flex-col flex-1 justify-between p-[20px] min-h-[130px] max-[820px]:min-h-[80px]">
+                <div>
+                  <div
+                    className="
+                      font-[family-name:var(--font-mono)] text-[9px]
+                      tracking-[0.4em] uppercase
+                      text-[var(--color-accent)] mb-[10px]
+                    "
+                  >
+                    {tile.category}
+                  </div>
+                  {/* Crossfade container — fixed height prevents layout shift */}
+                  <div className="relative min-h-[60px]">
+                    {/* Default title — fades out on hover */}
+                    <p
+                      className="
+                        absolute inset-0
+                        font-[family-name:var(--font-serif)] text-[16px]
+                        leading-[1.3] m-0
+                        transition-opacity duration-300
+                        opacity-100 group-hover:opacity-0
+                      "
+                      style={{ color: "#ece3d1" }}
+                    >
+                      {tile.title}
+                    </p>
+                    {/* Reveal line — fades in on hover */}
+                    <p
+                      className="
+                        absolute inset-0
+                        font-[family-name:var(--font-serif)] text-[14px]
+                        leading-[1.4] m-0
+                        transition-opacity duration-300
+                        opacity-0 group-hover:opacity-100
+                      "
+                      style={{ color: "rgba(236,227,209,0.85)" }}
+                    >
+                      {tile.reveal}
+                    </p>
+                  </div>
+                </div>
                 <div
                   className="
                     font-[family-name:var(--font-mono)] text-[9px]
-                    tracking-[0.4em] uppercase
-                    text-[var(--color-accent)] mb-[12px]
+                    tracking-[0.2em] uppercase mt-[14px]
                   "
+                  style={{ color: "rgba(236,227,209,0.38)" }}
                 >
-                  {tile.category}
+                  {tile.meta}
                 </div>
-                {/* Crossfade container — fixed height prevents layout shift */}
-                <div className="relative min-h-[72px]">
-                  {/* Default title — fades out on hover */}
-                  <p
-                    className="
-                      absolute inset-0
-                      font-[family-name:var(--font-serif)] text-[17px]
-                      leading-[1.3] text-[var(--color-paper)] m-0
-                      transition-opacity duration-300
-                      opacity-100 group-hover:opacity-0
-                    "
-                  >
-                    {tile.title}
-                  </p>
-                  {/* Reveal line — fades in on hover */}
-                  <p
-                    className="
-                      absolute inset-0
-                      font-[family-name:var(--font-serif)] text-[15px]
-                      leading-[1.4] text-[rgba(239,228,208,0.85)] m-0
-                      transition-opacity duration-300
-                      opacity-0 group-hover:opacity-100
-                    "
-                  >
-                    {tile.reveal}
-                  </p>
-                </div>
-              </div>
-              <div
-                className="
-                  font-[family-name:var(--font-mono)] text-[10px]
-                  tracking-[0.2em] uppercase mt-[16px]
-                "
-                style={{ color: "rgba(239,228,208,0.4)" }}
-              >
-                {tile.meta}
               </div>
             </Link>
           ))}
