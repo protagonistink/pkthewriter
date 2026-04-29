@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type RefObject } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type RefObject } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { ABOUT_FOLLOWUPS, type AboutFollowup } from "@/lib/about-response";
@@ -195,11 +195,34 @@ export function ResponseFeature({
 // Writing feature card
 // ---------------------------------------------------------------------------
 
-const WRITING_TILES = [
-  { category: "Essay", title: "Lorem ipsum dolor sit amet", meta: "Adweek · 2024" },
-  { category: "Column", title: "Consectetur adipiscing elit", meta: "Substack · 2023" },
-  { category: "Short Story", title: "Sed do eiusmod tempor", meta: "Fiction · 2022" },
-] as const;
+const WRITING_TILES: Array<{
+  category: string;
+  title: string;
+  reveal: string;
+  meta: string;
+}> = [
+  {
+    category: "Essay",
+    title: "Lorem ipsum dolor sit amet",
+    reveal:
+      "Most brands treat Gen Z like a science project. That's why they're getting ghosted.",
+    meta: "Adweek · 2024",
+  },
+  {
+    category: "Column",
+    title: "Consectetur adipiscing elit",
+    reveal:
+      "The brief was perfect. The campaign was fine. Let's talk about what happened in between.",
+    meta: "Substack · 2023",
+  },
+  {
+    category: "Short Story",
+    title: "Sed do eiusmod tempor",
+    reveal:
+      "She opened the deck, read slide one, and knew the agency had never used their own product.",
+    meta: "Fiction · 2022",
+  },
+];
 
 function WritingResponse({
   feature,
@@ -208,6 +231,15 @@ function WritingResponse({
   feature: FeatureCard;
   onClose?: () => void;
 }) {
+  const [spotlight, setSpotlight] = useState<{ x: number; y: number } | null>(null);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setSpotlight({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => setSpotlight(null), []);
+
   return (
     <section className="response-slot mt-[34px]" aria-live="polite">
       <p
@@ -233,39 +265,72 @@ function WritingResponse({
       >
         {/* Dark editorial tile grid */}
         <div
-          className="grid grid-cols-3 max-[820px]:grid-cols-1 gap-[1px]"
+          className="relative grid grid-cols-3 max-[820px]:grid-cols-1 gap-[1px]"
           style={{ background: "var(--color-ink)" }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
         >
+          {/* Spotlight overlay */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-[1]"
+            style={{
+              opacity: spotlight ? 1 : 0,
+              background: spotlight
+                ? `radial-gradient(500px circle at ${spotlight.x}px ${spotlight.y}px, rgba(192,84,46,0.13), transparent 50%)`
+                : "none",
+            }}
+          />
           {WRITING_TILES.map((tile) => (
             <Link
               key={tile.category}
               href="/writing"
               className="
+                group
                 flex flex-col justify-between
                 min-h-[160px] max-[820px]:min-h-[80px]
                 p-[24px]
-                hover:opacity-80 transition-opacity
+                transition-opacity
               "
               style={{ background: "rgba(27,26,22,0.94)" }}
             >
               <div>
                 <div
                   className="
-                    font-[family-name:var(--font-mono)] text-[10px]
-                    tracking-[0.3em] uppercase
+                    font-[family-name:var(--font-mono)] text-[9px]
+                    tracking-[0.4em] uppercase
                     text-[var(--color-accent)] mb-[12px]
                   "
                 >
                   {tile.category}
                 </div>
-                <p
-                  className="
-                    font-[family-name:var(--font-serif)] text-[18px]
-                    leading-[1.25] text-[var(--color-paper)] m-0
-                  "
-                >
-                  {tile.title}
-                </p>
+                {/* Crossfade container — fixed height prevents layout shift */}
+                <div className="relative min-h-[72px]">
+                  {/* Default title — fades out on hover */}
+                  <p
+                    className="
+                      absolute inset-0
+                      font-[family-name:var(--font-serif)] text-[17px]
+                      leading-[1.3] text-[var(--color-paper)] m-0
+                      transition-opacity duration-300
+                      opacity-100 group-hover:opacity-0
+                    "
+                  >
+                    {tile.title}
+                  </p>
+                  {/* Reveal line — fades in on hover */}
+                  <p
+                    className="
+                      absolute inset-0
+                      font-[family-name:var(--font-serif)] text-[15px]
+                      leading-[1.4] text-[rgba(239,228,208,0.85)] m-0
+                      transition-opacity duration-300
+                      opacity-0 group-hover:opacity-100
+                    "
+                  >
+                    {tile.reveal}
+                  </p>
+                </div>
               </div>
               <div
                 className="
