@@ -289,7 +289,7 @@ function WritingResponse({
             <Link
               key={tile.category}
               href="/writing"
-              className="group flex flex-col transition-opacity"
+              className="group flex flex-col transition-opacity border border-[rgba(239,228,208,0.1)]"
               style={{ background: "rgba(27,26,22,0.94)" }}
             >
               {/* Cover image — full-bleed, no padding */}
