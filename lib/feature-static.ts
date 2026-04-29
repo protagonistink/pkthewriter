@@ -229,12 +229,12 @@ export const STATIC_FEATURES: Record<FeatureKey, StaticFeature> = {
   resume: {
     key: "resume",
     intro: INTROS.resume,
-    title: "Resume - 2026",
+    title: "System Profile",
     kicker: "PDF · 1 page",
     copy: "",
     highlights: [
       "20+ years — agency and brand side",
-      "Ogilvy · Verizon · AT&amp;T · Airtable · Chevron · BP · Warner Bros.",
+      "Ogilvy · Verizon · AT&amp;T · Airtable · Chevron · Warner Bros.",
       "Writer · Creative Director · Narrative Strategy",
       "ADDYs · Austin Film Festival · CES · iBooks #1 · RACies Silver",
     ],

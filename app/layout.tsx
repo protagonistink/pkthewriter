@@ -3,6 +3,7 @@ import { Caveat, Newsreader, Space_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeBoundary } from "@/components/ThemeBoundary";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { LightSwitchHost } from "@/components/LightSwitchHost";
 import "./globals.css";
 
@@ -53,12 +54,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${newsreader.variable} ${spaceMono.variable} ${caveat.variable}`}>
       <body>
-        <a href="#main" className="skip-to-content">Skip to content</a>
-        <ThemeBoundary />
-        {children}
-        <LightSwitchHost />
-        <Analytics />
-        <SpeedInsights />
+        <ThemeProvider>
+          <a href="#main" className="skip-to-content">Skip to content</a>
+          <ThemeBoundary />
+          {children}
+          <LightSwitchHost />
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

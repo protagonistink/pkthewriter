@@ -239,11 +239,16 @@ body {
   --color-ink: var(--color-dark-ink);
   --color-ink-mid: var(--color-dark-ink-mid);
   --color-ink-soft: var(--color-dark-ink-soft);
-  --color-ink-faint: var(--color-dark-line);
+  --color-ink-faint: #5a5448;
+  --color-accent: #ff5b1f;
   --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.5);
   background: var(--color-dark-bg);
   color: var(--color-dark-ink);
   color-scheme: dark;
+}
+
+[data-tone="unfiltered"] {
+  --resume-aside-accent: rgba(255, 91, 31, 0.9);
 }
 
 [data-about-mode="draft-room"] {

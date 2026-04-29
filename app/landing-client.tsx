@@ -181,6 +181,7 @@ export function LandingClient({ featureMap, initialAbout }: Props) {
           aboutTurns={aboutTurns}
           onAboutFollowup={handleAboutFollowup}
           onAltSelect={(key) => handleFeature(key, "", { preserveScroll: true })}
+          onClose={handleReset}
         />
       )}
       {contactCard && (

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type R
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { ABOUT_FOLLOWUPS, type AboutFollowup } from "@/lib/about-response";
+import { ResumeOverlay } from "@/components/landing/ResumeOverlay";
 import type { FeatureCard, FeatureKey } from "@/lib/feature-resolver";
 import { useCaseStudyTransition } from "@/lib/use-case-study-transition";
 
@@ -25,6 +26,7 @@ type Props = {
   aboutTurns?: AboutFollowup[];
   onAboutFollowup?: (followup: AboutFollowup) => void;
   onAltSelect?: (key: FeatureKey) => void;
+  onClose?: () => void;
 };
 
 export function ResponseFeature({
@@ -33,6 +35,7 @@ export function ResponseFeature({
   aboutTurns = [],
   onAboutFollowup,
   onAltSelect,
+  onClose,
 }: Props) {
   const panelRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -47,6 +50,23 @@ export function ResponseFeature({
         onAboutFollowup={onAboutFollowup}
         onAltSelect={onAltSelect}
       />
+    );
+  }
+
+  if (feature.key === "resume") {
+    return (
+      <section className="response-slot mt-[34px]" aria-live="polite">
+        <p
+          className="
+            font-[family-name:var(--font-mono)] text-[13px] leading-[1.6]
+            text-[var(--color-ink-mid)] mb-[22px]
+          "
+        >
+          <span className="text-[var(--color-accent)] mr-1">→</span>
+          <span dangerouslySetInnerHTML={{ __html: feature.intro }} />
+        </p>
+        <ResumeOverlay onClose={onClose} />
+      </section>
     );
   }
 
