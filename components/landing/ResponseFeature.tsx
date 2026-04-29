@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type RefObject } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type RefObject } from "react";
 import Link from "next/link";
 import { track } from "@vercel/analytics";
 import { ABOUT_FOLLOWUPS, type AboutFollowup } from "@/lib/about-response";
@@ -70,6 +70,10 @@ export function ResponseFeature({
     );
   }
 
+  if (feature.key === "writing") {
+    return <WritingResponse feature={feature} onClose={onClose} />;
+  }
+
   return (
     <section className="response-slot mt-[34px]" aria-live="polite">
       <p
@@ -91,7 +95,7 @@ export function ResponseFeature({
         "
         style={{
           background:
-            "linear-gradient(180deg, var(--color-paper-panel) 0%, #fcf8ee 100%)",
+            "linear-gradient(180deg, var(--color-paper-panel) 0%, var(--color-paper) 100%)",
         }}
       >
         <div
@@ -186,6 +190,231 @@ export function ResponseFeature({
     </section>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Writing feature card
+// ---------------------------------------------------------------------------
+
+const WRITING_TILES: Array<{
+  category: string;
+  title: string;
+  reveal: string;
+  meta: string;
+  coverImage: string;
+}> = [
+  {
+    category: "Essay",
+    title: "Lorem ipsum dolor sit amet",
+    reveal:
+      "Most brands treat Gen Z like a science project. That's why they're getting ghosted.",
+    meta: "Adweek · 2024",
+    coverImage: "https://picsum.photos/seed/writing-essay/800/500",
+  },
+  {
+    category: "Column",
+    title: "Consectetur adipiscing elit",
+    reveal:
+      "The brief was perfect. The campaign was fine. Let's talk about what happened in between.",
+    meta: "Substack · 2023",
+    coverImage: "https://picsum.photos/seed/writing-column/800/500",
+  },
+  {
+    category: "Short Story",
+    title: "Sed do eiusmod tempor",
+    reveal:
+      "She opened the deck, read slide one, and knew the agency had never used their own product.",
+    meta: "Fiction · 2022",
+    coverImage: "https://picsum.photos/seed/writing-story/800/500",
+  },
+];
+
+function WritingResponse({
+  feature,
+  onClose: _onClose,
+}: {
+  feature: FeatureCard;
+  onClose?: () => void;
+}) {
+  const [spotlight, setSpotlight] = useState<{ x: number; y: number } | null>(null);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setSpotlight({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => setSpotlight(null), []);
+
+  return (
+    <section className="response-slot mt-[34px]" aria-live="polite">
+      <p
+        className="
+          font-[family-name:var(--font-mono)] text-[13px] leading-[1.6]
+          text-[var(--color-ink-mid)] mb-[22px]
+        "
+      >
+        <span className="text-[var(--color-accent)] mr-1">→</span>
+        <span dangerouslySetInnerHTML={{ __html: feature.intro }} />
+      </p>
+
+      <article
+        className="
+          overflow-hidden rounded-[22px]
+          border border-[var(--color-paper-line)]
+          shadow-[var(--shadow-soft)]
+        "
+        style={{
+          background:
+            "linear-gradient(180deg, var(--color-paper-panel) 0%, var(--color-paper) 100%)",
+        }}
+      >
+        {/* Dark editorial tile grid */}
+        <div
+          className="relative grid grid-cols-3 max-[820px]:grid-cols-1 gap-[8px]"
+          style={{ background: "var(--color-paper-panel)" }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
+          {/* Spotlight overlay */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-[1]"
+            style={{
+              opacity: spotlight ? 1 : 0,
+              background: spotlight
+                ? `radial-gradient(500px circle at ${spotlight.x}px ${spotlight.y}px, rgba(192,84,46,0.13), transparent 50%)`
+                : "none",
+            }}
+          />
+          {WRITING_TILES.map((tile) => (
+            <Link
+              key={tile.category}
+              href="/writing"
+              className="group flex flex-col transition-opacity border border-[rgba(239,228,208,0.1)]"
+              style={{ background: "rgba(27,26,22,0.94)" }}
+            >
+              {/* Cover image — full-bleed, no padding */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={tile.coverImage}
+                alt=""
+                className="w-full aspect-[16/10] object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+              />
+
+              {/* Text content */}
+              <div className="flex flex-col flex-1 justify-between p-[20px] min-h-[130px] max-[820px]:min-h-[80px]">
+                <div>
+                  <div
+                    className="
+                      font-[family-name:var(--font-mono)] text-[9px]
+                      tracking-[0.4em] uppercase
+                      text-[var(--color-accent)] mb-[10px]
+                    "
+                  >
+                    {tile.category}
+                  </div>
+                  {/* Crossfade container — fixed height prevents layout shift */}
+                  <div className="relative min-h-[60px]">
+                    {/* Default title — fades out on hover */}
+                    <p
+                      className="
+                        absolute inset-0
+                        font-[family-name:var(--font-serif)] text-[16px]
+                        leading-[1.3] m-0
+                        transition-opacity duration-300
+                        opacity-100 group-hover:opacity-0
+                      "
+                      style={{ color: "#ece3d1" }}
+                    >
+                      {tile.title}
+                    </p>
+                    {/* Reveal line — fades in on hover */}
+                    <p
+                      className="
+                        absolute inset-0
+                        font-[family-name:var(--font-serif)] text-[14px]
+                        leading-[1.4] m-0
+                        transition-opacity duration-300
+                        opacity-0 group-hover:opacity-100
+                      "
+                      style={{ color: "rgba(236,227,209,0.85)" }}
+                    >
+                      {tile.reveal}
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className="
+                    font-[family-name:var(--font-mono)] text-[9px]
+                    tracking-[0.2em] uppercase mt-[14px]
+                  "
+                  style={{ color: "rgba(236,227,209,0.38)" }}
+                >
+                  {tile.meta}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Bottom section — same hierarchy as standard ResponseFeature */}
+        <div className="px-[42px] py-[38px] pb-[40px] max-[820px]:px-[26px] max-[820px]:py-[28px] max-[820px]:pb-[32px]">
+          <header className="flex flex-wrap items-baseline gap-x-[18px] gap-y-2 mb-[22px]">
+            <h2
+              className="
+                font-[family-name:var(--font-serif)] font-normal
+                text-[44px] leading-[1] tracking-[-0.01em] m-0
+                max-[820px]:text-[36px]
+              "
+            >
+              {feature.title}
+            </h2>
+            <span
+              className="
+                font-[family-name:var(--font-mono)] text-[12px]
+                tracking-[0.2em] uppercase text-[var(--color-ink-soft)]
+              "
+            >
+              {feature.kicker}
+            </span>
+          </header>
+
+          {feature.copy ? (
+            <p
+              className="
+                font-[family-name:var(--font-serif)]
+                text-[19px] leading-[1.6] text-[var(--color-ink-mid)]
+                max-w-[62ch] m-0 mb-[28px]
+              "
+              dangerouslySetInnerHTML={{ __html: feature.copy }}
+            />
+          ) : null}
+
+          <div className="flex flex-wrap gap-[12px]">
+            {feature.ctas.map((cta) => (
+              <CtaButton key={cta.label} {...cta} />
+            ))}
+          </div>
+        </div>
+      </article>
+
+      <div className="flex flex-wrap items-center gap-x-[6px] gap-y-[10px] mt-[22px] pt-[20px]">
+        <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)]">
+          Or
+        </span>
+        <Link
+          href="/work"
+          className="work-inline-link font-[family-name:var(--font-serif)] text-[15px] text-[var(--color-ink-mid)] underline decoration-[var(--color-paper-line)] underline-offset-4 transition-colors"
+        >
+          see all work.
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// About feature card
+// ---------------------------------------------------------------------------
 
 function AboutResponse({
   feature,
