@@ -70,6 +70,10 @@ export function ResponseFeature({
     );
   }
 
+  if (feature.key === "writing") {
+    return <WritingResponse feature={feature} onClose={onClose} />;
+  }
+
   return (
     <section className="response-slot mt-[34px]" aria-live="polite">
       <p
@@ -186,6 +190,155 @@ export function ResponseFeature({
     </section>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Writing feature card
+// ---------------------------------------------------------------------------
+
+const WRITING_TILES = [
+  { category: "Essay", title: "Lorem ipsum dolor sit amet", meta: "Adweek · 2024" },
+  { category: "Column", title: "Consectetur adipiscing elit", meta: "Substack · 2023" },
+  { category: "Short Story", title: "Sed do eiusmod tempor", meta: "Fiction · 2022" },
+] as const;
+
+function WritingResponse({
+  feature,
+  onClose: _onClose,
+}: {
+  feature: FeatureCard;
+  onClose?: () => void;
+}) {
+  return (
+    <section className="response-slot mt-[34px]" aria-live="polite">
+      <p
+        className="
+          font-[family-name:var(--font-mono)] text-[13px] leading-[1.6]
+          text-[var(--color-ink-mid)] mb-[22px]
+        "
+      >
+        <span className="text-[var(--color-accent)] mr-1">→</span>
+        <span dangerouslySetInnerHTML={{ __html: feature.intro }} />
+      </p>
+
+      <article
+        className="
+          overflow-hidden rounded-[22px]
+          border border-[var(--color-paper-line)]
+          shadow-[var(--shadow-soft)]
+        "
+        style={{
+          background:
+            "linear-gradient(180deg, var(--color-paper-panel) 0%, #fcf8ee 100%)",
+        }}
+      >
+        {/* Dark editorial tile grid */}
+        <div
+          className="grid grid-cols-3 max-[820px]:grid-cols-1 gap-[1px]"
+          style={{ background: "var(--color-ink)" }}
+        >
+          {WRITING_TILES.map((tile) => (
+            <Link
+              key={tile.category}
+              href="/writing"
+              className="
+                flex flex-col justify-between
+                min-h-[160px] max-[820px]:min-h-[80px]
+                p-[24px]
+                hover:opacity-80 transition-opacity
+              "
+              style={{ background: "rgba(27,26,22,0.94)" }}
+            >
+              <div>
+                <div
+                  className="
+                    font-[family-name:var(--font-mono)] text-[10px]
+                    tracking-[0.3em] uppercase
+                    text-[var(--color-accent)] mb-[12px]
+                  "
+                >
+                  {tile.category}
+                </div>
+                <p
+                  className="
+                    font-[family-name:var(--font-serif)] text-[18px]
+                    leading-[1.25] text-[var(--color-paper)] m-0
+                  "
+                >
+                  {tile.title}
+                </p>
+              </div>
+              <div
+                className="
+                  font-[family-name:var(--font-mono)] text-[10px]
+                  tracking-[0.2em] uppercase mt-[16px]
+                "
+                style={{ color: "rgba(239,228,208,0.4)" }}
+              >
+                {tile.meta}
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Bottom section — same hierarchy as standard ResponseFeature */}
+        <div className="px-[42px] py-[38px] pb-[40px] max-[820px]:px-[26px] max-[820px]:py-[28px] max-[820px]:pb-[32px]">
+          <header className="flex flex-wrap items-baseline gap-x-[18px] gap-y-2 mb-[22px]">
+            <h2
+              className="
+                font-[family-name:var(--font-serif)] font-normal
+                text-[44px] leading-[1] tracking-[-0.01em] m-0
+                max-[820px]:text-[36px]
+              "
+            >
+              {feature.title}
+            </h2>
+            <span
+              className="
+                font-[family-name:var(--font-mono)] text-[12px]
+                tracking-[0.2em] uppercase text-[var(--color-ink-soft)]
+              "
+            >
+              {feature.kicker}
+            </span>
+          </header>
+
+          {feature.copy ? (
+            <p
+              className="
+                font-[family-name:var(--font-serif)]
+                text-[19px] leading-[1.6] text-[var(--color-ink-mid)]
+                max-w-[62ch] m-0 mb-[28px]
+              "
+              dangerouslySetInnerHTML={{ __html: feature.copy }}
+            />
+          ) : null}
+
+          <div className="flex flex-wrap gap-[12px]">
+            {feature.ctas.map((cta) => (
+              <CtaButton key={cta.label} {...cta} />
+            ))}
+          </div>
+        </div>
+      </article>
+
+      <div className="flex flex-wrap items-center gap-x-[6px] gap-y-[10px] mt-[22px] pt-[20px]">
+        <span className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-ink-soft)]">
+          Or
+        </span>
+        <Link
+          href="/work"
+          className="work-inline-link font-[family-name:var(--font-serif)] text-[15px] text-[var(--color-ink-mid)] underline decoration-[var(--color-paper-line)] underline-offset-4 transition-colors"
+        >
+          see all work.
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// About feature card
+// ---------------------------------------------------------------------------
 
 function AboutResponse({
   feature,
