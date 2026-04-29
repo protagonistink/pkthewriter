@@ -201,30 +201,34 @@ const WRITING_TILES: Array<{
   reveal: string;
   meta: string;
   coverImage: string;
+  href: string;
 }> = [
   {
     category: "Essay",
-    title: "Lorem ipsum dolor sit amet",
+    title: "The Dream of Nike",
     reveal:
-      "Most brands treat Gen Z like a science project. That's why they're getting ghosted.",
-    meta: "Adweek · 2024",
-    coverImage: "https://picsum.photos/seed/writing-essay/800/500",
+      "How “Just do it” went from a line to a mantra — and what it teaches us about brand storytelling.",
+    meta: "Protagonist Ink · 2025",
+    coverImage: "https://cdn.sanity.io/images/dkok2iir/production/b7f4bf667a865943802164c7f2601d4e5100c5a4-6000x4000.jpg",
+    href: "https://www.protagonist.ink/blog/the-dream-of-nike",
   },
   {
     category: "Column",
-    title: "Consectetur adipiscing elit",
+    title: "The Human in the Machine Age",
     reveal:
-      "The brief was perfect. The campaign was fine. Let's talk about what happened in between.",
-    meta: "Substack · 2023",
-    coverImage: "https://picsum.photos/seed/writing-column/800/500",
+      "Almost a year ago today, I got a Slack message. 'Tomorrow's your last day. Thanks so much!'",
+    meta: "West of Hollywood · 2025",
+    coverImage: "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F35353dba-1af5-4708-bce3-228a32d586e4_1600x533.heic",
+    href: "https://westofhollywood.substack.com/p/the-human-in-the-machine-age",
   },
   {
-    category: "Short Story",
-    title: "Sed do eiusmod tempor",
+    category: "Essay",
+    title: "Brand Messaging Not Working?",
     reveal:
-      "She opened the deck, read slide one, and knew the agency had never used their own product.",
-    meta: "Fiction · 2022",
-    coverImage: "https://picsum.photos/seed/writing-story/800/500",
+      "There's a concept in software called technical debt. Your brand has the same problem.",
+    meta: "Protagonist Ink · 2026",
+    coverImage: "https://cdn.sanity.io/images/dkok2iir/production/6b5187a712ac0350234f729c6b2504ba2737d615-1000x560.jpg",
+    href: "https://www.protagonist.ink/blog/brand-messaging-narrative-debt",
   },
 ];
 
@@ -288,7 +292,9 @@ function WritingResponse({
           {WRITING_TILES.map((tile) => (
             <Link
               key={tile.category}
-              href="/writing"
+              href={tile.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group flex flex-col transition-opacity border border-[rgba(239,228,208,0.1)]"
               style={{ background: "rgba(27,26,22,0.94)" }}
             >
