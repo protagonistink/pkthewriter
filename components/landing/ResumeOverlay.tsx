@@ -2,293 +2,308 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { LightSwitch } from "@/components/LightSwitch";
 import { useTheme } from "@/components/ThemeProvider";
 import { useResumeDrone } from "@/components/landing/ResumeAtmosphere";
 import { ResumeWordmarkGrid } from "@/components/landing/ResumeWordmarkGrid";
-import { RESUME_OVERLAY_CONTENT } from "@/lib/resume-overlay-content";
+import { CommandModal } from "@/components/ui/CommandModal";
+import { RESUME_OVERLAY_CONTENT, LINKEDIN_URL } from "@/lib/resume-overlay-content";
+
+const UI_SANS = `system-ui, -apple-system, "Inter", sans-serif`;
 
 type Props = {
   onClose?: () => void;
 };
 
-function randomBetween(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 export function ResumeOverlay({ onClose }: Props) {
   const { theme, toggle } = useTheme();
   const isDark = theme === "dark";
-  const { audioEnabled, setAudioEnabled, reducedMotion } = useResumeDrone(isDark);
-  const [voltageDrop, setVoltageDrop] = useState(false);
+  const { audioEnabled, setAudioEnabled } = useResumeDrone(isDark);
 
+  const content = useMemo(() => RESUME_OVERLAY_CONTENT, []);
+
+  const [isNarrow, setIsNarrow] = useState(false);
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onClose?.();
-      }
-    }
+    const mq = window.matchMedia("(max-width: 560px)");
+    setIsNarrow(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsNarrow(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
-
+  // Black Mirror glitch — fires once or twice while the modal is open, dark mode only
+  const [glitching, setGlitching] = useState(false);
   useEffect(() => {
-    if (!isDark || reducedMotion || typeof window === "undefined") return;
-
+    if (!isDark) return;
     let cancelled = false;
     const timers: number[] = [];
 
-    const tick = () => {
+    const fire = () => {
       if (cancelled) return;
-      const nextWait = randomBetween(8000, 12000);
-      const timer = window.setTimeout(() => {
-        if (cancelled) return;
-        setVoltageDrop(true);
-        const resetTimer = window.setTimeout(() => {
-          setVoltageDrop(false);
-          tick();
-        }, 40);
-        timers.push(resetTimer);
-      }, nextWait);
-      timers.push(timer);
+      setGlitching(true);
+      timers.push(window.setTimeout(() => setGlitching(false), 520));
     };
 
-    tick();
+    // First glitch: 2–3s after open
+    timers.push(window.setTimeout(fire, 2000 + Math.random() * 1000));
+    // Maybe a second: 12–22s later (50% chance)
+    if (Math.random() < 0.5) {
+      timers.push(window.setTimeout(fire, 12000 + Math.random() * 10000));
+    }
 
     return () => {
       cancelled = true;
-      timers.forEach((timer) => window.clearTimeout(timer));
+      timers.forEach((t) => window.clearTimeout(t));
     };
-  }, [isDark, reducedMotion]);
+  }, [isDark]);
 
-  const content = useMemo(() => RESUME_OVERLAY_CONTENT, []);
-  const summaryLines = isDark ? content.summary.dark : content.summary.light;
-  const toLines = (value: string | string[]) => (Array.isArray(value) ? value : [value]);
+  const dividerColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.07)";
 
-  return (
-    <div
-      className={`fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-6 transition-colors duration-700 ${isDark ? "bg-black/40" : "bg-[rgba(231,237,243,0.38)]"}`}
-      onClick={() => onClose?.()}
+  // ── Simple mode toggle — one button, no slash, no physical switch ──────────
+  const themeToggle = (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      style={{
+        fontFamily: UI_SANS,
+        fontSize: 11,
+        textTransform: "uppercase",
+        letterSpacing: "0.10em",
+        padding: "6px 14px",
+        border: `1px solid ${isDark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.18)"}`,
+        borderRadius: 4,
+        background: "transparent",
+        color: "currentColor",
+        cursor: "pointer",
+        opacity: 0.65,
+        transition: "opacity 150ms",
+        lineHeight: 1,
+      }}
+      onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "1")}
+      onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "0.65")}
     >
-      <article
-        className="relative w-full max-w-3xl overflow-hidden rounded-[20px] text-left font-[family-name:var(--font-serif)]"
-        onClick={(event) => event.stopPropagation()}
-        style={{
-          position: "relative",
-          zIndex: 90,
-          background: isDark
-            ? "rgba(15, 14, 12, 0.78)"
-            : "linear-gradient(180deg, rgba(255,255,255,0.68) 0%, rgba(243,247,251,0.58) 100%)",
-          backdropFilter: isDark
-            ? "blur(14px) saturate(140%)"
-            : "blur(30px) saturate(180%) brightness(1.06)",
-          WebkitBackdropFilter: isDark
-            ? "blur(14px) saturate(140%)"
-            : "blur(30px) saturate(180%) brightness(1.06)",
-          boxShadow: isDark
-            ? "0 32px 64px -24px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06)"
-            : [
-                "0 56px 120px -40px rgba(32, 46, 66, 0.24)",
-                "0 20px 44px -22px rgba(27, 26, 22, 0.12)",
-                "inset 0 0 0 1px rgba(255,255,255,0.84)",
-                "inset 0 1px 0 rgba(255,255,255,0.98)",
-                "inset 0 -18px 40px -32px rgba(171, 190, 209, 0.34)",
-              ].join(", "),
-          color: "var(--color-ink)",
-          filter: voltageDrop ? "brightness(0.6)" : "brightness(1)",
-        }}
-      >
-        {!isDark ? (
-          <>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.16) 22%, rgba(255,255,255,0) 44%)",
-              }}
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-[2px] top-[2px] h-[88px] rounded-t-[18px]"
-              style={{
-                background:
-                  "radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,0.82) 0%, rgba(228,239,249,0.3) 48%, rgba(255,255,255,0) 100%)",
-                opacity: 0.9,
-              }}
-            />
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-[10px] rounded-[14px]"
-              style={{
-                border: "1px solid rgba(255,255,255,0.34)",
-                opacity: 0.9,
-              }}
-            />
-          </>
-        ) : null}
+      {isDark ? "Light Mode" : "Dark Mode"}
+    </button>
+  );
 
-        <div
-          className="relative flex items-center justify-between gap-[18px] border-b px-[24px] py-[20px] md:px-[28px] md:py-[22px]"
-          style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
-        >
-          <div className="flex flex-col gap-[4px]">
-            <span className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.18em] text-[var(--color-ink-soft)]">
-              {content.eyebrow}
-            </span>
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-faint)]">
-              {content.headerMeta}
-            </span>
-          </div>
+  const underlineColor = isDark ? "rgba(255,255,255,0.30)" : "rgba(0,0,0,0.28)";
 
-          <div className="flex items-center gap-[12px] md:gap-[18px]">
-            <button
-              type="button"
-              onClick={toggle}
-              aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-              className="flex items-center rounded-full p-1"
-              style={{
-                background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                boxShadow: isDark
-                  ? "inset 0 1px 3px rgba(0,0,0,0.3)"
-                  : "inset 0 1px 3px rgba(0,0,0,0.1)",
-              }}
-            >
-              <span
-                className="rounded-full px-[14px] py-[6px] font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] transition-all md:px-[16px]"
-                style={{
-                  background: !isDark ? "#ffffff" : "transparent",
-                  color: !isDark ? "#111111" : "var(--color-ink-faint)",
-                  boxShadow: !isDark ? "0 1px 3px rgba(0,0,0,0.12)" : "none",
-                }}
-              >
-                {content.toneLabels.light}
-              </span>
-              <span
-                className="rounded-full px-[14px] py-[6px] font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.12em] transition-all md:px-[16px]"
-                style={{
-                  background: isDark ? "#27272a" : "transparent",
-                  color: isDark ? "#ffffff" : "var(--color-ink-faint)",
-                  boxShadow: isDark ? "0 1px 3px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)" : "none",
-                }}
-              >
-                {content.toneLabels.dark}
-              </span>
-            </button>
+  // ── Row content renderer — multi-item arrays flow into 2 columns ──────────
+  const renderContent = (
+    value: string | readonly string[],
+    isConnection: boolean
+  ) => {
+    if (isConnection) {
+      const borderRest = isDark ? "rgba(255,255,255,0.22)" : "var(--color-accent)";
+      const borderHover = isDark ? "rgba(255,255,255,0.40)" : "var(--color-accent)";
+      const fillHover = isDark ? "rgba(255,255,255,0.06)" : "rgba(192, 84, 46, 0.08)";
 
-            <button
-              type="button"
-              role="switch"
-              aria-checked={isDark}
-              aria-label={isDark ? "Tone unfiltered" : "Tone professional"}
-              onClick={toggle}
-              className="grid h-[40px] w-[24px] place-items-center"
-            >
-              <LightSwitch state={isDark ? "on" : "off"} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onClose?.()}
-              className="grid h-[24px] w-[24px] place-items-center text-[var(--color-ink-soft)] transition-colors hover:text-[var(--color-accent)]"
-              aria-label="Close resume"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
+      return (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px", alignItems: "center" }}>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: 17,
+              color: "inherit",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "baseline",
+              gap: 6,
+              transition: "opacity 150ms",
+              width: "fit-content",
+            }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.65")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.opacity = "1")}
+          >
+            LinkedIn
+            <span aria-hidden style={{ fontSize: 13, opacity: 0.55 }}>↗</span>
+          </a>
+          <Link
+            href={content.ctas.secondary.href}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: UI_SANS,
+              fontSize: 11,
+              letterSpacing: "0.10em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              color: isDark ? "currentColor" : "var(--color-accent)",
+              border: `1px solid ${borderRest}`,
+              borderRadius: 4,
+              padding: "7px 16px",
+              background: "transparent",
+              transition: "background 150ms, border-color 150ms",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLAnchorElement;
+              el.style.background = fillHover;
+              el.style.borderColor = borderHover;
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLAnchorElement;
+              el.style.background = "transparent";
+              el.style.borderColor = borderRest;
+            }}
+          >
+            Download PDF
+          </Link>
         </div>
+      );
+    }
 
+    const lines = Array.isArray(value) ? value : [value];
+
+    if (lines.length >= 4) {
+      // Multi-item: flow into 2 columns
+      return (
         <div
-          className="relative border-b px-[24px] py-[20px] md:px-[28px] md:py-[24px]"
-          style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
-        >
-          <div className="flex flex-col gap-[2px]">
-            {summaryLines.map((line) => (
-              <p
-                key={line}
-                className="m-0 max-w-[34ch] text-[28px] leading-[1.06] tracking-[-0.02em] md:text-[34px]"
-              >
-                {line}
-              </p>
-            ))}
-          </div>
-        </div>
-
-        <div className="px-[24px] py-[18px] md:px-[28px] md:py-[20px]">
-          {content.rows.map((row, index) => (
-            <div
-              key={row.label}
-              className={`grid grid-cols-1 gap-[6px] py-[18px] md:grid-cols-[180px_1fr] md:gap-[10px] ${index > 0 ? "border-t" : ""}`}
-              style={{ borderColor: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)" }}
-            >
-              <span className="font-[family-name:var(--font-serif)] text-[11px] uppercase tracking-[0.18em] text-[var(--color-accent)] opacity-60">
-                {row.label}
-              </span>
-              <div className="flex flex-col gap-[2px] text-[18px] leading-[1.4] text-[var(--color-ink)] md:text-[17px]">
-                {toLines(isDark ? row.dark : row.light).map((line) => (
-                  <span key={line}>{line}</span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div
-          className="border-t border-b px-[24px] py-[20px] md:px-[28px] md:py-[22px]"
-          style={{ borderColor: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)" }}
-        >
-          <div className="mb-[14px] font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-faint)]">
-            {isDark ? content.gridCaption.dark : content.gridCaption.light}
-          </div>
-          <ResumeWordmarkGrid isDark={isDark} />
-        </div>
-
-        <div
-          className="px-[24px] py-[24px] md:px-[28px]"
           style={{
-            background: isDark ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.22)",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "2px 16px",
+            fontFamily: "var(--font-serif)",
+            fontSize: 16,
+            lineHeight: 1.5,
+            color: "var(--color-ink)",
           }}
         >
-          <div className="flex flex-wrap items-center gap-x-[18px] gap-y-[14px]">
-            <Link
-              href={content.ctas.primary.href}
-              className="text-[15px] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-70"
-              style={{
-                textDecorationColor: isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)",
-              }}
-            >
-              {isDark ? content.ctas.primary.dark : content.ctas.primary.light}
-            </Link>
-            <Link
-              href={content.ctas.secondary.href}
-              className="inline-flex items-center justify-center rounded-[3px] px-[22px] py-[12px] text-[15px] font-medium transition-opacity hover:opacity-85"
-              style={{
-                background: isDark ? "#f4f4f5" : "#18181b",
-                color: isDark ? "#18181b" : "#f4f4f5",
-              }}
-            >
-              {content.ctas.secondary.label}
-            </Link>
-          </div>
-
-          {isDark ? (
-            <div className="mt-[18px]">
-              <button
-                type="button"
-                onClick={() => setAudioEnabled(!audioEnabled)}
-                aria-pressed={audioEnabled}
-                className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)] transition-colors hover:text-[var(--color-accent)]"
-              >
-                {audioEnabled ? content.audio.on : content.audio.off}
-              </button>
-            </div>
-          ) : null}
+          {lines.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
         </div>
-      </article>
-    </div>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          fontFamily: "var(--font-serif)",
+          fontSize: 17,
+          lineHeight: 1.4,
+          color: "var(--color-ink)",
+        }}
+      >
+        {lines.map((line) => (
+          <span key={line}>{line}</span>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <CommandModal
+      title="Resume"
+      onClose={onClose}
+      headerActions={themeToggle}
+      aria-label="Resume"
+    >
+      {/* Client press wall — lives at the top, full-width */}
+      <div
+        style={{
+          padding: "18px 24px",
+          borderBottom: `1px solid ${dividerColor}`,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: UI_SANS,
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            opacity: 0.38,
+            marginBottom: 14,
+          }}
+        >
+          Selected clients
+        </div>
+        <ResumeWordmarkGrid isDark={isDark} />
+      </div>
+
+      {/* Rows — 2-column settings layout */}
+      <div
+        className={glitching ? "cmd-glitch-active" : undefined}
+        style={{ padding: "8px 24px 12px" }}
+      >
+        {content.rows.map((row, index) => {
+          const isConnection = row.label === "Connection";
+          const label = row.label;
+          const value = isDark ? row.dark : row.light;
+
+          return (
+            <div
+              key={row.label}
+              style={{
+                display: "grid",
+                gridTemplateColumns: isNarrow ? "1fr" : "160px 1fr",
+                alignItems: "start",
+                gap: "0 12px",
+                padding: "13px 0",
+                borderTop: index > 0 ? `1px solid ${dividerColor}` : "none",
+              }}
+            >
+              {/* Col 1 — UI label */}
+              <span
+                style={{
+                  fontFamily: UI_SANS,
+                  fontSize: 11,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.10em",
+                  lineHeight: 1,
+                  paddingTop: 3,
+                  opacity: 0.45,
+                  color: "currentColor",
+                }}
+              >
+                {label}
+              </span>
+              {/* Col 2 — content */}
+              {renderContent(value, isConnection)}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Dark-mode-only audio toggle — slim footer */}
+      {isDark && (
+        <div
+          style={{
+            padding: "14px 24px 18px",
+            borderTop: `1px solid ${dividerColor}`,
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setAudioEnabled(!audioEnabled)}
+            aria-pressed={audioEnabled}
+            style={{
+              fontFamily: UI_SANS,
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.14em",
+              opacity: 0.42,
+              transition: "opacity 150ms",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "currentColor",
+              padding: 0,
+            }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "0.8")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.opacity = "0.42")}
+          >
+            {audioEnabled ? content.audio.on : content.audio.off}
+          </button>
+        </div>
+      )}
+    </CommandModal>
   );
 }
