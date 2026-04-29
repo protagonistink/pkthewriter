@@ -270,7 +270,7 @@ function WritingResponse({
         {/* Dark editorial tile grid */}
         <div
           className="relative grid grid-cols-3 max-[820px]:grid-cols-1 gap-[8px]"
-          style={{ background: "var(--color-ink)" }}
+          style={{ background: "var(--color-paper-panel)" }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
