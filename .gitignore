@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# sanity deploy output
+/dist/
+/.sanity/
+
 # claude code
 /.claude/worktrees/
 /.claude/settings.local.json
