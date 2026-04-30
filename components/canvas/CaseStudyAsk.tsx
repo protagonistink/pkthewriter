@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { useDialogAccessibility } from "@/lib/use-dialog-accessibility";
 
 const TRANSITION_MS = 260;
 
@@ -8,7 +9,9 @@ export function CaseStudyAsk() {
   const [open, setOpen] = useState(false);
   const [entered, setEntered] = useState(false);
   const [value, setValue] = useState("");
+  const titleId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function openPanel() {
@@ -31,19 +34,12 @@ export function CaseStudyAsk() {
     }, TRANSITION_MS);
   }
 
-  useEffect(() => {
-    if (!open) return;
-    // Focus on enter animation frame so iOS Safari accepts it.
-    const id = requestAnimationFrame(() => inputRef.current?.focus());
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") closePanel();
-    }
-    document.addEventListener("keydown", onKey);
-    return () => {
-      cancelAnimationFrame(id);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  useDialogAccessibility({
+    open,
+    containerRef: dialogRef,
+    initialFocusRef: inputRef,
+    onClose: closePanel,
+  });
 
   // ⌘K / Ctrl+K or "/" — global accelerator to open the ask overlay.
   // Skipped when the panel is already open.
@@ -107,22 +103,22 @@ export function CaseStudyAsk() {
 
       {open && (
         <>
-          <button
-            type="button"
-            aria-label="Close"
-            tabIndex={-1}
+          <div
+            aria-hidden="true"
             onClick={closePanel}
             className={`
-              fixed inset-0 z-40 cursor-default
+              fixed inset-0 z-40
               bg-[rgba(10,9,7,0.28)]
               transition-opacity duration-[${TRANSITION_MS}ms] ease-out
               ${entered ? "opacity-100" : "opacity-0"}
             `}
           />
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-label="Ask for something else"
+            aria-labelledby={titleId}
+            tabIndex={-1}
             style={{ transitionDuration: `${TRANSITION_MS}ms` }}
             className={`
               fixed z-50 bottom-[28px] right-[28px]
@@ -138,7 +134,10 @@ export function CaseStudyAsk() {
             `}
           >
             <div className="flex items-center justify-between px-[22px] pt-[18px] pb-[10px]">
-              <span className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.28em] uppercase text-[var(--color-ink-soft)]">
+              <span
+                id={titleId}
+                className="font-[family-name:var(--font-mono)] text-[12px] tracking-[0.28em] uppercase text-[var(--color-ink-soft)]"
+              >
                 Ask
               </span>
               <button

@@ -103,7 +103,7 @@ export function CaseStudyView({ project: p }: { project: Project }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={urlForImage(img).width(2000).url()}
-                alt=""
+                alt={`${p.title} image ${i + 1}`}
                 className="w-full object-cover"
               />
             </figure>

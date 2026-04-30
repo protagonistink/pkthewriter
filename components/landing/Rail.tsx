@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useDialogAccessibility } from "@/lib/use-dialog-accessibility";
 
 type Item = {
   href: string;
@@ -56,6 +57,8 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
   const [expanded, setExpanded] = useState(defaultExpanded);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname() ?? "/";
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const drawerCloseRef = useRef<HTMLButtonElement>(null);
 
   const items = ITEMS;
   const drawerItems = [...ITEMS, DRAWER_CONTACT_ITEM];
@@ -68,19 +71,12 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
     return () => window.removeEventListener("resize", handler);
   }, []);
 
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [mobileOpen]);
+  useDialogAccessibility({
+    open: mobileOpen,
+    containerRef: drawerRef,
+    initialFocusRef: drawerCloseRef,
+    onClose: () => setMobileOpen(false),
+  });
 
   useEffect(() => {
     const handler = () => setExpanded((v) => !v);
@@ -229,9 +225,11 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
           />
           <div
             id="mobile-nav-drawer"
+            ref={drawerRef}
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
+            tabIndex={-1}
             className="
               fixed inset-0 z-50
               bg-[var(--color-paper)]
@@ -241,6 +239,7 @@ export function Rail({ defaultExpanded = false }: { defaultExpanded?: boolean })
           >
             <div className="px-[14px] pb-[24px] flex justify-end">
               <button
+                ref={drawerCloseRef}
                 type="button"
                 aria-label="Close navigation"
                 onClick={() => setMobileOpen(false)}

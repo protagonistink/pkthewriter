@@ -21,10 +21,11 @@ export function ResumeOverlay({ onClose }: Props) {
 
   const content = useMemo(() => RESUME_OVERLAY_CONTENT, []);
 
-  const [isNarrow, setIsNarrow] = useState(false);
+  const [isNarrow, setIsNarrow] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(max-width: 560px)").matches
+  );
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 560px)");
-    setIsNarrow(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsNarrow(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
@@ -85,8 +86,6 @@ export function ResumeOverlay({ onClose }: Props) {
       {isDark ? "Light Mode" : "Dark Mode"}
     </button>
   );
-
-  const underlineColor = isDark ? "rgba(255,255,255,0.30)" : "rgba(0,0,0,0.28)";
 
   // ── Row content renderer — multi-item arrays flow into 2 columns ──────────
   const renderContent = (

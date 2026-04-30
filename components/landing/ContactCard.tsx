@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 type Variant = "hi" | "contact";
 
@@ -25,6 +25,7 @@ const COPY: Record<Variant, { eyebrow: string; title: string; body: string }> = 
 
 export function ContactCard({ variant, onLead, onFallback }: Props) {
   const copy = COPY[variant];
+  const messageId = useId();
   const [value, setValue] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
@@ -62,7 +63,11 @@ export function ContactCard({ variant, onLead, onFallback }: Props) {
 
           {status !== "sent" ? (
             <form onSubmit={handleSubmit} className="flex flex-col gap-[12px]" autoComplete="off">
+              <label htmlFor={messageId} className="sr-only">
+                Tell Patrick what you&apos;re working on
+              </label>
               <textarea
+                id={messageId}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="A sentence is enough."
@@ -105,7 +110,7 @@ export function ContactCard({ variant, onLead, onFallback }: Props) {
                 )}
               </div>
               {status === "error" && (
-                <p className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-accent)]">
+                <p role="alert" className="font-[family-name:var(--font-mono)] text-[12px] text-[var(--color-accent)]">
                   That didn&apos;t send. Try email instead.
                 </p>
               )}

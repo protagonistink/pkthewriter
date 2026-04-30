@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { useTheme } from "@/components/ThemeProvider";
+import { useDialogAccessibility } from "@/lib/use-dialog-accessibility";
 
 // ─── Aura ────────────────────────────────────────────────────────────────────
 
@@ -253,20 +254,26 @@ export function CommandModal({
 }: Props) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const modalRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!mounted || !modalRef.current) return;
+    modalRef.current.scrollTop = 0;
+  }, [mounted]);
 
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose?.();
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  useDialogAccessibility({
+    open: mounted,
+    containerRef: modalRef,
+    initialFocusRef: closeButtonRef,
+    onClose,
+  });
 
   const glassStyle: CSSProperties = isDark
     ? {
@@ -317,7 +324,6 @@ export function CommandModal({
     >
       {/* Modal wrapper */}
       <div
-        ref={modalRef}
         className="cmd-modal-wrapper"
         style={{
           position: "relative",
@@ -332,7 +338,12 @@ export function CommandModal({
         {isDark ? <DarkAura /> : <LightAura />}
 
         <article
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
           aria-label={ariaLabel ?? title}
+          aria-labelledby={titleId}
+          tabIndex={-1}
           style={{
             ...glassStyle,
             borderRadius: 24,
@@ -356,6 +367,7 @@ export function CommandModal({
             }}
           >
             <span
+              id={titleId}
               style={{
                 fontFamily: UI_SANS,
                 fontSize: 11,
@@ -371,6 +383,7 @@ export function CommandModal({
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               {headerActions}
               <button
+                ref={closeButtonRef}
                 type="button"
                 onClick={() => onClose?.()}
                 aria-label="Close"

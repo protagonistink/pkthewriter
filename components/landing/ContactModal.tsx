@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
+import { useDialogAccessibility } from "@/lib/use-dialog-accessibility";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -22,6 +23,15 @@ const CALENDLY_URL = "https://calendar.superhuman.com/book/11VL7tJ5Cd1dIChMDX/2T
 type Props = { open: boolean; onClose: () => void };
 
 export function ContactModal({ open, onClose }: Props) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const firstFieldRef = useRef<HTMLInputElement>(null);
+  const titleId = useId();
+  const nameId = useId();
+  const companyId = useId();
+  const roleId = useId();
+  const projectTypeId = useId();
+  const timelineId = useId();
+  const budgetId = useId();
   const [form, setForm] = useState<{
     name: string;
     company: string;
@@ -39,19 +49,12 @@ export function ContactModal({ open, onClose }: Props) {
   });
   const [status, setStatus] = useState<Status>("idle");
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [open, onClose]);
+  useDialogAccessibility({
+    open,
+    containerRef: dialogRef,
+    initialFocusRef: firstFieldRef,
+    onClose,
+  });
 
   if (!open) return null;
 
@@ -101,9 +104,11 @@ export function ContactModal({ open, onClose }: Props) {
         className="fixed inset-0 z-[60] bg-[rgba(0,0,0,0.32)] backdrop-blur-[2px]"
       />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Hire Patrick — contact form"
+        aria-labelledby={titleId}
+        tabIndex={-1}
         className="
           fixed z-[70] inset-x-0 bottom-0 sm:inset-auto sm:top-1/2 sm:left-1/2
           sm:-translate-x-1/2 sm:-translate-y-1/2
@@ -114,7 +119,7 @@ export function ContactModal({ open, onClose }: Props) {
         "
       >
         <div className="flex items-center justify-between px-[28px] pt-[24px] pb-[6px]">
-          <h2 className="font-[family-name:var(--font-serif)] text-[22px] tracking-[-0.01em]">
+          <h2 id={titleId} className="font-[family-name:var(--font-serif)] text-[22px] tracking-[-0.01em]">
             Tell me about the project.
           </h2>
           <button
@@ -139,7 +144,7 @@ export function ContactModal({ open, onClose }: Props) {
         </div>
 
         {status === "sent" ? (
-          <div className="px-[28px] py-[32px] text-center">
+          <div aria-live="polite" className="px-[28px] py-[32px] text-center">
             <p className="font-[family-name:var(--font-serif)] text-[20px] mb-[10px]">
               Got it. I&apos;ll be in touch.
             </p>
@@ -151,8 +156,10 @@ export function ContactModal({ open, onClose }: Props) {
           <form onSubmit={submit} className="px-[28px] pt-[12px] pb-[28px] space-y-[16px]">
             <div className="grid grid-cols-2 gap-[12px] max-[430px]:grid-cols-1">
               <div>
-                <label className={labelClass}>Name *</label>
+                <label htmlFor={nameId} className={labelClass}>Name *</label>
                 <input
+                  ref={firstFieldRef}
+                  id={nameId}
                   required
                   type="text"
                   placeholder="Pat Smith"
@@ -162,8 +169,9 @@ export function ContactModal({ open, onClose }: Props) {
                 />
               </div>
               <div>
-                <label className={labelClass}>Company</label>
+                <label htmlFor={companyId} className={labelClass}>Company</label>
                 <input
+                  id={companyId}
                   type="text"
                   placeholder="Acme Inc."
                   value={form.company}
@@ -173,8 +181,9 @@ export function ContactModal({ open, onClose }: Props) {
               </div>
             </div>
             <div>
-              <label className={labelClass}>Your Role</label>
+              <label htmlFor={roleId} className={labelClass}>Your Role</label>
               <input
+                id={roleId}
                 type="text"
                 placeholder="VP Marketing"
                 value={form.role}
@@ -183,8 +192,9 @@ export function ContactModal({ open, onClose }: Props) {
               />
             </div>
             <div>
-              <label className={labelClass}>Project Type *</label>
+              <label htmlFor={projectTypeId} className={labelClass}>Project Type *</label>
               <select
+                id={projectTypeId}
                 required
                 value={form.projectType}
                 onChange={(e) =>
@@ -203,8 +213,9 @@ export function ContactModal({ open, onClose }: Props) {
               </select>
             </div>
             <div>
-              <label className={labelClass}>Timeline *</label>
+              <label htmlFor={timelineId} className={labelClass}>Timeline *</label>
               <input
+                id={timelineId}
                 required
                 type="text"
                 placeholder="e.g. Start in June, 3-week sprint"
@@ -214,10 +225,11 @@ export function ContactModal({ open, onClose }: Props) {
               />
             </div>
             <div>
-              <label className={labelClass}>
+              <label htmlFor={budgetId} className={labelClass}>
                 Budget Range <span className="opacity-60">(optional)</span>
               </label>
               <input
+                id={budgetId}
                 type="text"
                 placeholder="e.g. $5k–10k, TBD"
                 value={form.budget}
@@ -226,7 +238,7 @@ export function ContactModal({ open, onClose }: Props) {
               />
             </div>
             {status === "error" && (
-              <p className="font-[family-name:var(--font-mono)] text-[13px] text-red-700">
+              <p role="alert" className="font-[family-name:var(--font-mono)] text-[13px] text-red-700">
                 Something broke on my end. Email patrick@pkthewriter.com directly.
               </p>
             )}

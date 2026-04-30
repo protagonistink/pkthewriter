@@ -470,7 +470,7 @@ function AboutResponse({
 
           {canAskMore ? (
             <div className="mt-[26px]">
-              <div className="flex flex-wrap gap-[10px]" aria-label="Suggested follow-ups">
+              <div role="group" aria-label="Suggested follow-ups" className="flex flex-wrap gap-[10px]">
                 {remainingFollowups.slice(0, 3).map((followup) => (
                   <button
                     key={followup.id}
