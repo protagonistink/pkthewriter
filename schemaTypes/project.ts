@@ -28,7 +28,7 @@ export default {
     { name: 'story',    title: 'Story',    default: true },
     { name: 'credits',  title: 'Credits' },
     { name: 'media',    title: 'Media' },
-    { name: 'settings', title: 'Settings' },
+    { name: 'settings', title: 'SEO' },
   ],
 
   fields: [
@@ -311,14 +311,6 @@ export default {
 
     // ─── SETTINGS ────────────────────────────────────────────────────────────
 
-    {
-      name: 'featured',
-      title: 'Featured Project',
-      type: 'boolean',
-      description: 'Show in the main work grid. Turn off to archive.',
-      initialValue: true,
-      group: 'settings',
-    },
     {
       name: 'slug',
       title: 'URL Slug',
