@@ -1,0 +1,1127 @@
+[
+  {
+    "fields": [
+      {
+        "rows": 2,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "max",
+                "constraint": 240
+              }
+            ]
+          }
+        ],
+        "description": "The logline. One punchy sentence that opens the case study — make it earn the reader's attention.",
+        "name": "context",
+        "type": "text",
+        "title": "The Hook"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "description": "Set the scene. Who's the client, and what world are they operating in?",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Bold"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "type": "block"
+          }
+        ],
+        "name": "setup",
+        "type": "array",
+        "title": "The Setup"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "description": "What made this hard? What were the stakes or constraints?",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Bold"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "type": "block"
+          }
+        ],
+        "name": "conflict",
+        "type": "array",
+        "title": "The Conflict"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "description": "What did you actually make, and how did it turn out?",
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/"
+                                  ],
+                                  "allowRelative": false,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "name": "href",
+                      "type": "url",
+                      "title": "URL"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Bold"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              }
+            ],
+            "type": "block"
+          }
+        ],
+        "name": "resolution",
+        "type": "array",
+        "title": "The Resolution"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Campaign Title"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "brand",
+        "type": "string",
+        "title": "Client"
+      },
+      {
+        "name": "role",
+        "type": "string",
+        "title": "Your Role"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "year",
+        "type": "string"
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "title": "Project Type"
+      },
+      {
+        "options": {
+          "sortable": true
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "disciplines",
+        "type": "array"
+      },
+      {
+        "options": {
+          "sortable": true
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "deliverables",
+        "type": "array",
+        "title": "Key Deliverables"
+      },
+      {
+        "options": {
+          "sortable": true
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "impact",
+        "type": "array",
+        "title": "Impact & Results"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "description": "Clean image without text overlays — used full-bleed at the top of the case study page.",
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt text"
+          }
+        ],
+        "name": "heroImage",
+        "type": "image"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "Image shown in the work grid. Can include text or copy to showcase the work.",
+        "fields": [
+          {
+            "name": "alt",
+            "type": "string",
+            "title": "Alt text"
+          }
+        ],
+        "name": "mainImage",
+        "type": "image",
+        "title": "Grid Thumbnail"
+      },
+      {
+        "description": "TV spots, brand films, trailers — add Vimeo or YouTube links.",
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ]
+                  }
+                ],
+                "name": "title",
+                "type": "string",
+                "title": "Spot / Video Title"
+              },
+              {
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      },
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "name": "url",
+                "type": "url",
+                "title": "Video URL"
+              },
+              {
+                "options": {
+                  "list": [
+                    {
+                      "title": "Vimeo",
+                      "value": "vimeo"
+                    },
+                    {
+                      "title": "YouTube",
+                      "value": "youtube"
+                    }
+                  ],
+                  "layout": "radio"
+                },
+                "initialValue": "vimeo",
+                "name": "platform",
+                "type": "string"
+              },
+              {
+                "options": {
+                  "hotspot": true
+                },
+                "name": "thumbnail",
+                "type": "image",
+                "title": "Custom Thumbnail (Optional)"
+              },
+              {
+                "rows": 3,
+                "name": "description",
+                "type": "text",
+                "title": "Description (Optional)"
+              },
+              {
+                "description": "e.g. :30, 1:15",
+                "name": "duration",
+                "type": "string",
+                "title": "Duration (Optional)"
+              }
+            ],
+            "type": "object",
+            "name": "videoItem",
+            "title": "Video"
+          }
+        ],
+        "name": "videoLinks",
+        "type": "array",
+        "title": "Video Portfolio"
+      },
+      {
+        "description": "Full-bleed stills. Shown on the case study page when no editorial sections are present.",
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "gallery",
+        "type": "array"
+      },
+      {
+        "description": "Add numbered story moments — each has copy, an optional pull quote, and images. When populated, these replace the gallery on the case study page.",
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "Internal label only — not displayed on the page.",
+                "name": "sectionTitle",
+                "type": "string",
+                "title": "Section Title (Internal)"
+              },
+              {
+                "of": [
+                  {
+                    "marks": {
+                      "annotations": [
+                        {
+                          "fields": [
+                            {
+                              "validation": [
+                                {
+                                  "level": "error",
+                                  "rules": [
+                                    {
+                                      "flag": "uri",
+                                      "constraint": {
+                                        "options": {
+                                          "scheme": [
+                                            "/^http$/",
+                                            "/^https$/"
+                                          ],
+                                          "allowRelative": false,
+                                          "relativeOnly": false,
+                                          "allowCredentials": false
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ],
+                              "name": "href",
+                              "type": "url",
+                              "title": "URL"
+                            }
+                          ],
+                          "name": "link",
+                          "type": "object"
+                        }
+                      ],
+                      "decorators": [
+                        {
+                          "value": "strong",
+                          "title": "Bold"
+                        }
+                      ]
+                    },
+                    "of": [],
+                    "styles": [
+                      {
+                        "value": "normal",
+                        "title": "Normal"
+                      }
+                    ],
+                    "type": "block"
+                  }
+                ],
+                "name": "copyBlock",
+                "type": "array",
+                "title": "Copy"
+              },
+              {
+                "of": [
+                  {
+                    "fields": [
+                      {
+                        "options": {
+                          "hotspot": true
+                        },
+                        "name": "image",
+                        "type": "image"
+                      },
+                      {
+                        "name": "caption",
+                        "type": "string",
+                        "title": "Caption (Optional)"
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "name": "images",
+                "type": "array"
+              },
+              {
+                "fields": [
+                  {
+                    "validation": [
+                      {
+                        "level": "error",
+                        "rules": [
+                          {
+                            "flag": "uri",
+                            "constraint": {
+                              "options": {
+                                "scheme": [
+                                  "/^http$/",
+                                  "/^https$/"
+                                ],
+                                "allowRelative": false,
+                                "relativeOnly": false,
+                                "allowCredentials": false
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "name": "url",
+                    "type": "url",
+                    "title": "Video URL"
+                  },
+                  {
+                    "options": {
+                      "list": [
+                        {
+                          "title": "Vimeo",
+                          "value": "vimeo"
+                        },
+                        {
+                          "title": "YouTube",
+                          "value": "youtube"
+                        }
+                      ]
+                    },
+                    "initialValue": "vimeo",
+                    "name": "platform",
+                    "type": "string"
+                  },
+                  {
+                    "options": {
+                      "hotspot": true
+                    },
+                    "name": "thumbnail",
+                    "type": "image",
+                    "title": "Custom Thumbnail"
+                  }
+                ],
+                "name": "video",
+                "type": "object",
+                "title": "Video (Optional)"
+              }
+            ],
+            "type": "object",
+            "name": "editorialSection"
+          }
+        ],
+        "name": "editorialSections",
+        "type": "array",
+        "title": "Editorial Story Moments"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "readOnly": "conditional",
+        "name": "slug",
+        "type": "slug",
+        "title": "URL Slug"
+      }
+    ],
+    "name": "project",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "year",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Essay",
+              "value": "essay"
+            },
+            {
+              "title": "Story",
+              "value": "story"
+            },
+            {
+              "title": "Column",
+              "value": "column"
+            },
+            {
+              "title": "Interview",
+              "value": "interview"
+            },
+            {
+              "title": "Other",
+              "value": "other"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "essay",
+        "name": "clipType",
+        "type": "string",
+        "title": "Type"
+      },
+      {
+        "description": "e.g., \"Substack\", \"Protagonist Ink\", \"The Atlantic\"",
+        "name": "outlet",
+        "type": "string",
+        "title": "Outlet / Publication"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Where the piece lives. Everything links out.",
+        "name": "url",
+        "type": "url",
+        "title": "URL"
+      },
+      {
+        "rows": 3,
+        "description": "Two or three lines shown in the list and on suggestion cards.",
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "initialValue": true,
+        "description": "Show on the /writing page.",
+        "name": "featured",
+        "type": "boolean"
+      }
+    ],
+    "name": "writingClip",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "year",
+        "type": "string"
+      },
+      {
+        "description": "e.g., \"Drama\", \"Dark Comedy\", \"Thriller\"",
+        "name": "genre",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "In Development",
+              "value": "development"
+            },
+            {
+              "title": "Complete",
+              "value": "complete"
+            },
+            {
+              "title": "Optioned",
+              "value": "optioned"
+            },
+            {
+              "title": "Produced",
+              "value": "produced"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "complete",
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "description": "One or two sentence pitch shown on the screenwriting page.",
+        "name": "logline",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "coverImage",
+        "type": "image"
+      },
+      {
+        "options": {
+          "accept": "application/pdf"
+        },
+        "description": "Upload a PDF sample (first 10 pages, etc.).",
+        "name": "samplePdf",
+        "type": "file",
+        "title": "Sample PDF"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "description": "Link to The Black List, a festival page, or a read-online version.",
+        "name": "externalUrl",
+        "type": "url",
+        "title": "External URL"
+      }
+    ],
+    "name": "screenplay",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g., \"I write things. For a living.\"",
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "type": "block"
+          }
+        ],
+        "name": "bio",
+        "type": "array"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "photo",
+        "type": "image"
+      },
+      {
+        "options": {
+          "accept": "application/pdf"
+        },
+        "name": "resumePdf",
+        "type": "file",
+        "title": "Résumé PDF"
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "title": "Contact Email"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g., \"LinkedIn\", \"Substack\"",
+                "name": "label",
+                "type": "string"
+              },
+              {
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "name": "url",
+                "type": "url",
+                "title": "URL"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "socialLinks",
+        "type": "array"
+      }
+    ],
+    "name": "aboutPage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "initialValue": "Landing Page Suggestions",
+        "description": "Internal name (e.g., \"Landing Page Suggestions\"). Not displayed publicly.",
+        "name": "label",
+        "type": "string",
+        "title": "Internal Label"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 6
+              }
+            ]
+          }
+        ],
+        "description": "Pick 3 documents (any mix of projects, stories, blog posts, or screenplays) to surface on the landing page.",
+        "of": [
+          {
+            "to": [
+              {
+                "type": "project"
+              },
+              {
+                "type": "writingClip"
+              },
+              {
+                "type": "screenplay"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to project, writing clip or screenplay"
+          }
+        ],
+        "name": "items",
+        "type": "array",
+        "title": "Suggestions"
+      }
+    ],
+    "name": "suggestionSet",
+    "type": "document"
+  }
+]

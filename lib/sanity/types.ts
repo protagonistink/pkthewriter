@@ -18,11 +18,11 @@ export type Project = {
   role?: string;
   year?: string;
   type?: string;
-  featured?: boolean;
-  customLayout?: "standard" | "editorial-multimedia";
+  layout?: "editorial" | "gallery" | "film";
   heroImage?: SanityImage;
   mainImage?: SanityImage;
   context?: string;
+  setup?: PortableTextBlock[];
   // Older docs stored these as plain strings; newer ones as Portable Text.
   conflict?: string | PortableTextBlock[];
   resolution?: string | PortableTextBlock[];
@@ -38,18 +38,12 @@ export type Project = {
     duration?: string;
   }>;
   gallery?: SanityImage[];
-  editorialScreenshots?: Array<{
-    image: SanityImage;
-    label?: string;
-    caption?: string;
-    layoutType?: "full" | "split" | "grid-3" | "grid-4";
-  }>;
   editorialSections?: Array<{
     sectionTitle?: string;
+    imageLayout?: "full" | "asymmetric" | "grid";
     copyBlock?: PortableTextBlock[];
     video?: { url: string; platform: "vimeo" | "youtube"; thumbnail?: SanityImage };
     images?: Array<{ image: SanityImage; caption?: string }>;
-    backgroundColor?: "white" | "lightGray" | "beige" | "blue" | "dark";
   }>;
 };
 

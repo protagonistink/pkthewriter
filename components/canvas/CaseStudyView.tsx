@@ -8,7 +8,8 @@ import { CaseStudyTransitions } from "./CaseStudyTransitions";
 export function CaseStudyView({ project: p }: { project: Project }) {
   const kicker = [p.brand, p.year, p.type].filter(Boolean).join(" · ");
   const hero = p.heroImage ?? p.mainImage;
-  const moments = p.editorialSections ?? [];
+  const layout = p.layout ?? "editorial";
+  const moments = layout !== "gallery" ? (p.editorialSections ?? []) : [];
   const slug = p.slug.current;
 
   return (
@@ -86,7 +87,12 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       )}
 
-      {/* Numbered moments — editorial sections, intercut with gallery stills */}
+      {/* Film layout — video leads before everything else */}
+      {layout === "film" && p.videoLinks && p.videoLinks.length > 0 && (
+        <VideoArtifacts videos={p.videoLinks} />
+      )}
+
+      {/* Numbered moments — editorial sections */}
       {moments.length > 0 && (
         <div className="pb-[80px]">
           {moments.map((section, i) => (
@@ -95,8 +101,8 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </div>
       )}
 
-      {/* Gallery fallback — if no editorial sections, show gallery as full-bleed stills */}
-      {moments.length === 0 && p.gallery?.length ? (
+      {/* Gallery — shown when layout is 'gallery', or as fallback when no editorial sections */}
+      {(layout === "gallery" || moments.length === 0) && p.gallery?.length ? (
         <section className="pb-[80px]">
           {p.gallery.map((img, i) => (
             <figure key={`gal-${i}`} className="w-full mb-[2px]">
@@ -111,8 +117,7 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       ) : null}
 
-      {/* Conflict / Resolution — always render when content exists, regardless of
-          whether editorial sections are also present. */}
+      {/* Conflict / Resolution — always render when content exists */}
       {(p.conflict || p.resolution) && (
         <section className="px-[60px] py-[80px] max-[820px]:px-[24px] max-[820px]:py-[56px]">
           <div className="max-w-[740px] mx-auto space-y-[48px]">
@@ -126,8 +131,8 @@ export function CaseStudyView({ project: p }: { project: Project }) {
         </section>
       )}
 
-      {/* Video artifacts — TV spots, brand films, trailers */}
-      {p.videoLinks && p.videoLinks.length > 0 && (
+      {/* Video artifacts — editorial and gallery layouts show video at the end */}
+      {layout !== "film" && p.videoLinks && p.videoLinks.length > 0 && (
         <VideoArtifacts videos={p.videoLinks} />
       )}
 
@@ -221,10 +226,13 @@ function VideoArtifacts({ videos }: { videos: VideoLink[] }) {
 type EditorialSection = NonNullable<Project["editorialSections"]>[number];
 type EditorialImage = NonNullable<EditorialSection["images"]>[number];
 
+const IMAGE_LAYOUT_RHYTHM = { full: 0, asymmetric: 1, grid: 2 } as const;
+
 function Moment({ section, index }: { section: EditorialSection; index: number }) {
   const counter = `§ ${String(index + 1).padStart(2, "0")}`;
   const images = section.images ?? [];
   const pullQuote = extractPullQuote(section.copyBlock);
+  const rhythm = IMAGE_LAYOUT_RHYTHM[section.imageLayout ?? "full"] ?? 0;
 
   return (
     <section className="px-[60px] py-[80px] max-[820px]:px-[24px] max-[820px]:py-[56px]">
@@ -243,13 +251,13 @@ function Moment({ section, index }: { section: EditorialSection; index: number }
             )}
             {pullQuote && (
               <blockquote className="my-[44px] max-w-[12ch] font-[family-name:var(--font-serif)] text-[clamp(48px,8vw,116px)] leading-[0.9] tracking-[-0.045em] text-[var(--color-ink)]">
-                “{pullQuote}”
+                "{pullQuote}"
               </blockquote>
             )}
           </div>
         </div>
 
-        <EditorialImages images={images} rhythm={index % 3} />
+        <EditorialImages images={images} rhythm={rhythm} />
       </div>
     </section>
   );

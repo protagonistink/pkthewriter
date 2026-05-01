@@ -139,6 +139,22 @@ export default {
     // ─── MEDIA ───────────────────────────────────────────────────────────────
 
     {
+      name: 'layout',
+      title: 'Page Layout',
+      type: 'string',
+      description: 'Controls how the case study body renders. Drag editorial sections to reorder them.',
+      options: {
+        list: [
+          { title: 'Editorial — numbered story moments with images', value: 'editorial' },
+          { title: 'Gallery — full-bleed stills, no numbered sections', value: 'gallery' },
+          { title: 'Film — video leads, then images / story', value: 'film' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'editorial',
+      group: 'media',
+    },
+    {
       name: 'heroImage',
       title: 'Hero Image',
       type: 'image',
@@ -153,6 +169,7 @@ export default {
       title: 'Grid Thumbnail',
       type: 'image',
       description: 'Image shown in the work grid. Can include text or copy to showcase the work.',
+      options: { hotspot: true },
       fields: [{ name: 'alt', title: 'Alt text', type: 'string' }],
       group: 'media',
     },
@@ -275,6 +292,21 @@ export default {
                   },
                 },
               ],
+            },
+            {
+              name: 'imageLayout',
+              title: 'Image Layout',
+              type: 'string',
+              description: 'How images in this section are arranged.',
+              options: {
+                list: [
+                  { title: 'Full-bleed → Grid', value: 'full' },
+                  { title: 'Asymmetric (wide + offset)', value: 'asymmetric' },
+                  { title: 'Equal Grid (2-up)', value: 'grid' },
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'full',
             },
             {
               name: 'video',
