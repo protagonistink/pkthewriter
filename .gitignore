@@ -43,6 +43,7 @@ next-env.d.ts
 # sanity deploy output
 /dist/
 /.sanity/
+/pkthewriter/
 
 # claude code
 /.claude/worktrees/
