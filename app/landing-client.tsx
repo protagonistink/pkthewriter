@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { ChatBar } from "@/components/landing/ChatBar";
 import { ContactCard } from "@/components/landing/ContactCard";
@@ -10,6 +11,25 @@ import { PICard } from "@/components/canvas/PICard";
 import { AboutClient } from "@/components/about/AboutClient";
 import { ABOUT_FOLLOWUPS, resolveAboutFollowup, type AboutFollowup } from "@/lib/about-response";
 import { resolveFeature, type FeatureKey, type FeatureMap, type FeatureCard } from "@/lib/feature-resolver";
+
+// Lazy-load WOPR bundles so phones (and anyone who never triggers it)
+// never download the JS, the canvas, or the GeoJSON asset.
+const WOPROverlay = dynamic(
+  () => import("@/components/wopr/WOPROverlay").then((m) => m.WOPROverlay),
+  { ssr: false }
+);
+const WoprInPageResponse = dynamic(
+  () => import("@/components/wopr/WoprInPageResponse").then((m) => m.WoprInPageResponse),
+  { ssr: false }
+);
+
+type WoprNotice = { text: string; durationMs: number; nonce: number } | null;
+type WoprState = {
+  phase: "act1" | "overlay";
+  query: string;
+  bucket: "A" | "B" | "C";
+  audioCtx: AudioContext | null;
+} | null;
 
 const ABOUT_ANSWER_LIMIT = 5;
 
@@ -46,6 +66,8 @@ export function LandingClient({ featureMap, initialAbout }: Props) {
   const [aboutTurns, setAboutTurns] = useState<AboutFollowup[]>([]);
   const [contactCard, setContactCard] = useState<"hi" | "contact" | null>(null);
   const [showAbout, setShowAbout] = useState(!!initialAbout);
+  const [woprState, setWoprState] = useState<WoprState>(null);
+  const [chatNotice, setChatNotice] = useState<WoprNotice>(null);
   // Read URL-driven intent (?ask=1, ?q=…, #ask) on the client without a
   // SSR/CSR divergence: server renders defaults, client subscribes once and
   // delivers the actual values post-hydration. Cached so renders are stable.
@@ -147,7 +169,7 @@ export function LandingClient({ featureMap, initialAbout }: Props) {
     return true;
   }
 
-  const inResponse = feature !== null || contactCard !== null || showAbout;
+  const inResponse = feature !== null || contactCard !== null || showAbout || woprState?.phase === "act1";
   const isAboutConversation = feature?.key === "about";
   const isPinnedConversation = isAboutConversation || feature?.key === "resume";
   const heroMode = inResponse || pathname === "/about" ? "receded" : "full";
@@ -167,11 +189,46 @@ export function LandingClient({ featureMap, initialAbout }: Props) {
           onFeature={(key, raw) => handleFeature(key, raw)}
           onContactCard={handleContactCard}
           onContextMessage={handleContextMessage}
+          onWopr={(query, bucket, audioCtx, skipBoot) =>
+            setWoprState({
+              phase: skipBoot ? "overlay" : "act1",
+              query,
+              bucket,
+              audioCtx,
+            })
+          }
+          transientReply={chatNotice}
           inResponse={inResponse}
           followupMode={isAboutConversation}
           onReset={handleReset}
           autoFocus={autoFocus}
           initialQuery={initialQuery}
+        />
+      )}
+      {woprState?.phase === "act1" && (
+        <WoprInPageResponse
+          onTakeover={(audioCtx) =>
+            setWoprState((prev) =>
+              prev ? { ...prev, phase: "overlay", audioCtx: audioCtx ?? prev.audioCtx } : null
+            )
+          }
+        />
+      )}
+      {woprState?.phase === "overlay" && (
+        <WOPROverlay
+          trigger={woprState.query}
+          bucket={woprState.bucket}
+          skipBoot
+          audioCtx={woprState.audioCtx}
+          onDismiss={() => {
+            setWoprState(null);
+            setChatNotice({
+              text: "> LOGOUT: JOSHUA SUCCESSFUL.\n[ RESUMING PORTFOLIO SESSION ]",
+              durationMs: 3000,
+              nonce: Date.now(),
+            });
+            handleFeature("att", "", { preserveScroll: true });
+          }}
         />
       )}
       {feature && (

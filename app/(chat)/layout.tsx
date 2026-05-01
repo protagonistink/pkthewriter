@@ -5,7 +5,7 @@ import { ChatLayoutInner } from "@/components/landing/ChatLayoutInner";
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="grid grid-cols-[auto_1fr] min-h-screen">
+    <div id="site-shell" className="grid grid-cols-[auto_1fr] min-h-screen">
       <Rail />
       <div className="flex flex-col min-w-0">
         <SiteHeader />

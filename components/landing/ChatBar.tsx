@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { routeIntent } from "@/lib/intent-router";
+import { createWoprAudioContext } from "@/components/wopr/hooks/useWoprAudio";
 import type { FeatureKey } from "@/lib/feature-resolver";
 import {
   promptGhostCompletion,
@@ -56,6 +57,17 @@ type Props = {
   onFeature: (key: FeatureKey, raw: string) => void;
   onContactCard: (variant: "hi" | "contact") => void;
   onContextMessage?: (message: string) => boolean;
+  /** Fires when a WOPR easter-egg input is dispatched. The pre-constructed
+   *  AudioContext must be built synchronously inside this gesture frame. */
+  onWopr?: (
+    query: string,
+    bucket: "A" | "B" | "C",
+    audioCtx: AudioContext | null,
+    skipBoot?: boolean
+  ) => void;
+  /** Parent-controlled transient notice displayed in the reply area
+   *  (e.g. the post-WOPR LOGOUT line). The nonce field re-triggers the timer. */
+  transientReply?: { text: string; durationMs: number; nonce: number } | null;
   /** Parent-controlled "response" state — renders × clear and adjusts helper copy. */
   inResponse: boolean;
   followupMode?: boolean;
@@ -74,6 +86,8 @@ export function ChatBar({
   onFeature,
   onContactCard,
   onContextMessage,
+  onWopr,
+  transientReply,
   inResponse,
   followupMode,
   onReset,
@@ -246,16 +260,32 @@ export function ChatBar({
 
   // If landing loaded with ?q=… (e.g. from the case-study Ask overlay), run
   // that query through the dispatcher once on mount. Guarded by a ref so
-  // re-renders don't re-fire it.
+  // re-renders don't re-fire it. Also marks firedFromUrlRef so the WOPR
+  // dispatch suppresses the egg when triggered via shareable URL.
   const autoFiredRef = useRef(false);
+  const firedFromUrlRef = useRef(false);
   useEffect(() => {
     if (autoFiredRef.current) return;
     const q = initialQuery?.trim();
     if (!q) return;
     autoFiredRef.current = true;
+    firedFromUrlRef.current = true;
     void dispatch(q);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Surface a parent-controlled transient notice (e.g. the post-WOPR LOGOUT
+  // message). Nonce-keyed so the same message can replay across multiple triggers.
+  useEffect(() => {
+    if (!transientReply) return;
+    setReply(transientReply.text);
+    const t = window.setTimeout(
+      () => setReply((current) => (current === transientReply.text ? null : current)),
+      transientReply.durationMs
+    );
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transientReply?.nonce]);
 
   async function dispatch(message: string) {
     const trimmed = message.trim();
@@ -326,6 +356,40 @@ export function ChatBar({
         } catch {
           setStatus("error");
           setReply("Something broke on my end. Try again, or just email me.");
+        }
+        return;
+      }
+      case "wopr": {
+        // Suppress on phones — the cinematic is desktop-only.
+        if (typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches) {
+          setClarifyQuery(trimmed);
+          setMode("clarify");
+          setReply(null);
+          return;
+        }
+        // Suppress when triggered via shareable URL (?q=...). No user gesture
+        // means AudioContext init breaks, and a 30s+ cinematic without consent
+        // is hostile.
+        if (firedFromUrlRef.current) {
+          firedFromUrlRef.current = false;
+          setClarifyQuery(trimmed);
+          setMode("clarify");
+          setReply(null);
+          return;
+        }
+        // Construct AudioContext SYNCHRONOUSLY inside this trusted-gesture frame
+        // so it survives the Bucket B 300ms delay. Lazy-constructing in useEffect
+        // on overlay mount would break Safari's autoplay policy.
+        const audioCtx = createWoprAudioContext();
+        setMode("initial");
+        setValue("");
+        const fire = () => onWopr?.(trimmed, intent.bucket, audioCtx, intent.skipBoot);
+        if (intent.bucket === "B") {
+          setReply("> ANALYZING…");
+          setTimeout(fire, 300);
+        } else {
+          setReply(null);
+          fire();
         }
         return;
       }

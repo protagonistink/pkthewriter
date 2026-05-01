@@ -1,0 +1,442 @@
+/* WOPR Easter Egg — scoped palette. Deliberately does not reference any
+   site-wide tokens (--color-paper, --font-mono, etc.). The egg owns its look. */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  font-family: "Courier New", Courier, monospace;
+  color: #39ff14;
+  background: #020802;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 0 0 7px #39ff14, 0 0 14px rgba(57, 255, 20, 0.38);
+}
+
+.root::before {
+  /* scanlines */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  z-index: 4;
+}
+
+.root::after {
+  /* vignette */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+.terminal {
+  position: relative;
+  z-index: 2;
+  padding: clamp(24px, 6vw, 64px);
+  max-width: min(900px, 92vw);
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(14px, 1.4vw, 17px);
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  white-space: pre-wrap;
+}
+
+/* Boot + resolution phases run larger, centered, more deliberate. The reader
+   should be able to absorb each line as it lands. */
+.terminalLarge {
+  font-size: clamp(18px, 2.1vw, 26px);
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+  justify-content: center;
+  text-align: left;
+  max-width: min(720px, 88vw);
+}
+
+.terminalText {
+  flex: 1;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.6em;
+  margin-left: 0.05em;
+  background: #39ff14;
+  height: 1.05em;
+  vertical-align: text-top;
+  animation: blink 1s steps(2, end) infinite;
+  box-shadow: 0 0 6px #39ff14;
+}
+
+.cursorHidden { visibility: hidden; }
+
+@keyframes blink {
+  50% { background: transparent; box-shadow: none; }
+}
+
+.dim {
+  color: #1a8c0a;
+  text-shadow: 0 0 4px rgba(26, 140, 10, 0.5);
+}
+
+.skipHint {
+  margin-top: 16px;
+  font-size: clamp(11px, 1vw, 13px);
+  color: #1a8c0a;
+  text-shadow: 0 0 4px rgba(26, 140, 10, 0.5);
+  animation: skipFade 1.6s ease-in-out infinite;
+}
+
+@keyframes skipFade {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.escIndicator {
+  position: absolute;
+  bottom: 12px;
+  right: 14px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 10px;
+  color: rgba(255, 80, 80, 0.7);
+  letter-spacing: 0.2em;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ---- Vector display (Phase 2) ---- */
+
+.vectorRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  font-family: "Courier New", Courier, monospace;
+  color: #b8c8e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Backdrop layer — invisible during Act 1 (board appears as a card over the
+   dimmed site), fades in when Joshua takes over. Pseudo-element scanlines and
+   vignette ride on this layer. */
+.vectorBackdrop {
+  position: absolute;
+  inset: 0;
+  background: #0a0f1e;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  pointer-events: none;
+}
+
+.vectorBackdropVisible {
+  opacity: 1;
+}
+
+.vectorBackdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 2px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.vectorBackdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+}
+
+/* Subtle hint that Joshua is "embedded" in the chat: in framed mode the
+   wrapper allows scrolling the site's chrome to remain visible behind the
+   card, but blocks clicks outside the card. */
+.vectorFramed .boardFrame {
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 0 60px rgba(184, 200, 224, 0.15), 0 0 0 1px rgba(184, 200, 224, 0.3) inset;
+}
+
+.framedHeader {
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(10px, 1.05vw, 12px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #b8c8e0;
+  text-shadow: 0 0 6px rgba(184, 200, 224, 0.4);
+  text-align: center;
+  margin-bottom: 14px;
+  z-index: 2;
+  position: relative;
+}
+
+.framedHeader .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #57e389;
+  box-shadow: 0 0 8px #57e389;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.boardFrame {
+  position: relative;
+  z-index: 2;
+  padding: 18px;
+  border: 1px solid rgba(184, 200, 224, 0.7);
+  box-shadow: 0 0 24px rgba(184, 200, 224, 0.2) inset;
+  background: rgba(10, 15, 30, 0.6);
+}
+
+.boardSvg {
+  display: block;
+  width: clamp(280px, 40vw, 420px);
+  height: clamp(280px, 40vw, 420px);
+}
+
+.cell {
+  cursor: pointer;
+}
+
+.cell:hover .cellBg {
+  fill: rgba(184, 200, 224, 0.05);
+}
+
+.cellLocked .cell {
+  cursor: default;
+}
+
+.cellLocked .cell:hover .cellBg {
+  fill: transparent;
+}
+
+.boardLine {
+  stroke: #b8c8e0;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px rgba(184, 200, 224, 0.5));
+}
+
+.markStroke {
+  stroke: #b8c8e0;
+  stroke-width: 6;
+  stroke-linecap: round;
+  fill: none;
+  filter: drop-shadow(0 0 5px rgba(184, 200, 224, 0.6));
+}
+
+@keyframes drawMark {
+  to { stroke-dashoffset: 0; }
+}
+
+.markDraw {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: drawMark 200ms linear forwards;
+}
+
+.markFast {
+  animation-duration: 60ms;
+}
+
+.statusLine {
+  margin-top: 22px;
+  font-size: clamp(13px, 1.3vw, 16px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b8c8e0;
+  text-shadow: 0 0 8px rgba(184, 200, 224, 0.45);
+  text-align: center;
+  z-index: 2;
+  position: relative;
+  min-height: 1.4em;
+}
+
+.statusJitter {
+  animation: jitter 0.32s steps(4, end) infinite;
+}
+
+@keyframes jitter {
+  0% { opacity: 1; transform: translate(0,0); }
+  20% { opacity: 0.4; transform: translate(-1px, 1px); }
+  45% { opacity: 1; transform: translate(1px, -1px); }
+  70% { opacity: 0.3; transform: translate(0,0); }
+  100% { opacity: 1; transform: translate(0,0); }
+}
+
+.simCounter {
+  margin-top: 12px;
+  font-size: clamp(11px, 1.05vw, 13px);
+  color: rgba(184, 200, 224, 0.7);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.boardJitter {
+  animation: boardJitter 120ms steps(2, end) infinite;
+}
+
+@keyframes boardJitter {
+  0% { transform: translate(0,0); }
+  25% { transform: translate(-2px, 1px); }
+  50% { transform: translate(1px, -2px); }
+  75% { transform: translate(2px, 2px); }
+  100% { transform: translate(-1px, 0); }
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  z-index: 6;
+  pointer-events: none;
+  animation: flashFade 40ms ease-out forwards;
+}
+
+@keyframes flashFade {
+  0% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
+.winnerStamp {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(14px, 1.6vw, 20px);
+  letter-spacing: 0.28em;
+  color: rgba(184, 200, 224, 0.9);
+  text-shadow: 0 0 10px rgba(184, 200, 224, 0.5);
+  background: rgba(10, 15, 30, 0.7);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ---- Phase 3 — cascade ---- */
+
+.cascadeTable {
+  font-size: clamp(13px, 1.2vw, 15px);
+  line-height: 1.7;
+}
+
+.cascadeRow {
+  display: grid;
+  grid-template-columns: 1fr 90px;
+  gap: 16px;
+  white-space: nowrap;
+}
+
+.cascadeBlur {
+  filter: blur(2px);
+  opacity: 0.6;
+}
+
+/* ---- Bridge — glitch ---- */
+
+.glitchRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #020802;
+  color: #39ff14;
+  font-family: "Courier New", Courier, monospace;
+  overflow: hidden;
+  animation: glitchFlicker 0.18s steps(3, end) infinite;
+}
+
+@keyframes glitchFlicker {
+  0% { transform: translate(0,0) skewX(0deg); filter: hue-rotate(0deg) blur(0); }
+  20% { transform: translate(2px, -1px) skewX(-1.5deg); filter: hue-rotate(40deg) blur(1px); }
+  45% { transform: translate(-3px, 2px) skewX(0.6deg); filter: hue-rotate(-30deg) blur(0.4px); }
+  75% { transform: translate(1px, 0) skewX(2deg); filter: hue-rotate(80deg) blur(2px); }
+  100% { transform: translate(0,0) skewX(0); filter: hue-rotate(0) blur(0); }
+}
+
+.glitchTear {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 22px;
+  background: rgba(57, 255, 20, 0.08);
+  mix-blend-mode: screen;
+}
+
+/* ---- Phase 5 — map ---- */
+
+.mapRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #06121f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mapCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+.mapWinner {
+  position: relative;
+  z-index: 6;
+  font-family: "Courier New", Courier, monospace;
+  font-size: clamp(20px, 2.6vw, 32px);
+  letter-spacing: 0.32em;
+  color: #1a4660;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(255,255,255,0.6);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mapWinnerVisible { opacity: 1; transition: opacity 280ms ease-in; }
